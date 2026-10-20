@@ -2,22 +2,15 @@
   "dependencies": {
     "com.anklebreaker.unity-mcp": "https://github.com/AnkleBreaker-Studio/unity-mcp-plugin.git",
     "com.community.antigravity-unity": "https://github.com/usmanbutt-dev/antigravity-unity.git",
-<<<<<<< HEAD
     "com.unity.animation.rigging": "6.6.0",
-=======
->>>>>>> 37157e669918c4508205c48129ff513621872283
     "com.unity.collab-proxy": "2.13.6",
     "com.unity.ide.visualstudio": "2.0.26",
     "com.unity.inputsystem": "1.20.0",
     "com.unity.multiplayer.center": "2.0.1",
-<<<<<<< HEAD
+    "com.unity.nuget.newtonsoft-json": "3.2.2",
     "com.unity.render-pipelines.universal": "17.6.0",
     "com.unity.services.analytics": "6.3.0",
     "com.unity.splines": "2.9.1",
-=======
-    "com.unity.nuget.newtonsoft-json": "3.2.2",
-    "com.unity.render-pipelines.universal": "17.6.0",
->>>>>>> 37157e669918c4508205c48129ff513621872283
     "com.unity.test-framework": "1.8.0",
     "com.unity.timeline": "6.6.0",
     "com.unity.ugui": "2.6.0",

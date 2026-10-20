@@ -3,17 +3,8 @@ guid: ca44f6eb870d244cfb1c83054a69ffc3
 timeCreated: 1484046036
 licenseType: Store
 TextureImporter:
-<<<<<<< HEAD:Assets/Plugins/Easy Save 3/Editor/checkmarkSmall.png.meta
   fileIDToRecycleName: {}
   serializedVersion: 4
-=======
-  internalIDToNameTable:
-  - first:
-      213: 5001637110751753925
-    second: level_card_0
-  externalObjects: {}
-  serializedVersion: 13
->>>>>>> 37157e669918c4508205c48129ff513621872283:Assets/Arts/Sprites/LevelSelect/level_card.png.meta
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -54,12 +45,7 @@ TextureImporter:
   alphaIsTransparency: 1
   spriteTessellationMethod: 0
   spriteTessellationDetail: -1
-<<<<<<< HEAD:Assets/Plugins/Easy Save 3/Editor/checkmarkSmall.png.meta
   textureType: 2
-=======
-  spriteGeometrySubdivision: -1
-  textureType: 8
->>>>>>> 37157e669918c4508205c48129ff513621872283:Assets/Arts/Sprites/LevelSelect/level_card.png.meta
   textureShape: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0

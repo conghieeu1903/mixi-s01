@@ -13,11 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: SaiGame
-<<<<<<< HEAD
   productName: doMixiSimulator
-=======
-  productName: sg02-2026
->>>>>>> 37157e669918c4508205c48129ff513621872283
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.1764706, g: 0.19215687, b: 0.20392157, a: 1}
@@ -45,10 +41,6 @@ PlayerSettings:
     height: 1
   m_SplashScreenLogos: []
   m_VirtualRealitySplashScreen: {fileID: 2800000, guid: de01855cf21125046af797a4c3ee83bd, type: 3}
-<<<<<<< HEAD
-=======
-  m_HolographicTrackingLossScreen: {fileID: 0}
->>>>>>> 37157e669918c4508205c48129ff513621872283
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
   defaultScreenWidthWeb: 960

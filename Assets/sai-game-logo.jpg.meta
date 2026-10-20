@@ -1,16 +1,4 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Plugins/Easy Save 3/Editor/checkmark.png.meta
-guid: 9d92f481545af4a45b06e8fe44778d93
-timeCreated: 1484046036
-licenseType: Store
-TextureImporter:
-  fileIDToRecycleName: {}
-  serializedVersion: 4
-  mipmaps:
-    mipMapMode: 0
-    enableMipMap: 0
-    sRGBTexture: 0
-========
 guid: de01855cf21125046af797a4c3ee83bd
 TextureImporter:
   internalIDToNameTable: []
@@ -20,7 +8,6 @@ TextureImporter:
     mipMapMode: 0
     enableMipMap: 1
     sRGBTexture: 1
->>>>>>>> 37157e669918c4508205c48129ff513621872283:Assets/sai-game-logo.jpg.meta
     linearTexture: 0
     fadeOut: 0
     borderMipMap: 0
@@ -33,13 +20,10 @@ TextureImporter:
     normalMapFilter: 0
     flipGreenChannel: 0
   isReadable: 0
-<<<<<<<< HEAD:Assets/Plugins/Easy Save 3/Editor/checkmark.png.meta
-========
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
   ignoreMipmapLimit: 0
->>>>>>>> 37157e669918c4508205c48129ff513621872283:Assets/sai-game-logo.jpg.meta
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -47,13 +31,6 @@ TextureImporter:
   textureFormat: 1
   maxTextureSize: 2048
   textureSettings:
-<<<<<<<< HEAD:Assets/Plugins/Easy Save 3/Editor/checkmark.png.meta
-    filterMode: -1
-    aniso: 1
-    mipBias: -1
-    wrapMode: 1
-  nPOTScale: 0
-========
     serializedVersion: 2
     filterMode: 1
     aniso: 1
@@ -62,7 +39,6 @@ TextureImporter:
     wrapV: 0
     wrapW: 0
   nPOTScale: 1
->>>>>>>> 37157e669918c4508205c48129ff513621872283:Assets/sai-game-logo.jpg.meta
   lightmap: 0
   compressionQuality: 50
   spriteMode: 0
@@ -80,11 +56,6 @@ TextureImporter:
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
-<<<<<<<< HEAD:Assets/Plugins/Easy Save 3/Editor/checkmark.png.meta
-  platformSettings:
-  - buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
-========
   ignorePngGamma: 0
   applyGammaDecoding: 0
   swizzle: 50462976
@@ -107,22 +78,17 @@ TextureImporter:
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
->>>>>>>> 37157e669918c4508205c48129ff513621872283:Assets/sai-game-logo.jpg.meta
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-<<<<<<<< HEAD:Assets/Plugins/Easy Save 3/Editor/checkmark.png.meta
-  - buildTarget: Standalone
-========
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
     buildTarget: Android
->>>>>>>> 37157e669918c4508205c48129ff513621872283:Assets/sai-game-logo.jpg.meta
     maxTextureSize: 2048
     textureFormat: -1
     textureCompression: 1
@@ -130,67 +96,13 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-<<<<<<<< HEAD:Assets/Plugins/Easy Save 3/Editor/checkmark.png.meta
-  - buildTarget: iPhone
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: tvOS
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Android
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Tizen
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: WebGL
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Samsung TV
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-========
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
->>>>>>>> 37157e669918c4508205c48129ff513621872283:Assets/sai-game-logo.jpg.meta
   spriteSheet:
     serializedVersion: 2
     sprites: []
     outline: []
-<<<<<<<< HEAD:Assets/Plugins/Easy Save 3/Editor/checkmark.png.meta
-  spritePackingTag: 
-========
     customData: 
     physicsShape: []
     bones: []
@@ -206,7 +118,6 @@ TextureImporter:
     nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
->>>>>>>> 37157e669918c4508205c48129ff513621872283:Assets/sai-game-logo.jpg.meta
   userData: 
   assetBundleName: 
   assetBundleVariant: 
