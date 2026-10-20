@@ -7,13 +7,15 @@
         </ui:VisualElement>
         <ui:VisualElement name="sidebar" class="wf-panel main-menu__sidebar">
             <ui:VisualElement name="logo" class="wf-placeholder main-menu__logo">
-                <ui:Label text="LOGO GAME" class="wf-placeholder__label" />
+                <ui:Label text="STREAMER SIMULATOR" class="wf-placeholder__label" />
             </ui:VisualElement>
-            <ui:Button name="playButton" text="Chơi" class="wf-button wf-button--primary main-menu__button" />
+            <ui:Button name="continueButton" text="Continue" class="wf-button wf-button--primary main-menu__button" />
+            <ui:Label name="saveInfoLabel" text="Chưa có dữ liệu lưu" class="wf-caption main-menu__dialog-text" />
+            <ui:Button name="playButton" text="New Game" class="wf-button main-menu__button" />
             <ui:Button name="settingsButton" text="Settings" class="wf-button main-menu__button" />
             <ui:Button name="exitButton" text="Thoát" class="wf-button main-menu__button" />
             <ui:VisualElement class="wf-grow" />
-            <ui:Label text="v0.1 · MenuManager" class="wf-note" />
+            <ui:Label text="v0.1 · Phase 1 Core Loop" class="wf-note" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

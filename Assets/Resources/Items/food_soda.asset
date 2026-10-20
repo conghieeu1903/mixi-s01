@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7987d37ef76bf0d4392793bfc5e0cec6, type: 3}
+  m_Name: food_soda
+  m_EditorClassIdentifier: Assembly-CSharp::FoodData
+  id: food_soda
+  displayName: "N\u01B0\u1EDBc ng\u1ECDt"
+  category: 0
+  price: 3
+  stars: 1.5
+  icon: {fileID: 0}
+  prefab: {fileID: 953918059287116426, guid: 3eb6988a5fb38d64c8026489627ea69b, type: 3}
+  hungerRelief: 2
+  stressDelta: -4

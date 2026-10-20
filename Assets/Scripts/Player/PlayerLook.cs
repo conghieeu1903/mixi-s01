@@ -72,5 +72,7 @@ public class PlayerLook : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(0f, yaw, 0f);
         pitch = Mathf.Clamp(newPitch, -maxPitchUp, maxPitchDown);
+        if (cameraPivot != null)
+            cameraPivot.localRotation = Quaternion.Euler(pitch, 0f, 0f);
     }
 }

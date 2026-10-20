@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3e2513bca3fd64ca164f09b3315a60, type: 3}
+  m_Name: mb_basic
+  m_EditorClassIdentifier: Assembly-CSharp::PcPartData
+  id: mb_basic
+  displayName: Mainboard B450
+  category: 2
+  price: 45
+  stars: 2
+  icon: {fileID: 0}
+  prefab: {fileID: 639094671956291020, guid: 7c6f6219c0a4e434fa1c917ea52fdc89, type: 3}
+  partType: 0
+  quality: 8
+  capacityGb: 0

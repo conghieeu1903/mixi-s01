@@ -7,10 +7,17 @@ public class Toilet : MonoBehaviour, IInteractable
 
     public bool CanInteract(PlayerInteractor interactor)
     {
-        return false;
+        return true;
     }
 
     public void Interact(PlayerInteractor interactor)
     {
+        Animator anim = GetComponent<Animator>();
+        if (anim != null)
+            anim.SetBool("IsOpen", !anim.GetBool("IsOpen"));
+
+        GameWorld.Instance.Needs.UseToilet();
+        GameWorld.Instance.Mood.Change(2f);
+        FindFirstObjectByType<HudView>()?.ShowInfo("Đã đi vệ sinh (+2 Mood)", true);
     }
 }

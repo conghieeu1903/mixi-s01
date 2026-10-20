@@ -17,6 +17,7 @@ public class PlayerInputReader : MonoBehaviour
     InputAction jump;
     InputAction sprint;
     InputAction crouch;
+    InputAction interact;
 
     // Số UI đang yêu cầu đóng băng nhân vật, lớn hơn 0 thì bỏ qua input
     int freezeCount;
@@ -24,32 +25,37 @@ public class PlayerInputReader : MonoBehaviour
     public bool IsFrozen => freezeCount > 0;
 
     // Hướng di chuyển (x trái phải, y tiến lùi), bằng 0 khi bị đóng băng
-    public Vector2 Move => IsFrozen ? Vector2.zero : move.ReadValue<Vector2>();
+    public Vector2 Move => IsFrozen || move == null ? Vector2.zero : move.ReadValue<Vector2>();
 
     // Có đang giữ chạy nhanh không
-    public bool SprintHeld => !IsFrozen && sprint.IsPressed();
+    public bool SprintHeld => !IsFrozen && sprint != null && sprint.IsPressed();
 
     // Có đang giữ cúi không
-    public bool CrouchHeld => !IsFrozen && crouch.IsPressed();
+    public bool CrouchHeld => !IsFrozen && crouch != null && crouch.IsPressed();
 
     // Vừa bấm nhảy trong frame này
-    public bool JumpPressed => !IsFrozen && jump.WasPressedThisFrame();
+    public bool JumpPressed => !IsFrozen && jump != null && jump.WasPressedThisFrame();
+
+    // Vừa bấm tương tác (phím E) trong frame này
+    public bool InteractPressed => !IsFrozen && ((interact != null && interact.WasPressedThisFrame()) || (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame));
 
     // Lấy action từ asset và bật action map
     void Awake()
     {
+        if (actions == null) return;
         InputActionMap map = actions.FindActionMap(PlayerMap, true);
         move = map.FindAction("Move", true);
         look = map.FindAction("Look", true);
         jump = map.FindAction("Jump", true);
         sprint = map.FindAction("Sprint", true);
         crouch = map.FindAction("Crouch", true);
+        interact = map.FindAction("Interact", false);
     }
 
     // Bật input và cập nhật con trỏ
     void OnEnable()
     {
-        actions.FindActionMap(PlayerMap, true).Enable();
+        if (actions != null) actions.FindActionMap(PlayerMap, true).Enable();
         ApplyCursor();
     }
 
@@ -64,7 +70,7 @@ public class PlayerInputReader : MonoBehaviour
     // Đọc input xoay camera, trả về độ xoay (độ) đã nhân độ nhạy và đã bù deltaTime với tay cầm
     public Vector2 ReadLook(float mouseSensitivity, float gamepadDegreesPerSecond)
     {
-        if (IsFrozen) return Vector2.zero;
+        if (IsFrozen || look == null) return Vector2.zero;
         Vector2 value = look.ReadValue<Vector2>();
         bool isGamepad = look.activeControl != null && look.activeControl.device is Gamepad;
         return isGamepad ? value * (gamepadDegreesPerSecond * Time.deltaTime) : value * mouseSensitivity;

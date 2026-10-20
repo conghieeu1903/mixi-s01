@@ -7,5 +7,7 @@ public class AppearanceSystem : MonoBehaviour
 
     public void Apply(AppearanceData data)
     {
+        if (data == null) return;
+        Current = data;
     }
 }

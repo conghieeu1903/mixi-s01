@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25b49a7cec97784693280fc45e14382, type: 3}
+  m_Name: med_pills
+  m_EditorClassIdentifier: Assembly-CSharp::MedicineData
+  id: med_pills
+  displayName: "Thu\u1ED1c c\u1EA3m c\xFAm"
+  category: 1
+  price: 18
+  stars: 3
+  icon: {fileID: 0}
+  prefab: {fileID: 982272730570120612, guid: eacb6e1e05412754a8e290510d2f9429, type: 3}

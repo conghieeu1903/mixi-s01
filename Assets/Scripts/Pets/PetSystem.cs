@@ -8,6 +8,13 @@ public class PetSystem
     // Điểm phần trăm viewer cộng thêm khi stream có thú cưng
     public int ViewerBonus()
     {
-        return 0;
+        int bonus = 0;
+        for (int i = 0; i < Pets.Count; i++)
+        {
+            Pet p = Pets[i];
+            if (p != null && p.gameObject.activeInHierarchy && p.Happiness >= 40f)
+                bonus += 5;
+        }
+        return bonus;
     }
 }

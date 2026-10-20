@@ -4,7 +4,7 @@ using UnityEngine;
 // Các nhu cầu sinh tồn của streamer: thức khuya, đói, vệ sinh, tắm, bệnh, stress
 public class SurvivalNeeds
 {
-    // Ngưỡng báo debuff (awake và shower lấy từ game gốc, hunger và toilet là giá trị tạm)
+    // Ngưỡng báo debuff sinh tồn
     public int AwakeLimit = 12;
     public const int ShowerLimit = 15;
     public const int HungerLimit = 6;
@@ -27,6 +27,7 @@ public class SurvivalNeeds
     int hoursSinceNeedTick;
 
     public event Action<bool> SickChanged;
+    public event Action Changed;
 
     // Khởi tạo với bộ random dùng chung của game
     public SurvivalNeeds(System.Random rng)
@@ -59,11 +60,14 @@ public class SurvivalNeeds
     {
         AwakeHours++;
         hoursSinceNeedTick++;
-        if (hoursSinceNeedTick < 2) return;
-        hoursSinceNeedTick = 0;
-        HungerTime++;
-        ToiletTime++;
-        NotShowerTime++;
+        if (hoursSinceNeedTick >= 2)
+        {
+            hoursSinceNeedTick = 0;
+            HungerTime++;
+            ToiletTime++;
+            NotShowerTime++;
+        }
+        Changed?.Invoke();
     }
 
     // Ngủ: reset giờ thức, nhưng đói và vệ sinh tăng thêm 6
@@ -72,6 +76,7 @@ public class SurvivalNeeds
         AwakeHours = 0;
         HungerTime += 6;
         ToiletTime += 6;
+        Changed?.Invoke();
     }
 
     // Ăn: giảm đói, có thể kèm đổi stress
@@ -79,18 +84,28 @@ public class SurvivalNeeds
     {
         HungerTime = Math.Max(0, HungerTime - hungerRelief);
         ChangeStress(stressDelta);
+        Changed?.Invoke();
     }
 
     // Đi vệ sinh: reset bộ đếm
-    public void UseToilet() => ToiletTime = 0;
+    public void UseToilet()
+    {
+        ToiletTime = 0;
+        Changed?.Invoke();
+    }
 
     // Tắm: reset bộ đếm
-    public void Shower() => NotShowerTime = 0;
+    public void Shower()
+    {
+        NotShowerTime = 0;
+        Changed?.Invoke();
+    }
 
     // Thay đổi stress, giữ trong 0–100
     public void ChangeStress(float delta)
     {
         Stress = Mathf.Clamp(Stress + delta, 0f, 100f);
+        Changed?.Invoke();
     }
 
     // Uống thuốc: chữa bệnh
@@ -119,6 +134,7 @@ public class SurvivalNeeds
         Stress = data.stress;
         hoursSinceNeedTick = data.hoursSinceNeedTick;
         IsSick = data.isSick;
+        Changed?.Invoke();
     }
 
     // Ghi trạng thái vào save
@@ -139,5 +155,6 @@ public class SurvivalNeeds
         if (IsSick == value) return;
         IsSick = value;
         SickChanged?.Invoke(value);
+        Changed?.Invoke();
     }
 }

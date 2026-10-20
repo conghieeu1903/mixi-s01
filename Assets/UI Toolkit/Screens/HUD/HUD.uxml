@@ -5,6 +5,14 @@
         <ui:VisualElement name="world" class="wf-world">
             <ui:Label text="GÓC NHÌN 3D (FPS)" class="wf-world__label" />
         </ui:VisualElement>
+        <ui:VisualElement name="statusPanel" class="wf-panel hud__status">
+            <ui:VisualElement class="wf-row hud__status-row">
+                <ui:Label name="dayLabel" text="Ngày 1" class="wf-subheading hud__day" />
+                <ui:Label name="clockLabel" text="08:00" class="wf-subheading hud__clock" />
+            </ui:VisualElement>
+            <ui:Label name="moneyLabel" text="$ 500" class="wf-heading hud__money" />
+            <ui:Label name="shortcutNote" text="ESC: Tạm dừng · B: Hóa đơn" class="wf-caption" />
+        </ui:VisualElement>
         <ui:VisualElement class="hud__fader-note">
             <ui:Label text="UIManager · Fader / Flashbang phủ toàn màn hình khi chuyển cảnh" class="wf-note" />
             <ui:Label text="Prototype: ESC Pause · M Map · I/Tab Inventory · P Phone · C PC · L Stream · T NPC · B Blackjack · G Minigame · E World panel · PgUp/PgDn lật màn" class="wf-note" />
@@ -20,19 +28,19 @@
             <ui:Label name="warningLabel" text="Không thể dùng khi đang lái xe" class="wf-text" />
         </ui:VisualElement>
         <ui:VisualElement name="notify" class="hud__notify">
-            <ui:VisualElement class="hud__notify-item">
+            <ui:VisualElement name="mailNotify" class="hud__notify-item">
                 <ui:VisualElement class="wf-icon">
                     <ui:Label text="Mail" class="wf-caption" />
                     <ui:Label name="mailBadge" text="3" class="wf-badge" />
                 </ui:VisualElement>
                 <ui:Label text="Mail" class="wf-caption" />
             </ui:VisualElement>
-            <ui:VisualElement class="hud__notify-item">
+            <ui:VisualElement name="billNotify" class="hud__notify-item">
                 <ui:VisualElement class="wf-icon">
                     <ui:Label text="Bill" class="wf-caption" />
                     <ui:Label name="billBadge" text="1" class="wf-badge" />
                 </ui:VisualElement>
-                <ui:Label text="Hóa đơn" class="wf-caption" />
+                <ui:Label text="Hóa đơn (B)" class="wf-caption" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="skillPointToast" class="wf-panel hud__skill-toast">

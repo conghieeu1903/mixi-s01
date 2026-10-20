@@ -1,7 +1,7 @@
 .stream__top-info {
     position: absolute;
-    left: 24px;
-    top: 24px;
+    left: 300px;
+    top: 32px;
     flex-direction: row;
     align-items: center;
     padding: 10px 16px;

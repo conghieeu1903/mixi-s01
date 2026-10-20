@@ -19,7 +19,7 @@ public class MoodSystem
 
     public float Value { get; private set; } = 60f;
 
-    // Mức trạng thái hiện tại (ngưỡng là giá trị tạm, chỉnh theo cân bằng game)
+    // Mức trạng thái hiện tại theo các mốc cân bằng game
     public MoodState State
     {
         get

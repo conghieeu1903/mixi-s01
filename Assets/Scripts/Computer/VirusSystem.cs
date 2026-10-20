@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 // Virus trên máy tính: nhiễm virus gây Blue Screen, quét bằng app diệt virus
 public class VirusSystem
@@ -10,10 +11,21 @@ public class VirusSystem
     // Thử nhiễm virus khi tải file lạ
     public void TryInfect(float chance)
     {
+        if (IsInfected || chance <= 0f) return;
+        if (UnityEngine.Random.value <= chance)
+        {
+            IsInfected = true;
+            if (GameWorld.HasInstance)
+                GameWorld.Instance.Stream.HasProblem = true;
+            BlueScreen?.Invoke();
+        }
     }
 
     // Quét và diệt virus
     public void Scan()
     {
+        IsInfected = false;
+        if (GameWorld.HasInstance)
+            GameWorld.Instance.Stream.HasProblem = false;
     }
 }

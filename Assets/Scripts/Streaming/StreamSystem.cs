@@ -45,7 +45,10 @@ public class StreamSystem
     // Hàm cộng điểm phần trăm viewer theo kỹ năng, mặc định không có kỹ năng nào
     public Func<StreamCategory, int> SkillViewerBonus = _ => 0;
 
-    // Giới hạn viewer hiện tại, tăng sau mỗi ngày stream đủ dài (giá trị tạm)
+    // Điểm phần trăm viewer cộng thêm từ chất lượng dàn máy, router và thiết bị stream
+    public int RigViewerBonus;
+
+    // Giới hạn viewer hiện tại, tăng sau mỗi ngày stream đủ dài
     public int ViewerLimit => 200 + 300 * ViewerLimitationDay;
 
     public event Action Opened;
@@ -113,6 +116,7 @@ public class StreamSystem
         if (!IsOpen) return;
         StreamMinutes++;
         if (StreamMinutes % WaveIntervalMinutes == 0) RunWave();
+        else StatsChanged?.Invoke();
     }
 
     // Một đợt 30 phút: viewer tăng, dao động, rồi tính follower, sub, donate
@@ -126,16 +130,17 @@ public class StreamSystem
         StatsChanged?.Invoke();
     }
 
-    // Tăng viewer theo phần trăm, cộng hệ số mood, kỹ năng và thưởng kênh nhỏ
+    // Tăng viewer theo phần trăm, cộng hệ số mood, kỹ năng, dàn máy và thưởng kênh nhỏ
     public void UpdateViewerPercent(int percent)
     {
         if (!IsOpen || HasProblem || Viewers >= ViewerLimit) return;
-        int total = percent + mood.ViewerPercentModifier(percent) + SkillViewerBonus(Category);
-        if (Viewers < 100) total += rng.Next(10, 15);
-        else if (Viewers < 200) total += rng.Next(7, 10);
-        else if (Viewers < 400) total += 5;
+        int moodMod = mood.ViewerPercentModifier(percent);
+        int total = percent + moodMod + SkillViewerBonus(Category) + RigViewerBonus;
+        if (Viewers < 100 && mood.Value >= 35f) total += rng.Next(10, 15);
+        else if (Viewers < 200 && mood.Value >= 35f) total += rng.Next(7, 10);
+        else if (Viewers < 400 && mood.Value >= 35f) total += 5;
         if (total <= 0) return;
-        int gain = Math.Max(1, Viewers * total / 100);
+        int gain = Math.Max(1, Viewers * total / 100 + Math.Max(0, total / 6));
         Viewers = Math.Min(Viewers + gain, ViewerLimit);
         PeakViewers = Math.Max(PeakViewers, Viewers);
     }
@@ -185,11 +190,19 @@ public class StreamSystem
     // Có thể có donate sau mỗi đợt, càng nhiều viewer càng dễ có
     void RollDonate()
     {
-        float chance = Mathf.Min(0.9f, 0.05f + Viewers / 500f * 0.2f);
+        float chance = Mathf.Min(0.9f, 0.55f + Viewers / 500f * 0.2f);
         if (rng.NextDouble() >= chance) return;
-        float amount = rng.Next(1, 6) * Math.Max(1, Viewers / 50);
+        float amount = rng.Next(5, 25) * Math.Max(1, Viewers / 50);
         economy.Earn(amount);
         Donated?.Invoke(amount);
+    }
+
+    // Cộng thêm follower từ mạng xã hội hoặc sự kiện ngoài stream
+    public void AddFollowers(int count)
+    {
+        if (count <= 0) return;
+        Followers = Math.Min(Followers + count, MaxFollowers);
+        StatsChanged?.Invoke();
     }
 
     // Nạp trạng thái từ save

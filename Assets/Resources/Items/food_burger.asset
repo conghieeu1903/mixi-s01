@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7987d37ef76bf0d4392793bfc5e0cec6, type: 3}
+  m_Name: food_burger
+  m_EditorClassIdentifier: Assembly-CSharp::FoodData
+  id: food_burger
+  displayName: "Burger b\xF2"
+  category: 0
+  price: 8
+  stars: 2.5
+  icon: {fileID: 0}
+  prefab: {fileID: 4878144265527840958, guid: d85c1caa96516484ca69d769649d6b65, type: 3}
+  hungerRelief: 4
+  stressDelta: -3

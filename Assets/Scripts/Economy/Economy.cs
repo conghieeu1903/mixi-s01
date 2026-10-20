@@ -16,7 +16,7 @@ public class Economy
     // Dưới mức này người chơi bị debuff "nghèo"
     public const float PoorThreshold = 200f;
 
-    // Tiền thuê nhà mỗi ngày (giá trị tạm)
+    // Tiền thuê nhà mỗi ngày
     public float DailyRent = 50f;
 
     public float Money { get; private set; } = 500f;
@@ -27,6 +27,7 @@ public class Economy
 
     public event Action<float> MoneyChanged;
     public event Action<Bill> BillIssued;
+    public event Action BillsChanged;
 
     // Cộng tiền
     public void Earn(float amount)
@@ -48,9 +49,17 @@ public class Economy
     // Phát hành hóa đơn tiền nhà khi qua ngày
     public void IssueDailyBills(int day)
     {
-        var bill = new Bill { day = day, title = "Rent", amount = DailyRent };
+        IssueCustomBill(day, "Tiền thuê nhà", DailyRent);
+    }
+
+    // Phát hành một hóa đơn phát sinh (tiền điện, dịch vụ)
+    public void IssueCustomBill(int day, string title, float amount)
+    {
+        if (amount <= 0f) return;
+        var bill = new Bill { day = day, title = title, amount = amount };
         UnpaidBills.Add(bill);
         BillIssued?.Invoke(bill);
+        BillsChanged?.Invoke();
     }
 
     // Thanh toán một hóa đơn, trả về false nếu không đủ tiền
@@ -59,6 +68,7 @@ public class Economy
         if (bill == null || !UnpaidBills.Contains(bill)) return false;
         if (!TrySpend(bill.amount)) return false;
         UnpaidBills.Remove(bill);
+        BillsChanged?.Invoke();
         return true;
     }
 
@@ -69,6 +79,7 @@ public class Economy
         UnpaidBills.Clear();
         if (data.unpaidBills != null) UnpaidBills.AddRange(data.unpaidBills);
         MoneyChanged?.Invoke(Money);
+        BillsChanged?.Invoke();
     }
 
     // Ghi trạng thái vào save

@@ -6,4 +6,9 @@ public class Router : MonoBehaviour
     [SerializeField] RouterData data;
 
     public RouterData Data => data;
+
+    public void SetData(RouterData routerData)
+    {
+        data = routerData;
+    }
 }

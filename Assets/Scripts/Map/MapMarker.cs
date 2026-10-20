@@ -8,4 +8,19 @@ public class MapMarker : MonoBehaviour
 
     public string Label => label;
     public Sprite Icon => icon;
+
+    public void SetLabel(string newLabel)
+    {
+        label = newLabel;
+    }
+
+    void OnEnable()
+    {
+        FindFirstObjectByType<MapSystem>()?.Register(this);
+    }
+
+    void OnDisable()
+    {
+        FindFirstObjectByType<MapSystem>()?.Unregister(this);
+    }
 }

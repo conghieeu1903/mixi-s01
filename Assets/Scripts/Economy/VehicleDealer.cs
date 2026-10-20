@@ -1,16 +1,43 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // Showroom mua xe
 public class VehicleDealer : MonoBehaviour, IInteractable
 {
-    public string Prompt => "Xem xe";
+    [SerializeField] float defaultVehiclePrice = 150f;
+    [SerializeField] VehicleController showroomVehicle;
+
+    public HashSet<string> OwnedVehicles { get; } = new HashSet<string>();
+
+    public string Prompt => $"Showroom Xe (Mua xe $ {defaultVehiclePrice:0.##})";
 
     public bool CanInteract(PlayerInteractor interactor)
     {
-        return false;
+        return true;
     }
 
     public void Interact(PlayerInteractor interactor)
     {
+        if (BuyVehicle("car_sedan", defaultVehiclePrice))
+        {
+            FindFirstObjectByType<HudView>()?.ShowInfo($"Đã mua xe tại Showroom! Lại gần xe bấm [E] để lái.", true);
+        }
+        else
+        {
+            FindFirstObjectByType<HudView>()?.ShowInfo($"Không đủ $ {defaultVehiclePrice:0.##} để mua xe mới", false);
+        }
+    }
+
+    public bool BuyVehicle(string vehicleId, float price)
+    {
+        if (string.IsNullOrEmpty(vehicleId)) return false;
+        if (OwnedVehicles.Contains(vehicleId)) return true;
+        if (!GameWorld.HasInstance || !GameWorld.Instance.Economy.TrySpend(price))
+            return false;
+
+        OwnedVehicles.Add(vehicleId);
+        if (showroomVehicle != null)
+            showroomVehicle.gameObject.SetActive(true);
+        return true;
     }
 }
