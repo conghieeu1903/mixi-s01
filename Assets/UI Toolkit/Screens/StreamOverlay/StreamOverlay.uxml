@@ -1,0 +1,58 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="StreamOverlay.uss" />
+    <ui:VisualElement name="streamOverlay" class="wf-screen">
+        <ui:VisualElement name="streamView" class="wf-world">
+            <ui:Label text="NỘI DUNG STREAM" class="wf-world__label" />
+        </ui:VisualElement>
+        <ui:VisualElement name="topStreamInfo" class="wf-panel stream__top-info">
+            <ui:Label text="LIVE" class="wf-tag wf-tag--dark" />
+            <ui:VisualElement class="stream__stat">
+                <ui:Label text="Người xem" class="wf-caption" />
+                <ui:Label name="viewersLabel" text="1,234" class="wf-subheading" />
+            </ui:VisualElement>
+            <ui:VisualElement class="stream__stat">
+                <ui:Label text="Follower" class="wf-caption" />
+                <ui:Label name="followersLabel" text="+56" class="wf-subheading" />
+            </ui:VisualElement>
+            <ui:VisualElement class="stream__stat">
+                <ui:Label text="Thời gian" class="wf-caption" />
+                <ui:Label name="durationLabel" text="01:12:30" class="wf-subheading" />
+            </ui:VisualElement>
+            <ui:VisualElement class="stream__stat">
+                <ui:Label text="Thu nhập" class="wf-caption" />
+                <ui:Label name="incomeLabel" text="$ 182" class="wf-subheading" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="donatePopup" class="wf-panel stream__donate">
+            <ui:VisualElement class="wf-placeholder stream__donate-image">
+                <ui:Label text="GIF donate" class="wf-placeholder__label" />
+            </ui:VisualElement>
+            <ui:Label name="donateTitle" text="gamer_99 donate $50" class="wf-heading" />
+            <ui:Label name="donateMessage" text="&quot;Chơi tiếp màn này đi anh!&quot;" class="wf-text wf-wrap stream__donate-message" />
+            <ui:VisualElement class="wf-progress stream__donate-progress">
+                <ui:VisualElement class="wf-progress__fill wf-progress__fill--30" />
+            </ui:VisualElement>
+            <ui:Label text="Sound donate đang phát · SoundDonatePanel" class="wf-caption stream__donate-progress-label" />
+        </ui:VisualElement>
+        <ui:VisualElement name="chatPanel" class="wf-panel stream__chat">
+            <ui:VisualElement class="stream__chat-header">
+                <ui:Label text="Chat" class="wf-subheading wf-grow" />
+                <ui:Label text="ChatPanel" class="wf-note" />
+            </ui:VisualElement>
+            <ui:VisualElement name="chatList" class="stream__chat-list">
+                <ui:VisualElement class="stream__chat-line"><ui:Label text="viewer_01:" class="wf-text stream__chat-user" /><ui:Label text="hello" class="wf-text" /></ui:VisualElement>
+                <ui:VisualElement class="stream__chat-line"><ui:Label text="noob_master:" class="wf-text stream__chat-user" /><ui:Label text="LOL" class="wf-text" /></ui:VisualElement>
+                <ui:VisualElement class="stream__chat-line"><ui:Label text="mimi_fan:" class="wf-text stream__chat-user" /><ui:Label text="setup đẹp quá" class="wf-text" /></ui:VisualElement>
+                <ui:VisualElement class="stream__chat-line stream__chat-line--donate"><ui:Label text="gamer_99:" class="wf-text stream__chat-user" /><ui:Label text="donate $50" class="wf-text" /></ui:VisualElement>
+                <ui:VisualElement class="stream__chat-line"><ui:Label text="river:" class="wf-text stream__chat-user" /><ui:Label text="GG" class="wf-text" /></ui:VisualElement>
+                <ui:VisualElement class="stream__chat-line"><ui:Label text="hobo:" class="wf-text stream__chat-user" /><ui:Label text="cho xin ít tiền" class="wf-text" /></ui:VisualElement>
+                <ui:VisualElement class="stream__chat-line"><ui:Label text="crispy_jerry:" class="wf-text stream__chat-user" /><ui:Label text="Pog" class="wf-text" /></ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="infoBar" class="stream__info-bar">
+            <ui:Label text="INFO" class="wf-tag wf-tag--dark" />
+            <ui:Label name="infoLabel" text="Mục tiêu hôm nay: 100 follower mới · Theo dõi kênh để nhận thông báo" class="wf-text" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

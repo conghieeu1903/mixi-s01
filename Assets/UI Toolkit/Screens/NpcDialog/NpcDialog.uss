@@ -1,0 +1,40 @@
+.npc-dialog__box {
+    position: absolute;
+    left: 160px;
+    right: 160px;
+    bottom: 48px;
+    flex-direction: row;
+    padding: 24px;
+}
+
+.npc-dialog__portrait {
+    width: 180px;
+    height: 180px;
+    margin-right: 24px;
+}
+
+.npc-dialog__content {
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin-right: 24px;
+}
+
+.npc-dialog__name {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.npc-dialog__name > .wf-tag {
+    margin-left: 12px;
+}
+
+.npc-dialog__choices {
+    width: 380px;
+    justify-content: flex-end;
+}
+
+.npc-dialog__choice {
+    -unity-text-align: middle-left;
+    margin-top: 10px;
+}

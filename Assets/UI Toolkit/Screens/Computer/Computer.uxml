@@ -1,0 +1,80 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="Computer.uss" />
+    <ui:VisualElement name="computer" class="wf-screen">
+        <ui:VisualElement name="wallpaper" class="wf-world">
+            <ui:Label text="HÌNH NỀN DESKTOP" class="wf-world__label" />
+        </ui:VisualElement>
+        <ui:VisualElement name="desktopIcons" class="computer__desktop-icons">
+            <ui:VisualElement class="computer__desktop-icon"><ui:VisualElement class="wf-icon" /><ui:Label text="Browser" class="wf-caption" /></ui:VisualElement>
+            <ui:VisualElement class="computer__desktop-icon"><ui:VisualElement class="wf-icon" /><ui:Label text="Youhube" class="wf-caption" /></ui:VisualElement>
+            <ui:VisualElement class="computer__desktop-icon"><ui:VisualElement class="wf-icon" /><ui:Label text="Ops" class="wf-caption" /></ui:VisualElement>
+            <ui:VisualElement class="computer__desktop-icon"><ui:VisualElement class="wf-icon" /><ui:Label text="Discat" class="wf-caption" /></ui:VisualElement>
+            <ui:VisualElement class="computer__desktop-icon"><ui:VisualElement class="wf-icon" /><ui:Label text="Smoke" class="wf-caption" /></ui:VisualElement>
+            <ui:VisualElement class="computer__desktop-icon"><ui:VisualElement class="wf-icon" /><ui:Label text="Zamazor" class="wf-caption" /></ui:VisualElement>
+            <ui:VisualElement class="computer__desktop-icon"><ui:VisualElement class="wf-icon" /><ui:Label text="Mail" class="wf-caption" /></ui:VisualElement>
+            <ui:VisualElement class="computer__desktop-icon"><ui:VisualElement class="wf-icon" /><ui:Label text="Bill" class="wf-caption" /></ui:VisualElement>
+            <ui:VisualElement class="computer__desktop-icon"><ui:VisualElement class="wf-icon" /><ui:Label text="StreamerTools" class="wf-caption" /></ui:VisualElement>
+            <ui:VisualElement class="computer__desktop-icon"><ui:VisualElement class="wf-icon" /><ui:Label text="CryptoWeb" class="wf-caption" /></ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="browserWindow" class="computer__window computer__window--browser">
+            <ui:VisualElement class="computer__titlebar">
+                <ui:VisualElement class="wf-icon wf-icon--sm" />
+                <ui:Label text="Browser · PcPanel" class="wf-subheading" />
+                <ui:Button name="minimizeButton" text="_" class="wf-button wf-button--square" />
+                <ui:Button name="maximizeButton" text="[ ]" class="wf-button wf-button--square" />
+                <ui:Button name="closeButton" text="×" class="wf-button wf-button--square" />
+            </ui:VisualElement>
+            <ui:VisualElement class="computer__toolbar">
+                <ui:Button text="&lt;" class="wf-button wf-button--square" />
+                <ui:Button text="&gt;" class="wf-button wf-button--square" />
+                <ui:TextField name="addressField" value="https://youhube.com/studio" class="computer__address" />
+            </ui:VisualElement>
+            <ui:VisualElement name="webView" class="wf-placeholder computer__web-view">
+                <ui:Label text="WEBVIEW (Vuplex) hoặc WebContentPanel nội bộ" class="wf-placeholder__label" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="chatWindow" class="computer__window computer__window--chat">
+            <ui:VisualElement class="computer__titlebar">
+                <ui:VisualElement class="wf-icon wf-icon--sm" />
+                <ui:Label text="Discat (đang focus)" class="wf-subheading" />
+                <ui:Button text="_" class="wf-button wf-button--square" />
+                <ui:Button text="[ ]" class="wf-button wf-button--square" />
+                <ui:Button text="×" class="wf-button wf-button--square" />
+            </ui:VisualElement>
+            <ui:VisualElement class="computer__chat-body">
+                <ui:VisualElement class="computer__channels">
+                    <ui:Label text="# chung" class="wf-text" />
+                    <ui:Label text="# stream" class="wf-text" />
+                    <ui:Label text="River" class="wf-text" />
+                    <ui:Label text="Mimi" class="wf-text" />
+                </ui:VisualElement>
+                <ui:VisualElement class="computer__messages">
+                    <ui:VisualElement class="computer__message">
+                        <ui:VisualElement class="wf-icon wf-icon--sm" />
+                        <ui:Label text="River: Tối nay stream không?" class="wf-text wf-wrap computer__message-text" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="computer__message">
+                        <ui:VisualElement class="wf-icon wf-icon--sm" />
+                        <ui:Label text="Bạn: 8h nhé" class="wf-text wf-wrap computer__message-text" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="wf-grow" />
+                    <ui:TextField name="chatInput" value="Nhập tin nhắn…" class="computer__chat-input" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Label text="ESC / ExitMonitor để quay lại 3D" class="wf-tag computer__exit-hint" />
+        <ui:VisualElement name="taskbar" class="computer__taskbar">
+            <ui:Button name="startButton" text="Start" class="wf-button wf-button--primary computer__taskbar-button" />
+            <ui:Button text="Browser" class="wf-button computer__taskbar-button" />
+            <ui:Button text="Discat" class="wf-button computer__taskbar-button computer__taskbar-button--active" />
+            <ui:Button text="Mail (3)" class="wf-button computer__taskbar-button" />
+            <ui:VisualElement class="wf-grow" />
+            <ui:VisualElement class="computer__tray">
+                <ui:Label text="CPU 42%" class="wf-caption" />
+                <ui:Label text="GPU 61%" class="wf-caption" />
+                <ui:Label text="14:20" class="wf-caption" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,69 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="../../Components/StrokeText/StrokeText.uss" />
+    <ui:Style src="../../Components/CurrencyPill/CurrencyPill.uss" />
+    <ui:Style src="LevelHUD.uss" />
+
+    <ui:Template name="Settings" src="../Settings/Settings.uxml" />
+
+    <ui:VisualElement name="hudRoot" picking-mode="Ignore" class="level-hud">
+        <ui:VisualElement name="hudFrame" picking-mode="Ignore" class="level-hud__frame" />
+
+        <SafeAreaContainer name="hudSafe">
+            <ui:VisualElement name="backButton" class="level-hud__back-btn">
+                <ui:VisualElement picking-mode="Ignore" class="level-hud__back-icon" />
+            </ui:VisualElement>
+            <StrokeText name="levelTitle" text="LEVEL 1" picking-mode="Ignore" class="level-hud__text level-hud__title" />
+            <ui:Label name="levelSubtitle" text="3 SLOTS · BINGO 3" picking-mode="Ignore" class="level-hud__text level-hud__subtitle" />
+
+            <ui:VisualElement name="topBar" picking-mode="Ignore" class="level-hud__top-bar">
+                <CurrencyPill name="coinsPill" currency-type="Coins" value="0" class="level-hud__pill--coins" />
+                <CurrencyPill name="diamondsPill" currency-type="Diamonds" value="0" class="level-hud__pill--diamonds" />
+                <ui:VisualElement name="settingsButton" class="level-hud__settings-btn" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="bottomBar" picking-mode="Ignore" class="level-hud__bottom-bar" />
+
+            <ui:VisualElement name="stopButton" class="level-hud__stop">
+                <ui:Label name="stopLabel" text="STOP" picking-mode="Ignore" class="level-hud__text level-hud__stop-label" />
+            </ui:VisualElement>
+            <ui:VisualElement name="spinButton" class="level-hud__spin">
+                <ui:Label name="spinLabel" text="SPIN" picking-mode="Ignore" class="level-hud__text level-hud__spin-label" />
+            </ui:VisualElement>
+            <ui:VisualElement name="autoButton" class="level-hud__auto">
+                <ui:Label text="AUTO" picking-mode="Ignore" class="level-hud__text level-hud__auto-label" />
+            </ui:VisualElement>
+
+            <ui:VisualElement picking-mode="Ignore" class="level-hud__bingo-crown" />
+            <StrokeText name="bingoValue" text="0/3" picking-mode="Ignore" class="level-hud__text level-hud__bingo-value" />
+            <ui:Label text="BINGO" picking-mode="Ignore" class="level-hud__text level-hud__bingo-label" />
+
+            <StrokeText text="GOOD LUCK!" picking-mode="Ignore" class="level-hud__text level-hud__good-luck" />
+        </SafeAreaContainer>
+    </ui:VisualElement>
+
+    <ui:VisualElement name="levelComplete" class="level-complete">
+        <ui:VisualElement name="levelCompletePanel" class="level-complete__panel">
+            <ui:VisualElement picking-mode="Ignore" class="level-complete__crown" />
+            <StrokeText name="completeLevel" text="LEVEL 1" picking-mode="Ignore" class="level-complete__text level-complete__title" />
+            <StrokeText text="COMPLETE!" picking-mode="Ignore" class="level-complete__text level-complete__headline" />
+            <ui:VisualElement picking-mode="Ignore" class="level-complete__banner">
+                <ui:Label name="completeOutcome" text="BINGO!" picking-mode="Ignore" class="level-complete__text level-complete__outcome" />
+            </ui:VisualElement>
+            <ui:VisualElement picking-mode="Ignore" class="level-complete__reward">
+                <ui:VisualElement picking-mode="Ignore" class="level-complete__coin" />
+                <StrokeText name="completeReward" text="+0" picking-mode="Ignore" class="level-complete__text level-complete__reward-value" />
+            </ui:VisualElement>
+            <ui:Label name="completeNext" text="NEXT · LEVEL 2 · 6 SLOTS" picking-mode="Ignore" class="level-complete__text level-complete__next" />
+            <ui:VisualElement picking-mode="Ignore" class="level-complete__buttons">
+                <ui:VisualElement name="completeMenuButton" class="level-complete__menu-btn">
+                    <ui:Label text="MENU" picking-mode="Ignore" class="level-complete__text level-complete__menu-label" />
+                </ui:VisualElement>
+                <ui:VisualElement name="nextLevelButton" class="level-complete__next-btn">
+                    <ui:Label text="NEXT" picking-mode="Ignore" class="level-complete__text level-complete__next-label" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+    <ui:Instance template="Settings" name="settingsScreen" class="level-hud__settings-screen" />
+</ui:UXML>

@@ -1,0 +1,212 @@
+.computer__desktop-icons {
+    position: absolute;
+    left: 24px;
+    top: 24px;
+    bottom: 80px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+.computer__desktop-icon {
+    width: 104px;
+    align-items: center;
+    margin: 0 8px 20px 0;
+}
+
+.computer__desktop-icon > .wf-icon {
+    width: 64px;
+    height: 64px;
+}
+
+.computer__desktop-icon > .wf-caption {
+    margin-top: 6px;
+    color: var(--wf-ink);
+}
+
+.computer__window {
+    position: absolute;
+    background-color: var(--wf-surface);
+    border-width: 2px;
+    border-color: var(--wf-line);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.computer__window--browser {
+    left: 280px;
+    top: 60px;
+    width: 1100px;
+    height: 760px;
+}
+
+.computer__window--chat {
+    left: 1300px;
+    top: 200px;
+    width: 560px;
+    height: 600px;
+    border-color: var(--wf-ink);
+    border-width: 3px;
+}
+
+.computer__titlebar {
+    flex-direction: row;
+    align-items: center;
+    height: 44px;
+    padding: 0 6px 0 12px;
+    background-color: var(--wf-fill);
+    border-bottom-width: 2px;
+    border-color: var(--wf-line);
+}
+
+.computer__titlebar > .wf-subheading {
+    flex-grow: 1;
+    margin-left: 10px;
+    font-size: 18px;
+}
+
+.computer__titlebar > .wf-button {
+    margin-left: 6px;
+    width: 32px;
+    height: 32px;
+}
+
+.computer__toolbar {
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom-width: 1px;
+    border-color: var(--wf-line-soft);
+}
+
+.computer__toolbar > .wf-button {
+    margin-right: 8px;
+}
+
+.computer__address {
+    flex-grow: 1;
+}
+
+.computer__address > .unity-base-field__label {
+    min-width: 0;
+}
+
+.computer__web-view {
+    flex-grow: 1;
+    margin: 12px;
+}
+
+.computer__chat-body {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.computer__channels {
+    width: 160px;
+    padding: 12px;
+    background-color: var(--wf-bg);
+    border-right-width: 1px;
+    border-color: var(--wf-line-soft);
+}
+
+.computer__channels > .wf-text {
+    margin-bottom: 10px;
+}
+
+.computer__messages {
+    flex-grow: 1;
+    padding: 12px;
+}
+
+.computer__message {
+    flex-direction: row;
+    margin-bottom: 14px;
+}
+
+.computer__message-text {
+    flex-shrink: 1;
+    margin-left: 10px;
+}
+
+.computer__chat-input > .unity-base-field__label {
+    min-width: 0;
+}
+
+.computer__taskbar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 56px;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 12px;
+    background-color: var(--wf-surface);
+    border-top-width: 2px;
+    border-color: var(--wf-line);
+}
+
+.computer__taskbar-button {
+    margin-right: 8px;
+    font-size: 16px;
+    padding: 6px 14px;
+}
+
+.computer__taskbar-button--active {
+    border-bottom-width: 4px;
+    border-bottom-color: var(--wf-ink);
+}
+
+.computer__tray {
+    flex-direction: row;
+    align-items: center;
+}
+
+.computer__tray > .wf-caption {
+    margin-left: 16px;
+    color: var(--wf-ink);
+}
+
+.computer__exit-hint {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+}
+
+.computer__state-frame {
+    width: 800px;
+    height: 450px;
+    border-width: 2px;
+    border-color: var(--wf-line);
+    align-items: center;
+    justify-content: center;
+}
+
+.computer__boot {
+    background-color: var(--wf-surface);
+}
+
+.computer__boot-logo {
+    width: 200px;
+    height: 120px;
+    margin-bottom: 32px;
+}
+
+.computer__boot-progress {
+    width: 420px;
+    margin-bottom: 12px;
+}
+
+.computer__bsod {
+    background-color: var(--wf-dark);
+    align-items: flex-start;
+    padding: 48px;
+}
+
+.computer__bsod > .wf-label-inverse {
+    color: var(--wf-ink-inverse);
+    margin-bottom: 16px;
+}
+
+.computer__bsod-face {
+    font-size: 96px;
+}

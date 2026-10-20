@@ -1,0 +1,64 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="Map.uss" />
+    <ui:VisualElement name="map" class="wf-screen">
+        <ui:VisualElement name="world" class="wf-world">
+            <ui:Label text="GÓC NHÌN 3D" class="wf-world__label" />
+        </ui:VisualElement>
+        <ui:VisualElement name="overlay" class="wf-overlay">
+            <ui:VisualElement name="mapPanel" class="wf-panel map__panel">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Bản đồ" class="wf-heading" />
+                    <ui:Label text="  (M) · MapPanel" class="wf-caption wf-grow" />
+                    <ui:Button name="closeButton" text="×" class="wf-button wf-button--square" />
+                </ui:VisualElement>
+                <ui:VisualElement class="map__body">
+                    <ui:VisualElement name="mapView" class="wf-placeholder map__view">
+                        <ui:Label text="ẢNH BẢN ĐỒ THÀNH PHỐ" class="wf-placeholder__label" />
+                        <ui:VisualElement class="map__pin map__pin--player">
+                            <ui:VisualElement class="map__marker map__marker--player" />
+                            <ui:Label text="Bạn" class="wf-caption" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="map__pin map__pin--home">
+                            <ui:VisualElement class="map__marker" />
+                            <ui:Label text="Nhà" class="wf-caption" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="map__pin map__pin--pc-shop">
+                            <ui:VisualElement class="map__marker" />
+                            <ui:Label text="Cửa hàng PC" class="wf-caption" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="map__pin map__pin--barber">
+                            <ui:VisualElement class="map__marker" />
+                            <ui:Label text="Barber" class="wf-caption" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="map__pin map__pin--pawn">
+                            <ui:VisualElement class="map__marker" />
+                            <ui:Label text="Pawn shop" class="wf-caption" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="map__pin map__pin--club">
+                            <ui:VisualElement class="map__marker" />
+                            <ui:Label text="Club" class="wf-caption" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="legend" class="map__legend">
+                        <ui:Label text="Chú thích" class="wf-subheading map__legend-item" />
+                        <ui:VisualElement class="wf-row map__legend-item">
+                            <ui:VisualElement class="map__marker map__marker--player" />
+                            <ui:Label text="Vị trí của bạn" class="wf-text" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="wf-row map__legend-item">
+                            <ui:VisualElement class="map__marker" />
+                            <ui:Label text="Địa điểm" class="wf-text" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="wf-divider" />
+                        <ui:Label text="Nhà" class="wf-text map__legend-item" />
+                        <ui:Label text="Cửa hàng PC" class="wf-text map__legend-item" />
+                        <ui:Label text="Barber" class="wf-text map__legend-item" />
+                        <ui:Label text="Pawn shop" class="wf-text map__legend-item" />
+                        <ui:Label text="Club" class="wf-text map__legend-item" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,26 @@
+.loading {
+    justify-content: center;
+    align-items: center;
+}
+
+.loading__logo {
+    width: 480px;
+    height: 200px;
+    margin-bottom: 48px;
+}
+
+.loading__tip {
+    width: 900px;
+    -unity-text-align: middle-center;
+}
+
+.loading__footer {
+    position: absolute;
+    left: 120px;
+    right: 120px;
+    bottom: 80px;
+}
+
+.loading__status {
+    margin-top: 12px;
+}

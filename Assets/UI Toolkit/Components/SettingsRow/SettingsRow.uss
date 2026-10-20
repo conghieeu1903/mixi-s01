@@ -1,0 +1,162 @@
+.settings-row {
+    position: relative;
+    width: 940px;
+    height: 64px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.settings-row--cyan {
+    background-color: rgba(34, 211, 238, 0.022);
+}
+
+.settings-row--white {
+    background-color: rgba(255, 255, 255, 0.006);
+}
+
+.settings-row__label {
+    position: absolute;
+    left: 10px;
+    top: 17px;
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.92);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-SemiBold%20SDF.asset?fileID=11400000&guid=776c9168ab955e543bf588f13c177b96&type=2#Inter-SemiBold SDF");
+}
+
+/* Thanh trượt */
+.settings-slider__track {
+    position: absolute;
+    left: 420px;
+    top: 28px;
+    width: 380px;
+    height: 8px;
+    background-color: rgb(30, 58, 138);
+}
+
+.settings-slider__fill {
+    height: 100%;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_slider_fill.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.settings-slider__knob {
+    position: absolute;
+    left: 404px;
+    top: 16px;
+    width: 32px;
+    height: 32px;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_slider_knob.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.settings-slider__hit {
+    position: absolute;
+    left: 400px;
+    top: 0;
+    width: 420px;
+    height: 64px;
+}
+
+.settings-slider__value {
+    position: absolute;
+    left: 844px;
+    top: 16px;
+    margin: 0;
+    padding: 0;
+    font-size: 26px;
+    color: rgb(253, 206, 3);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BlackItalic%20SDF.asset?fileID=11400000&guid=6760fe27ba215f04189cb6a412f07c16&type=2#Inter-BlackItalic SDF");
+}
+
+/* Nút bật tắt ON / OFF */
+.settings-toggle__segment {
+    position: absolute;
+    top: 11px;
+    height: 42px;
+    justify-content: center;
+    align-items: center;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_toggle_inactive.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    transition-duration: 0.1s;
+}
+
+.settings-toggle__segment:active {
+    scale: 0.95 0.95;
+}
+
+.settings-toggle__segment--on {
+    left: 419px;
+    width: 110px;
+}
+
+.settings-toggle__segment--off {
+    left: 522px;
+    width: 111px;
+}
+
+.settings-toggle__segment--selected {
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_toggle_active.png");
+}
+
+.settings-toggle__segment-text {
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.55);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-ExtraBoldItalic%20SDF.asset?fileID=11400000&guid=5f7f74bcfb7cfd54eb8de297c0336fba&type=2#Inter-ExtraBoldItalic SDF");
+}
+
+.settings-toggle__segment--selected > .settings-toggle__segment-text {
+    color: rgb(1, 21, 69);
+}
+
+/* Ô chọn giá trị có mũi tên */
+.settings-selector__box {
+    position: absolute;
+    left: 419px;
+    top: 9px;
+    width: 422px;
+    height: 46px;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_select_bg.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.settings-selector__value {
+    position: absolute;
+    left: 419px;
+    top: 20px;
+    width: 422px;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    letter-spacing: 0.6px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BoldItalic%20SDF.asset?fileID=11400000&guid=d9867da3a75c0484baaf443b83491d00&type=2#Inter-BoldItalic SDF");
+}
+
+.settings-selector__arrow {
+    position: absolute;
+    top: 12px;
+    width: 36px;
+    height: 40px;
+    color: rgb(34, 211, 238);
+    transition-duration: 0.1s;
+}
+
+.settings-selector__arrow:hover {
+    scale: 1.2 1.2;
+}
+
+.settings-selector__arrow--left {
+    left: 437px;
+}
+
+.settings-selector__arrow--right {
+    left: 785px;
+}

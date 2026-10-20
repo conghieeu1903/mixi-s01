@@ -1,0 +1,182 @@
+.daily {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.daily__dim {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(1, 8, 30, 0.8);
+}
+
+/* Khung popup ở giữa màn hình */
+.daily__panel {
+    position: absolute;
+    left: 50%;
+    top: 100px;
+    width: 1360px;
+    height: 860px;
+    margin-left: -680px;
+    padding-top: 60px;
+    align-items: center;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_list_panel.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.daily__text {
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    -unity-text-align: middle-center;
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-ExtraBold%20SDF.asset?fileID=11400000&guid=3be00f7d20028454995018d5d6c0fbe4&type=2#Inter-ExtraBold SDF");
+}
+
+.daily__title {
+    margin: 0;
+    padding: 0;
+}
+
+.daily__streak {
+    margin-top: 6px;
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+}
+
+.daily__timer {
+    margin-top: 36px;
+    font-size: 28px;
+    color: rgb(253, 206, 3);
+}
+
+/* Hàng 7 thẻ ngày */
+.daily__cards {
+    margin-top: 40px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.daily-card {
+    width: 140px;
+    height: 250px;
+    margin: 0 6px;
+    padding: 14px 6px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(8, 18, 56);
+    border-width: 3px;
+    border-color: rgb(34, 211, 238);
+    border-radius: 14px;
+    transition-duration: 0.15s;
+}
+
+.daily-card--big {
+    width: 210px;
+    height: 300px;
+    border-color: rgb(253, 206, 3);
+}
+
+.daily-card--today {
+    background-color: rgb(30, 48, 120);
+    border-color: rgb(253, 206, 3);
+    border-width: 5px;
+    scale: 1.08 1.08;
+}
+
+.daily-card--claimed {
+    opacity: 0.5;
+}
+
+.daily-card--missed {
+    opacity: 0.35;
+    border-color: rgb(120, 130, 160);
+}
+
+.daily-card--missed > .daily-card__stamp {
+    color: rgb(239, 68, 68);
+}
+
+.daily-card__day {
+    margin: 0;
+    padding: 0;
+    font-size: 30px;
+}
+
+.daily-card__rewards {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.daily-card--big > .daily-card__rewards {
+    flex-direction: row;
+}
+
+.daily-card__reward {
+    align-items: center;
+    margin: 0 4px;
+}
+
+.daily-card__icon {
+    width: 64px;
+    height: 64px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.daily-card__icon--coins {
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_coin.png");
+}
+
+.daily-card__icon--diamonds {
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_diamond.png");
+}
+
+.daily-card__amount {
+    margin-top: 6px;
+    font-size: 28px;
+    color: rgb(255, 255, 255);
+}
+
+.daily-card__stamp {
+    height: 30px;
+    font-size: 22px;
+    color: rgb(34, 211, 238);
+}
+
+.daily-card--today > .daily-card__stamp {
+    color: rgb(253, 206, 3);
+}
+
+/* Nút LATER và CLAIM */
+.daily__actions {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 70px;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.daily__btn {
+    min-width: 340px;
+    min-height: 100px;
+    margin: 0 24px;
+}
+
+.daily__btn:disabled {
+    opacity: 0.5;
+}
+
+.daily__btn--close > .skew-button__shape {
+    --skew-fill-color: rgb(34, 211, 238);
+}
+
+.daily__btn--close:hover > .skew-button__shape {
+    --skew-fill-color: rgb(90, 225, 245);
+}

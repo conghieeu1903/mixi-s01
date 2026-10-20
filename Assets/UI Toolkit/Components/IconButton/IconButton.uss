@@ -1,0 +1,70 @@
+.icon-button {
+    width: 76px;
+    height: 76px;
+    justify-content: center;
+    align-items: center;
+    transition-duration: 0.12s;
+}
+
+.icon-button:hover {
+    scale: 1.06 1.06;
+}
+
+.icon-button:active {
+    translate: 2px 4px;
+}
+
+.icon-button__shape {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    --icon-btn-fill-color: rgb(34, 211, 238);
+    --icon-btn-stroke-color: rgb(0, 0, 0);
+    --icon-btn-stroke-width: 3;
+    --icon-btn-shadow-color: rgb(0, 0, 0);
+    --icon-btn-shadow-offset-x: 5;
+    --icon-btn-shadow-offset-y: 7;
+    --icon-btn-slant: 10;
+}
+
+.icon-button__glyph {
+    width: 100%;
+    height: 100%;
+    -unity-background-scale-mode: scale-to-fit;
+    --icon-btn-glyph-color: rgb(1, 21, 69);
+}
+
+.icon-button--cyan > .icon-button__shape {
+    --icon-btn-fill-color: rgb(34, 211, 238);
+}
+
+.icon-button--cyan:hover > .icon-button__shape {
+    --icon-btn-fill-color: rgb(103, 232, 249);
+}
+
+.icon-button--yellow > .icon-button__shape {
+    --icon-btn-fill-color: rgb(253, 206, 3);
+}
+
+.icon-button--yellow:hover > .icon-button__shape {
+    --icon-btn-fill-color: rgb(255, 222, 70);
+}
+
+.icon-button--dark > .icon-button__shape {
+    --icon-btn-fill-color: rgb(15, 32, 87);
+    --icon-btn-stroke-color: rgb(34, 211, 238);
+}
+
+.icon-button--dark > .icon-button__glyph {
+    --icon-btn-glyph-color: rgb(255, 255, 255);
+}
+
+.icon-button--green > .icon-button__shape {
+    --icon-btn-fill-color: rgb(34, 197, 94);
+}
+
+.icon-button--green > .icon-button__glyph {
+    --icon-btn-glyph-color: rgb(255, 255, 255);
+}

@@ -1,0 +1,35 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="../../Components/SkewButton/SkewButton.uss" />
+    <ui:Style src="Quest.uss" />
+
+    <ui:VisualElement name="questRoot" class="quest">
+        <ui:VisualElement name="questBg" picking-mode="Ignore" class="quest__bg" />
+        <ui:VisualElement name="questOverlay" picking-mode="Ignore" class="quest__overlay" />
+
+        <SafeAreaContainer name="questSafeArea">
+            <ui:VisualElement name="questBackButton" class="quest__back-btn">
+                <ui:VisualElement picking-mode="Ignore" class="quest__back-icon" />
+            </ui:VisualElement>
+
+            <GameText name="questTitle" text="QUESTS" text-style="ComicTitle" picking-mode="Ignore" class="quest__title" />
+
+            <ui:VisualElement name="questTabs" picking-mode="Ignore" class="quest__tabs">
+                <ui:VisualElement name="questTabDaily" class="quest-tab quest-tab--active">
+                    <ui:Label text="DAILY" picking-mode="Ignore" class="quest__text quest-tab__label" />
+                    <ui:VisualElement name="questTabDailyBadge" picking-mode="Ignore" class="quest-tab__badge" />
+                </ui:VisualElement>
+                <ui:VisualElement name="questTabChain" class="quest-tab">
+                    <ui:Label text="STORY" picking-mode="Ignore" class="quest__text quest-tab__label" />
+                    <ui:VisualElement name="questTabChainBadge" picking-mode="Ignore" class="quest-tab__badge" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="questPanel" picking-mode="Ignore" class="quest__panel">
+                <ui:ScrollView name="questList" mode="Vertical" horizontal-scroller-visibility="Hidden" class="quest__list" />
+                <ui:Label name="questEmptyLabel" text="NO QUESTS YET" picking-mode="Ignore" class="quest__text quest__empty" />
+            </ui:VisualElement>
+
+            <ui:Label name="questMessageLabel" text="" picking-mode="Ignore" class="quest__text quest__message" />
+        </SafeAreaContainer>
+    </ui:VisualElement>
+</ui:UXML>

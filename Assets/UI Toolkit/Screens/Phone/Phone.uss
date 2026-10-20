@@ -1,0 +1,115 @@
+.phone {
+    width: 360px;
+    height: 740px;
+    background-color: var(--wf-surface);
+    border-width: 8px;
+    border-color: var(--wf-ink);
+    border-radius: 40px;
+    padding: 16px 16px 12px 16px;
+    overflow: hidden;
+}
+
+.phone__status-bar {
+    flex-direction: row;
+    padding: 0 12px 12px 12px;
+}
+
+.phone__content {
+    flex-grow: 1;
+}
+
+.phone__home-bar {
+    width: 120px;
+    height: 6px;
+    border-radius: 3px;
+    background-color: var(--wf-ink);
+    align-self: center;
+    margin-top: 10px;
+}
+
+.phone__app-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 8px 4px;
+}
+
+.phone__app {
+    width: 98px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.phone__app > .wf-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+}
+
+.phone__app > .wf-caption {
+    margin-top: 6px;
+    color: var(--wf-ink);
+}
+
+.phone__app-header {
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom-width: 2px;
+    border-color: var(--wf-line-soft);
+}
+
+.phone__app-header > .wf-subheading {
+    margin-left: 12px;
+}
+
+.phone__list-item {
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom-width: 1px;
+    border-color: var(--wf-line-soft);
+}
+
+.phone__list-text {
+    flex-grow: 1;
+    margin-left: 12px;
+}
+
+.phone__warning {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+}
+
+.phone__warning-box {
+    align-items: center;
+}
+
+.phone__warning-box > .wf-text {
+    margin: 12px 0 16px 0;
+    -unity-text-align: middle-center;
+}
+
+.phone__loading {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.phone__spinner {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    border-width: 6px;
+    border-color: var(--wf-fill);
+    border-top-color: var(--wf-ink);
+    margin-bottom: 16px;
+}
+
+.phone__cart {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 12px;
+}

@@ -1,0 +1,26 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="NpcDialog.uss" />
+    <ui:VisualElement name="npcDialog" class="wf-screen">
+        <ui:VisualElement name="world" class="wf-world">
+            <ui:Label text="GÓC NHÌN 3D – CAMERA ZOOM VÀO NPC" class="wf-world__label" />
+        </ui:VisualElement>
+        <ui:VisualElement name="dialogBox" class="wf-panel npc-dialog__box">
+            <ui:VisualElement name="portrait" class="wf-placeholder npc-dialog__portrait">
+                <ui:Label text="Chân dung NPC" class="wf-placeholder__label" />
+            </ui:VisualElement>
+            <ui:VisualElement class="npc-dialog__content">
+                <ui:VisualElement class="npc-dialog__name">
+                    <ui:Label name="npcName" text="Mimi" class="wf-heading" />
+                    <ui:Label text="TalkMimiPanel" class="wf-tag" />
+                </ui:VisualElement>
+                <ui:Label name="dialogText" text="Chào! Dạo này stream của bạn đông người xem ghê. Cuối tuần đi cà phê với mình không?" class="wf-text wf-wrap" />
+            </ui:VisualElement>
+            <ui:VisualElement name="choices" class="npc-dialog__choices">
+                <ui:Button name="choice1" text="1. Đi chứ!" class="wf-button npc-dialog__choice" />
+                <ui:Button name="choice2" text="2. Để lúc khác nhé" class="wf-button npc-dialog__choice" />
+                <ui:Button name="choice3" text="3. Tạm biệt" class="wf-button npc-dialog__choice" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

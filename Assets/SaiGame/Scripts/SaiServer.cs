@@ -1,0 +1,891 @@
+using System;
+using System.Collections;
+using System.Reflection;
+using System.Text;
+using UnityEngine;
+using UnityEngine.Networking;
+
+namespace SaiGame.Services
+{
+    [DefaultExecutionOrder(-100)]
+    public class SaiServer : SaiSingleton<SaiServer>
+    {
+        public const string PACKAGE_VERSION = "0.2.56a";
+        public const string PACKAGE_NAME = "Sai Server";
+
+        [SerializeField] protected SaiAuth saiAuth;
+        [SerializeField] protected GoogleBackendLogin googleBackendLogin;
+        [SerializeField] protected GamerProgress gamerProgress;
+        [SerializeField] protected Mailbox mailbox;
+        [SerializeField] protected ItemDefinitions itemDefinitions;
+        [SerializeField] protected PlayerItem playerItem;
+        [SerializeField] protected PlayerEvent playerEvent;
+        [SerializeField] protected PlayerContainer playerContainer;
+        [SerializeField] protected ItemPreset itemPreset;
+        [SerializeField] protected ItemAddDeduct itemAddDeduct;
+        [SerializeField] protected ItemCrafting itemCrafting;
+        [SerializeField] protected ItemGenerator itemGenerator;
+        [SerializeField] protected EquipmentSlot equipmentSlotManager;
+        [SerializeField] protected Shop shop;
+        [SerializeField] protected ChainQuest chainQuest;
+        [SerializeField] protected BattlePass battlePass;
+        [SerializeField] protected QuestProgressor questProgressor;
+        [SerializeField] protected QuestHistory questHistory;
+        [SerializeField] protected DailyQuest dailyQuest;
+        [SerializeField] protected ItemMove itemMove;
+        [SerializeField] protected ItemSwap itemSwap;
+        [SerializeField] protected ItemTag itemTag;
+        [SerializeField] protected Leaderboard leaderboard;
+        [SerializeField] protected BattleSessions battleSessions;
+        [SerializeField] protected BattleScript battleScript;
+
+        [Header("Server Configuration")]
+        [HideInInspector][SerializeField] protected ServerEndpointOption serverEndpoint = ServerEndpointOption.ProductionHttps;
+        [HideInInspector][SerializeField] protected DomainOption domainOption = DomainOption.Local;
+        [HideInInspector][SerializeField] protected int port = 80;
+        [HideInInspector][SerializeField] protected bool useHttps = false;
+
+        [Header("Game Configuration")]
+        [SerializeField] protected string gameId = "";
+        private const string PREF_SERVER_ENDPOINT = "SaiGame_ServerEndpoint";
+
+        [Header("API Settings")]
+        [SerializeField] protected int requestTimeout = 30;
+
+        [Header("Server Time")]
+        [SerializeField] protected string serverTime = "";
+        [SerializeField] protected long serverTimestamp;
+        [SerializeField] protected string serverTimezone = "";
+        [SerializeField] protected string serverTimeError = "";
+        [NonSerialized] private DateTime serverTimeAtSync;
+        [NonSerialized] private float serverTimeSyncRealtime;
+
+        [SerializeField] protected bool showButtonsLog = true;
+        [SerializeField] protected bool showCallbackLog = true;
+        [SerializeField] protected bool showDebugLog = true;
+        [SerializeField] protected bool showUrlRequest = true;
+        [SerializeField] protected bool showJsonRequest = true;
+        [SerializeField] protected bool showJsonResponse = true;
+
+        public event Action<string> OnTokenRefreshed;
+
+        public bool ShowDebug => showDebugLog;
+
+        public bool ShowButtonsLog => showButtonsLog;
+
+        public bool ShowCallbackLog => showCallbackLog;
+
+        public bool ShowUrlRequest => showUrlRequest;
+
+        public bool ShowJsonRequest => showJsonRequest;
+
+        public bool ShowJsonResponse => showJsonResponse;
+
+        public string BaseUrl
+        {
+            get
+            {
+                switch (this.serverEndpoint)
+                {
+                    case ServerEndpointOption.ProductionHttps:
+                        return "https://api.saigame.studio";
+                    case ServerEndpointOption.LocalHttp:
+                    default:
+                        return "http://local-api.saigame.studio:82";
+                }
+            }
+        }
+
+        public bool IsAuthenticated => saiAuth != null && saiAuth.IsAuthenticated;
+
+        public bool HasAccessToken => saiAuth != null && saiAuth.HasAccessToken;
+
+        public string AccessToken => saiAuth?.AccessToken ?? "";
+
+        public string RefreshToken => saiAuth?.RefreshToken ?? "";
+
+        public int ExpiresIn => saiAuth?.ExpiresIn ?? 0;
+
+        public UserData CurrentUser => saiAuth?.CurrentUser;
+
+        public GamerProgress GamerProgress => this.gamerProgress;
+
+        public Mailbox Mailbox => this.mailbox;
+
+        public ItemDefinitions ItemDefinitions => this.itemDefinitions;
+
+        public PlayerItem PlayerItem => this.playerItem;
+
+        public PlayerEvent PlayerEvent => playerEvent;
+
+        public PlayerContainer PlayerContainer => playerContainer;
+
+        public ItemPreset ItemPreset => this.itemPreset;
+
+        public ItemAddDeduct ItemAddDeduct => this.itemAddDeduct;
+
+        public ItemCrafting ItemCrafting => this.itemCrafting;
+
+        public ItemGenerator ItemGenerator => itemGenerator;
+
+        public Shop Shop => this.shop;
+
+        public EquipmentSlot EquipmentSlotManager => this.equipmentSlotManager;
+
+        public ChainQuest ChainQuest => this.chainQuest;
+
+        public BattlePass BattlePass => this.battlePass;
+
+        public QuestProgressor QuestProgressor => this.questProgressor;
+
+        public QuestHistory QuestHistory => this.questHistory;
+
+        public DailyQuest DailyQuest => this.dailyQuest;
+
+        public ItemMove ItemMove => this.itemMove;
+
+        public ItemSwap ItemSwap => this.itemSwap;
+
+        public ItemTag ItemTag => this.itemTag;
+
+        public Leaderboard Leaderboard => this.leaderboard;
+
+        public BattleSessions BattleSessions => this.battleSessions;
+
+        public BattleScript BattleScript => this.battleScript;
+
+        public SaiAuth SaiAuth => saiAuth;
+
+        public GoogleBackendLogin GoogleBackendLogin => this.googleBackendLogin;
+
+        public string GameId => this.NormalizeInput(this.gameId);
+
+        public bool HasServerTime => this.serverTimestamp > 0;
+
+        public DateTime CurrentServerTime => !this.HasServerTime
+            ? DateTime.MinValue
+            : this.serverTimeAtSync.AddSeconds(Time.realtimeSinceStartup - this.serverTimeSyncRealtime);
+
+        [Serializable]
+        private class ServerTimeResponse
+        {
+            public string server_time;
+            public long timestamp;
+            public string timezone;
+        }
+
+        private string NormalizeInput(string value)
+        {
+            return string.IsNullOrEmpty(value) ? string.Empty : value.Trim();
+        }
+
+        private void SyncLegacyServerFieldsFromEndpoint()
+        {
+            switch (this.serverEndpoint)
+            {
+                case ServerEndpointOption.ProductionHttps:
+                    this.domainOption = DomainOption.Production;
+                    this.useHttps = true;
+                    this.port = 443;
+                    break;
+                case ServerEndpointOption.LocalHttp:
+                default:
+                    this.domainOption = DomainOption.Local;
+                    this.useHttps = false;
+                    this.port = 82;
+                    break;
+            }
+        }
+
+        private void SyncEndpointFromLegacyServerFields()
+        {
+            bool isProduction = this.domainOption == DomainOption.Production;
+            this.serverEndpoint = isProduction
+                ? ServerEndpointOption.ProductionHttps
+                : ServerEndpointOption.LocalHttp;
+        }
+
+        public void SetAccessToken(string token)
+        {
+            if (this.saiAuth != null)
+            {
+                this.saiAuth.SetAccessToken(token);
+                this.OnTokenRefreshed?.Invoke(token);
+            }
+        }
+
+        public void SetLoginData(string access, string refresh, int expires, UserData user = null)
+        {
+            if (this.saiAuth != null)
+            {
+                this.saiAuth.SetLoginData(access, refresh, expires, user);
+                this.OnTokenRefreshed?.Invoke(access);
+            }
+        }
+
+        protected UnityWebRequest CreateAuthenticatedRequest(string endpoint, string method = "GET")
+        {
+            string url = $"{BaseUrl}{endpoint}";
+            UnityWebRequest request = new UnityWebRequest(url, method);
+
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.timeout = requestTimeout;
+            request.certificateHandler = new AllowAllCertificateHandler();
+
+            if (HasAccessToken)
+            {
+                request.SetRequestHeader("Authorization", $"Bearer {AccessToken}");
+            }
+
+            return request;
+        }
+
+        // Gửi GET, tự thử lại khi lỗi kết nối tạm thời (SSL/mạng chập chờn)
+        public IEnumerator GetRequest(string endpoint, Action<string> onSuccess, Action<string> onError)
+        {
+            const int maxRetries = 2;
+            for (int attempt = 0; ; attempt++)
+            {
+                using (UnityWebRequest request = CreateAuthenticatedRequest(endpoint, "GET"))
+                {
+                    if (this.showUrlRequest)
+                        Debug.Log($"[SaiServer] GET {request.url}");
+
+                    yield return request.SendWebRequest();
+
+                    if (request.result == UnityWebRequest.Result.Success)
+                    {
+                        if (this.showJsonResponse)
+                            Debug.Log($"[SaiServer] GET Response\n{request.downloadHandler.text}");
+                        onSuccess?.Invoke(request.downloadHandler.text);
+                        yield break;
+                    }
+
+                    if (request.result == UnityWebRequest.Result.ConnectionError && attempt < maxRetries)
+                    {
+                        Debug.LogWarning($"[SaiServer] GET {endpoint} connection error ({request.error}), retry {attempt + 1}/{maxRetries}");
+                        yield return new WaitForSecondsRealtime(0.5f * (attempt + 1));
+                        continue;
+                    }
+
+                    string rawResponse = request.downloadHandler?.text ?? "No response data";
+                    string errorMsg = $"GET {endpoint} failed: {request.error}\nResponse Code: {request.responseCode}\nRaw Data: {rawResponse}";
+                    onError?.Invoke(errorMsg);
+                    yield break;
+                }
+            }
+        }
+
+        public IEnumerator PostRequest(string endpoint, string jsonData, Action<string> onSuccess, Action<string> onError)
+        {
+            using (UnityWebRequest request = CreateAuthenticatedRequest(endpoint, "POST"))
+            {
+                byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                request.SetRequestHeader("Content-Type", "application/json");
+
+                if (this.showUrlRequest)
+                    Debug.Log($"[SaiServer] POST {request.url}");
+                if (this.showJsonRequest && !IsPasswordAuthenticationRequest(endpoint))
+                    Debug.Log($"[SaiServer] POST Request Body\n{jsonData}");
+
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    if (this.showJsonResponse)
+                        Debug.Log($"[SaiServer] POST Response\n{request.downloadHandler.text}");
+                    onSuccess?.Invoke(request.downloadHandler.text);
+                }
+                else
+                {
+                    string rawResponse = request.downloadHandler?.text ?? "No response data";
+                    string errorMsg = $"POST {endpoint} failed: {request.error}\nResponse Code: {request.responseCode}\nRaw Data: {rawResponse}";
+                    onError?.Invoke(errorMsg);
+                }
+            }
+        }
+
+        private static bool IsPasswordAuthenticationRequest(string endpoint)
+        {
+            return endpoint == "/api/v1/auth/login" || endpoint == "/api/v1/auth/register";
+        }
+
+        public IEnumerator PutRequest(string endpoint, string jsonData, Action<string> onSuccess, Action<string> onError)
+        {
+            using (UnityWebRequest request = CreateAuthenticatedRequest(endpoint, "PUT"))
+            {
+                byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                request.SetRequestHeader("Content-Type", "application/json");
+
+                if (this.showUrlRequest)
+                    Debug.Log($"[SaiServer] PUT {request.url}");
+                if (this.showJsonRequest)
+                    Debug.Log($"[SaiServer] PUT Request Body\n{jsonData}");
+
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    if (this.showJsonResponse)
+                        Debug.Log($"[SaiServer] PUT Response\n{request.downloadHandler.text}");
+                    onSuccess?.Invoke(request.downloadHandler.text);
+                }
+                else
+                {
+                    string rawResponse = request.downloadHandler?.text ?? "No response data";
+                    string errorMsg = $"PUT {endpoint} failed: {request.error}\nResponse Code: {request.responseCode}\nRaw Data: {rawResponse}";
+                    onError?.Invoke(errorMsg);
+                }
+            }
+        }
+
+        public IEnumerator PatchRequest(string endpoint, string jsonData, Action<string> onSuccess, Action<string> onError)
+        {
+            using (UnityWebRequest request = CreateAuthenticatedRequest(endpoint, "PATCH"))
+            {
+                byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                request.SetRequestHeader("Content-Type", "application/json");
+
+                if (this.showUrlRequest)
+                    Debug.Log($"[SaiServer] PATCH {request.url}");
+                if (this.showJsonRequest)
+                    Debug.Log($"[SaiServer] PATCH Request Body\n{jsonData}");
+
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    if (this.showJsonResponse)
+                        Debug.Log($"[SaiServer] PATCH Response\n{request.downloadHandler.text}");
+                    onSuccess?.Invoke(request.downloadHandler.text);
+                }
+                else
+                {
+                    string rawResponse = request.downloadHandler?.text ?? "No response data";
+                    string errorMsg = $"PATCH {endpoint} failed: {request.error}\nResponse Code: {request.responseCode}\nRaw Data: {rawResponse}";
+                    onError?.Invoke(errorMsg);
+                }
+            }
+        }
+
+        public IEnumerator DeleteRequest(string endpoint, Action<string> onSuccess, Action<string> onError)
+        {
+            using (UnityWebRequest request = CreateAuthenticatedRequest(endpoint, "DELETE"))
+            {
+                if (this.showUrlRequest)
+                    Debug.Log($"[SaiServer] DELETE {request.url}");
+
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    if (this.showJsonResponse)
+                        Debug.Log($"[SaiServer] DELETE Response\n{request.downloadHandler.text}");
+                    onSuccess?.Invoke(request.downloadHandler.text);
+                }
+                else
+                {
+                    string rawResponse = request.downloadHandler?.text ?? "No response data";
+                    string errorMsg = $"DELETE {endpoint} failed: {request.error}\nResponse Code: {request.responseCode}\nRaw Data: {rawResponse}";
+                    onError?.Invoke(errorMsg);
+                }
+            }
+        }
+
+        public void SetDomain(DomainOption newDomain)
+        {
+            this.domainOption = newDomain;
+            this.SyncEndpointFromLegacyServerFields();
+            this.SyncLegacyServerFieldsFromEndpoint();
+        }
+
+        public void SetPort(int newPort)
+        {
+            this.port = newPort;
+            this.SyncEndpointFromLegacyServerFields();
+            this.SyncLegacyServerFieldsFromEndpoint();
+        }
+
+        protected override void ResetValue()
+        {
+            base.ResetValue();
+            this.ManualClearGameId();
+            this.ResetServerEndpointToProduction();
+        }
+
+        private void ResetServerEndpointToProduction()
+        {
+            this.serverEndpoint = ServerEndpointOption.ProductionHttps;
+            this.SyncLegacyServerFieldsFromEndpoint();
+            this.SaveServerEndpointToPlayerPrefs();
+        }
+
+        protected override void LoadComponents()
+        {
+            base.LoadComponents();
+            this.LoadServerEndpointFromPlayerPrefs();
+            this.SyncLegacyServerFieldsFromEndpoint();
+            this.LoadSaiAuth();
+            this.LoadGoogleBackendLogin();
+
+            this.RegisterLoginListeners();
+            this.LoadGamerProgress();
+            this.LoadMailbox();
+            this.LoadItemDefinitions();
+            this.LoadPlayerEvent();
+            this.LoadLeaderboard();
+            this.LoadPlayerItem();
+            this.LoadPlayerContainer();
+            this.LoadItemPreset();
+            this.LoadItemAddDeduct();
+            this.LoadItemCrafting();
+            this.LoadItemGenerator();
+            this.LoadEquipmentSlotManager();
+            this.LoadShop();
+            this.LoadChainQuest();
+            this.LoadBattlePass();
+            this.LoadQuestProgressor();
+            this.LoadQuestHistory();
+            this.LoadDailyQuest();
+            this.LoadItemTag();
+            this.LoadItemMove();
+            this.LoadItemSwap();
+            this.LoadBattleSessions();
+            this.LoadBattleScript();
+        }
+
+        protected virtual void RegisterLoginListeners()
+        {
+            if (this.saiAuth != null)
+            {
+                this.saiAuth.OnLoginSuccess -= this.HandleLoginSuccess;
+                this.saiAuth.OnLoginSuccess += this.HandleLoginSuccess;
+            }
+
+            if (this.googleBackendLogin != null)
+            {
+                this.googleBackendLogin.OnLoginSuccess -= this.HandleLoginSuccess;
+                this.googleBackendLogin.OnLoginSuccess += this.HandleLoginSuccess;
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+            if (this.saiAuth != null)
+                this.saiAuth.OnLoginSuccess -= this.HandleLoginSuccess;
+
+            if (this.googleBackendLogin != null)
+                this.googleBackendLogin.OnLoginSuccess -= this.HandleLoginSuccess;
+
+            base.OnDestroy();
+        }
+
+        protected virtual void HandleLoginSuccess(LoginResponse _)
+        {
+            if (!this.IsAuthenticated)
+                return;
+
+            StartCoroutine(this.GetServerTimeCoroutine());
+        }
+
+        private IEnumerator GetServerTimeCoroutine()
+        {
+            yield return this.GetRequest(
+                "/api/v1/time",
+                response =>
+                {
+                    try
+                    {
+                        ServerTimeResponse serverTimeResponse = JsonUtility.FromJson<ServerTimeResponse>(response);
+                        this.serverTime = serverTimeResponse.server_time ?? string.Empty;
+                        this.serverTimestamp = serverTimeResponse.timestamp;
+                        this.serverTimezone = serverTimeResponse.timezone ?? string.Empty;
+                        this.serverTimeAtSync = this.ParseServerTime(serverTimeResponse.server_time, serverTimeResponse.timestamp);
+                        this.serverTimeSyncRealtime = Time.realtimeSinceStartup;
+                        this.serverTimeError = string.Empty;
+                    }
+                    catch (Exception exception)
+                    {
+                        this.serverTimeError = $"Parse server time response failed: {exception.Message}";
+                        Debug.LogWarning($"[SaiServer] {this.serverTimeError}", gameObject);
+                    }
+                },
+                error =>
+                {
+                    this.serverTimeError = error;
+                    Debug.LogWarning($"[SaiServer] Server time request failed: {error}", gameObject);
+                }
+            );
+        }
+
+        private DateTime ParseServerTime(string value, long timestamp)
+        {
+            if (DateTimeOffset.TryParse(value, out DateTimeOffset parsedServerTime))
+                return parsedServerTime.UtcDateTime;
+
+            return DateTimeOffset.FromUnixTimeSeconds(timestamp).UtcDateTime;
+        }
+
+
+        protected virtual void LoadSaiAuth()
+        {
+            if (this.saiAuth != null) return;
+            this.saiAuth = GetComponent<SaiAuth>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadSaiAuth", gameObject);
+        }
+
+        protected virtual void LoadGoogleBackendLogin()
+        {
+            if (this.googleBackendLogin != null) return;
+            this.googleBackendLogin = GetComponentInChildren<GoogleBackendLogin>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadGoogleBackendLogin", gameObject);
+        }
+
+        protected virtual void LoadPlayerEvent()
+        {
+            if (this.playerEvent != null) return;
+            this.playerEvent = GetComponent<PlayerEvent>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadPlayerEvent", gameObject);
+        }
+
+        protected virtual void LoadLeaderboard()
+        {
+            if (this.leaderboard != null) return;
+            this.leaderboard = GetComponent<Leaderboard>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadLeaderboard", gameObject);
+        }
+
+        protected virtual void LoadMailbox()
+        {
+            if (this.mailbox != null) return;
+            this.mailbox = GetComponent<Mailbox>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadMailbox", gameObject);
+        }
+
+        protected virtual void LoadGamerProgress()
+        {
+            if (this.gamerProgress != null) return;
+            this.gamerProgress = GetComponent<GamerProgress>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadSaiGamerProgress", gameObject);
+        }
+
+        protected virtual void LoadPlayerItem()
+        {
+            if (this.playerItem != null) return;
+            this.playerItem = GetComponentInChildren<PlayerItem>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadPlayerItem", gameObject);
+        }
+
+        protected virtual void LoadItemDefinitions()
+        {
+            if (this.itemDefinitions != null) return;
+            this.itemDefinitions = GetComponentInChildren<ItemDefinitions>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadItemDefinitions", gameObject);
+        }
+
+        protected virtual void LoadPlayerContainer()
+        {
+            if (this.playerContainer != null) return;
+            this.playerContainer = GetComponentInChildren<PlayerContainer>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadPlayerContainer", gameObject);
+        }
+
+        protected virtual void LoadItemPreset()
+        {
+            if (this.itemPreset != null) return;
+            this.itemPreset = GetComponentInChildren<ItemPreset>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadItemPreset", gameObject);
+        }
+
+        protected virtual void LoadItemAddDeduct()
+        {
+            if (this.itemAddDeduct != null) return;
+            this.itemAddDeduct = GetComponentInChildren<ItemAddDeduct>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadItemAddDeduct", gameObject);
+        }
+
+        protected virtual void LoadItemCrafting()
+        {
+            if (this.itemCrafting != null) return;
+            this.itemCrafting = GetComponentInChildren<ItemCrafting>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadItemCrafting", gameObject);
+        }
+
+        protected virtual void LoadItemGenerator()
+        {
+            if (this.itemGenerator != null) return;
+            this.itemGenerator = GetComponentInChildren<ItemGenerator>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadItemGenerator", gameObject);
+        }
+
+        protected virtual void LoadEquipmentSlotManager()
+        {
+            if (this.equipmentSlotManager != null) return;
+            this.equipmentSlotManager = GetComponentInChildren<EquipmentSlot>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadEquipmentSlotManager", gameObject);
+        }
+
+        protected virtual void LoadShop()
+        {
+            if (this.shop != null) return;
+            this.shop = GetComponentInChildren<Shop>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadShop", gameObject);
+        }
+
+        protected virtual void LoadChainQuest()
+        {
+            if (this.chainQuest != null) return;
+            this.chainQuest = GetComponentInChildren<ChainQuest>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadChainQuest", gameObject);
+        }
+
+        protected virtual void LoadBattlePass()
+        {
+            if (this.battlePass != null) return;
+            this.battlePass = GetComponentInChildren<BattlePass>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadBattlePass", gameObject);
+        }
+
+        protected virtual void LoadQuestProgressor()
+        {
+            if (this.questProgressor != null) return;
+            this.questProgressor = GetComponentInChildren<QuestProgressor>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadQuestProgressor", gameObject);
+        }
+
+        protected virtual void LoadDailyQuest()
+        {
+            if (this.dailyQuest != null) return;
+            this.dailyQuest = GetComponentInChildren<DailyQuest>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadDailyQuest", gameObject);
+        }
+
+        protected virtual void LoadQuestHistory()
+        {
+            if (this.questHistory != null) return;
+            this.questHistory = GetComponentInChildren<QuestHistory>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadQuestHistory", gameObject);
+        }
+
+        protected virtual void LoadItemMove()
+        {
+            if (this.itemMove != null) return;
+            this.itemMove = GetComponentInChildren<ItemMove>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadItemMove", gameObject);
+        }
+
+        protected virtual void LoadItemSwap()
+        {
+            if (this.itemSwap != null) return;
+            this.itemSwap = GetComponentInChildren<ItemSwap>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadItemSwap", gameObject);
+        }
+
+        protected virtual void LoadItemTag()
+        {
+            if (this.itemTag != null) return;
+            this.itemTag = GetComponentInChildren<ItemTag>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadItemTag", gameObject);
+        }
+
+        protected virtual void LoadBattleSessions()
+        {
+            if (this.battleSessions != null) return;
+            this.battleSessions = GetComponentInChildren<BattleSessions>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadBattleSessions", gameObject);
+        }
+
+        protected virtual void LoadBattleScript()
+        {
+            if (this.battleScript != null) return;
+            this.battleScript = GetComponentInChildren<BattleScript>();
+            if (this.showDebugLog)
+                Debug.Log(transform.name + ": LoadBattleScript", gameObject);
+        }
+
+
+
+
+        protected virtual void LoadServerEndpointFromPlayerPrefs()
+        {
+            if (PlayerPrefs.HasKey(PREF_SERVER_ENDPOINT))
+            {
+                this.serverEndpoint = (ServerEndpointOption)PlayerPrefs.GetInt(PREF_SERVER_ENDPOINT);
+                this.SyncLegacyServerFieldsFromEndpoint();
+                if (this.showDebugLog)
+                    Debug.Log($"Loaded Server Endpoint from PlayerPrefs: {this.serverEndpoint}");
+            }
+        }
+
+        protected virtual void SaveServerEndpointToPlayerPrefs()
+        {
+            PlayerPrefs.SetInt(PREF_SERVER_ENDPOINT, (int)this.serverEndpoint);
+            PlayerPrefs.Save();
+            if (this.showDebugLog)
+                Debug.Log($"Saved Server Endpoint to PlayerPrefs: {this.serverEndpoint}");
+        }
+
+        public void ManualSaveServerEndpoint()
+        {
+            if (this.showButtonsLog)
+                Debug.Log("<color=#00FF88><b>[SaiServer] ► Save Server Endpoint to PlayerPrefs</b></color>", gameObject);
+            this.SaveServerEndpointToPlayerPrefs();
+        }
+
+        public void SetGameId(string newGameId)
+        {
+            this.gameId = this.NormalizeInput(newGameId);
+        }
+
+        protected virtual void OnValidate()
+        {
+            // serverEndpoint is the source of truth; sync legacy fields from it only.
+            this.SyncLegacyServerFieldsFromEndpoint();
+            this.gameId = this.NormalizeInput(this.gameId);
+        }
+
+        public void ManualClearGameId()
+        {
+            this.gameId = "";
+        }
+
+        public int ManualFullResetHierarchyComponents()
+        {
+            _ = Instance;
+            Component[] hierarchyComponents = this.GetComponentsInChildren<Component>(true);
+            int resetCount = 0;
+
+            for (int i = 0; i < hierarchyComponents.Length; i++)
+            {
+                Component component = hierarchyComponents[i];
+                if (component == null)
+                {
+                    continue;
+                }
+
+                if (this.ManualInvokeResetHooks(component))
+                {
+                    resetCount++;
+                }
+            }
+
+            return resetCount;
+        }
+
+        public bool ManualInvokeResetHooks(Component component)
+        {
+            if (component == null)
+            {
+                return false;
+            }
+
+            if (this.TryInvokeParameterlessMethod(component, "Reset"))
+            {
+                return true;
+            }
+
+            return this.TryInvokeParameterlessMethod(component, "ResetValue");
+        }
+
+        public bool ManualInvokeLoadComponents(Component component)
+        {
+            if (component == null)
+            {
+                return false;
+            }
+
+            return this.TryInvokeParameterlessMethod(component, "LoadComponents");
+        }
+
+        private bool TryInvokeParameterlessMethod(Component component, string methodName)
+        {
+            MethodInfo methodInfo = this.FindParameterlessMethod(component.GetType(), methodName);
+
+            if (methodInfo == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                methodInfo.Invoke(component, null);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private MethodInfo FindParameterlessMethod(Type currentType, string methodName)
+        {
+            while (currentType != null)
+            {
+                MethodInfo methodInfo = currentType.GetMethod(
+                    methodName,
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly,
+                    null,
+                    Type.EmptyTypes,
+                    null);
+
+                if (methodInfo != null)
+                {
+                    return methodInfo;
+                }
+
+                currentType = currentType.BaseType;
+            }
+
+            return null;
+        }
+
+        public void TestConnection(Action<bool> callback = null)
+        {
+            if (this.showButtonsLog)
+                Debug.Log("<color=#66CCFF><b>[SaiServer] ► Test Connection</b></color>", gameObject);
+            StartCoroutine(TestConnectionCoroutine(callback));
+        }
+
+        private IEnumerator TestConnectionCoroutine(Action<bool> callback)
+        {
+            string url = $"{BaseUrl}/health";
+
+            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            {
+                request.timeout = 5;
+                request.certificateHandler = new AllowAllCertificateHandler();
+                yield return request.SendWebRequest();
+
+                bool success = request.result == UnityWebRequest.Result.Success;
+                callback?.Invoke(success);
+            }
+        }
+    }
+}

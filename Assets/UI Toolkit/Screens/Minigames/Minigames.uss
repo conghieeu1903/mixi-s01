@@ -1,0 +1,120 @@
+.minigame {
+    width: 520px;
+    height: 380px;
+}
+
+.minigame__body {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.minigame__footer {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.minigame__footer > .wf-button {
+    margin-left: 10px;
+}
+
+.minigame__reels {
+    flex-direction: row;
+}
+
+.minigame__reel {
+    width: 110px;
+    height: 150px;
+    margin: 0 8px;
+    background-color: var(--wf-surface);
+    border-width: 2px;
+    border-color: var(--wf-ink);
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.minigame__scratch-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 300px;
+}
+
+.minigame__scratch-cell {
+    width: 88px;
+    height: 72px;
+    margin: 0 12px 12px 0;
+}
+
+.minigame__scratch-cell--revealed {
+    background-color: var(--wf-surface);
+}
+
+.minigame__wheel {
+    flex-shrink: 0;
+    width: 220px;
+    height: 220px;
+    border-radius: 110px;
+    border-width: 4px;
+    border-color: var(--wf-ink);
+    background-color: var(--wf-fill);
+    align-items: center;
+    justify-content: center;
+}
+
+.minigame__wheel-pointer {
+    width: 0;
+    height: 0;
+    border-left-width: 14px;
+    border-right-width: 14px;
+    border-top-width: 24px;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: var(--wf-ink);
+    margin-bottom: -6px;
+}
+
+.minigame__lanes {
+    flex-direction: row;
+    flex-grow: 1;
+    align-self: stretch;
+    justify-content: center;
+}
+
+.minigame__lane {
+    width: 80px;
+    margin: 0 6px;
+    background-color: var(--wf-bg);
+    border-width: 1px;
+    border-color: var(--wf-line-soft);
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 8px;
+}
+
+.minigame__note {
+    width: 56px;
+    height: 24px;
+    border-radius: 4px;
+    background-color: var(--wf-fill-strong);
+    margin-bottom: 40px;
+}
+
+.minigame__note--low {
+    margin-bottom: 110px;
+}
+
+.minigame__ticket {
+    width: 320px;
+    padding: 20px;
+    align-items: center;
+    border-width: 2px;
+    border-color: var(--wf-ink);
+    border-radius: 8px;
+    background-color: var(--wf-surface);
+}
+
+.minigame__ticket > .wf-heading {
+    margin: 8px 0;
+}

@@ -1,0 +1,76 @@
+.blackjack {
+    padding: 40px;
+}
+
+.blackjack__table {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: space-between;
+    padding: 32px;
+}
+
+.blackjack__hand {
+    align-items: center;
+}
+
+.blackjack__cards {
+    flex-direction: row;
+    margin: 12px 0;
+}
+
+.blackjack__card {
+    width: 120px;
+    height: 168px;
+    margin: 0 8px;
+    background-color: var(--wf-surface);
+    border-width: 2px;
+    border-color: var(--wf-ink);
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.blackjack__card--hidden {
+    background-color: var(--wf-fill-strong);
+}
+
+.blackjack__card > .wf-heading {
+    font-size: 40px;
+}
+
+.blackjack__result {
+    padding: 8px 24px;
+}
+
+.blackjack__controls {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.blackjack__wallet {
+    margin-right: 40px;
+}
+
+.blackjack__chips {
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.blackjack__chip {
+    width: 72px;
+    height: 72px;
+    border-radius: 36px;
+    margin-right: 12px;
+    padding: 0;
+}
+
+.blackjack__actions {
+    flex-direction: row;
+}
+
+.blackjack__actions > .wf-button {
+    margin-left: 12px;
+    height: 64px;
+    font-size: 24px;
+}

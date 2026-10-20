@@ -1,0 +1,313 @@
+.login {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-Bold%20SDF.asset?fileID=11400000&guid=41482344942c31f46aee1b5019cbf976&type=2#Inter-Bold SDF");
+}
+
+.login--hidden {
+    display: none;
+}
+
+.login__dim {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(1, 21, 69, 0.6);
+}
+
+/* Panel đăng nhập bên phải */
+.login__panel {
+    position: absolute;
+    right: 120px;
+    top: 70px;
+    width: 820px;
+    height: 800px;
+    padding: 36px 64px 28px 64px;
+    flex-direction: column;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_panel.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    -unity-slice-left: 48;
+    -unity-slice-top: 48;
+    -unity-slice-right: 48;
+    -unity-slice-bottom: 48;
+}
+
+.login__accent {
+    position: absolute;
+    height: 9px;
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.login__accent--yellow {
+    left: 60px;
+    top: -3px;
+    width: 162px;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_accent_yellow.png");
+}
+
+.login__accent--cyan {
+    left: 230px;
+    top: -4px;
+    width: 62px;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_accent_cyan.png");
+}
+
+.login__title {
+    margin: 0;
+    padding: 0;
+    font-size: 48px;
+    letter-spacing: 1.1px;
+    color: rgb(255, 255, 255);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BlackItalic%20SDF.asset?fileID=11400000&guid=6760fe27ba215f04189cb6a412f07c16&type=2#Inter-BlackItalic SDF");
+}
+
+.login__subtitle {
+    margin: 4px 0 0 0;
+    padding: 0;
+    font-size: 20px;
+    letter-spacing: 0.9px;
+    color: rgba(255, 255, 255, 0.7);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-Medium%20SDF.asset?fileID=11400000&guid=7732124c92e6d4744ad7088a3055cb79&type=2#Inter-Medium SDF");
+}
+
+/* Tab LOGIN / REGISTER */
+.login__tabs {
+    flex-direction: row;
+    margin-top: 24px;
+}
+
+.login-tab {
+    width: 200px;
+    height: 56px;
+    margin-right: 14px;
+    justify-content: center;
+    align-items: center;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_tab_inactive.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    transition-duration: 0.1s;
+}
+
+.login-tab:hover {
+    scale: 1.03 1.03;
+}
+
+.login-tab--active {
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_tab_active.png");
+}
+
+.login-tab__label {
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+    letter-spacing: 0.7px;
+    color: rgba(255, 255, 255, 0.7);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-ExtraBoldItalic%20SDF.asset?fileID=11400000&guid=5f7f74bcfb7cfd54eb8de297c0336fba&type=2#Inter-ExtraBoldItalic SDF");
+}
+
+.login-tab--active > .login-tab__label {
+    color: rgb(1, 21, 69);
+}
+
+.login__divider {
+    height: 2px;
+    margin-top: 18px;
+    background-color: rgba(34, 211, 238, 0.25);
+}
+
+/* Trang nhập liệu */
+.login__page {
+    flex-grow: 1;
+    margin-top: 18px;
+    flex-direction: column;
+}
+
+.login__page--hidden {
+    display: none;
+}
+
+.login__field-label {
+    margin: 0 0 6px 6px;
+    padding: 0;
+    font-size: 18px;
+    letter-spacing: 0.8px;
+    color: rgb(34, 211, 238);
+}
+
+.login__field {
+    height: 56px;
+    margin: 0 0 12px 0;
+    padding: 0;
+}
+
+.login__field > .unity-base-text-field__input {
+    margin: 0;
+    padding: 0 40px;
+    border-width: 0;
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_select_bg.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    -unity-background-image-tint-color: rgba(255, 255, 255, 0.55);
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    --unity-cursor-color: rgb(253, 206, 3);
+    --unity-selection-color: rgba(34, 211, 238, 0.4);
+}
+
+.login__field:focus > .unity-base-text-field__input,
+.login__field > .unity-base-text-field__input:focus {
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+}
+
+.login__field .unity-base-text-field__input--placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.login__field:disabled {
+    opacity: 0.5;
+}
+
+/* Dòng trạng thái / lỗi */
+.login__status {
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+    color: rgb(34, 211, 238);
+}
+
+.login__status--error {
+    color: rgb(255, 99, 110);
+}
+
+/* Nút */
+.login__btn {
+    justify-content: center;
+    align-items: center;
+    -unity-background-scale-mode: stretch-to-fill;
+    transition-duration: 0.12s;
+}
+
+.login__btn:hover {
+    scale: 1.04 1.04;
+}
+
+.login__btn:active {
+    scale: 0.96 0.96;
+}
+
+.login__btn:disabled {
+    opacity: 0.45;
+    scale: 1 1;
+}
+
+.login__btn--submit {
+    align-self: center;
+    width: 500px;
+    height: 92px;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_btn_apply.png");
+}
+
+.login__alt {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+.login__btn--alt {
+    width: 290px;
+    height: 60px;
+    margin: 0 10px;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_btn_reset.png");
+}
+
+/* Tạm ẩn nút PLAY AS GUEST, bỏ class này khỏi Login.uxml để hiện lại */
+.login__btn--hidden {
+    display: none;
+}
+
+.login__btn-label {
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+    letter-spacing: 0.8px;
+    color: rgb(255, 255, 255);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BlackItalic%20SDF.asset?fileID=11400000&guid=6760fe27ba215f04189cb6a412f07c16&type=2#Inter-BlackItalic SDF");
+}
+
+.login__btn--submit > .login__btn-label {
+    font-size: 32px;
+    color: rgb(1, 21, 69);
+}
+
+/* Trang báo đăng ký thành công, phủ lên form trong panel */
+.login__success {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 64px;
+    justify-content: center;
+    align-items: center;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_panel.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    -unity-slice-left: 48;
+    -unity-slice-top: 48;
+    -unity-slice-right: 48;
+    -unity-slice-bottom: 48;
+}
+
+.login__success--hidden {
+    display: none;
+}
+
+.login__success-badge {
+    width: 132px;
+    height: 132px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 66px;
+    border-width: 4px;
+    border-color: rgb(34, 211, 238);
+    background-color: rgba(34, 211, 238, 0.15);
+}
+
+.login__success-check {
+    width: 60px;
+    height: 30px;
+    margin-top: -14px;
+    border-left-width: 12px;
+    border-bottom-width: 12px;
+    border-color: rgb(253, 206, 3);
+    rotate: -45deg;
+}
+
+.login__success-title {
+    margin-top: 28px;
+    -unity-text-align: middle-center;
+}
+
+.login__success-message {
+    margin: 14px 0 0 0;
+    padding: 0;
+    font-size: 30px;
+    -unity-text-align: middle-center;
+    color: rgb(34, 211, 238);
+}
+
+.login__success-note {
+    margin-top: 10px;
+    -unity-text-align: middle-center;
+}
+
+.login__success-btn {
+    margin-top: 44px;
+}

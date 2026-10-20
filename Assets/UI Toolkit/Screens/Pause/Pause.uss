@@ -1,0 +1,14 @@
+.pause__panel {
+    width: 520px;
+}
+
+.pause__button {
+    height: 60px;
+    font-size: 24px;
+    margin-bottom: 14px;
+}
+
+.pause__footer {
+    margin-top: 8px;
+    -unity-text-align: middle-center;
+}

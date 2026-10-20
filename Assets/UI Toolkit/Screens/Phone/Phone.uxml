@@ -1,0 +1,103 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="Phone.uss" />
+    <ui:VisualElement name="phoneBoard" class="wf-screen wf-board">
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="homePhone" class="phone">
+                <ui:VisualElement class="phone__status-bar">
+                    <ui:Label text="14:20" class="wf-caption wf-grow" />
+                    <ui:Label text="Pin 80%" class="wf-caption" />
+                </ui:VisualElement>
+                <ui:VisualElement name="homeScreen" class="phone__content">
+                    <ui:VisualElement class="phone__app-grid">
+                        <ui:VisualElement name="eatApp" class="phone__app"><ui:VisualElement class="wf-icon" /><ui:Label text="Đồ ăn" class="wf-caption" /></ui:VisualElement>
+                        <ui:VisualElement name="clothApp" class="phone__app"><ui:VisualElement class="wf-icon" /><ui:Label text="Quần áo" class="wf-caption" /></ui:VisualElement>
+                        <ui:VisualElement name="petApp" class="phone__app"><ui:VisualElement class="wf-icon" /><ui:Label text="Thú cưng" class="wf-caption" /></ui:VisualElement>
+                        <ui:VisualElement name="carApp" class="phone__app"><ui:VisualElement class="wf-icon" /><ui:Label text="Xe" class="wf-caption" /></ui:VisualElement>
+                        <ui:VisualElement name="cameraApp" class="phone__app"><ui:VisualElement class="wf-icon" /><ui:Label text="Camera" class="wf-caption" /></ui:VisualElement>
+                        <ui:VisualElement name="albumApp" class="phone__app"><ui:VisualElement class="wf-icon" /><ui:Label text="Album" class="wf-caption" /></ui:VisualElement>
+                        <ui:VisualElement name="skillApp" class="phone__app"><ui:VisualElement class="wf-icon" /><ui:Label text="Skill" class="wf-caption" /></ui:VisualElement>
+                        <ui:VisualElement name="mapApp" class="phone__app"><ui:VisualElement class="wf-icon" /><ui:Label text="Bản đồ" class="wf-caption" /></ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="phone__home-bar" />
+            </ui:VisualElement>
+            <ui:Label text="1. Home Screen" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="warningPhone" class="phone">
+                <ui:VisualElement class="phone__status-bar">
+                    <ui:Label text="14:20" class="wf-caption wf-grow" />
+                    <ui:Label text="Pin 80%" class="wf-caption" />
+                </ui:VisualElement>
+                <ui:VisualElement class="phone__warning">
+                    <ui:VisualElement name="phoneWarningPanel" class="wf-panel phone__warning-box">
+                        <ui:VisualElement class="wf-icon">
+                            <ui:Label text="!" class="wf-heading" />
+                        </ui:VisualElement>
+                        <ui:Label text="Không thể dùng điện thoại khi đang lái xe" class="wf-text wf-wrap" />
+                        <ui:Button text="OK" class="wf-button wf-button--small" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="phone__home-bar" />
+            </ui:VisualElement>
+            <ui:Label text="2a. Warning (không đủ điều kiện)" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="loadingPhone" class="phone">
+                <ui:VisualElement class="phone__status-bar">
+                    <ui:Label text="14:20" class="wf-caption wf-grow" />
+                    <ui:Label text="Pin 80%" class="wf-caption" />
+                </ui:VisualElement>
+                <ui:VisualElement class="phone__loading">
+                    <ui:VisualElement class="phone__spinner" />
+                    <ui:Label text="Đang mở app…" class="wf-caption" />
+                </ui:VisualElement>
+                <ui:VisualElement class="phone__home-bar" />
+            </ui:VisualElement>
+            <ui:Label text="2b. Loading 2s" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="eatAppPhone" class="phone">
+                <ui:VisualElement class="phone__status-bar">
+                    <ui:Label text="14:20" class="wf-caption wf-grow" />
+                    <ui:Label text="Pin 80%" class="wf-caption" />
+                </ui:VisualElement>
+                <ui:VisualElement name="eatAppContent" class="phone__content">
+                    <ui:VisualElement class="phone__app-header">
+                        <ui:Button name="backButton" text="&lt;" class="wf-button wf-button--square" />
+                        <ui:Label text="Đồ ăn" class="wf-subheading" />
+                    </ui:VisualElement>
+                    <ui:ScrollView class="wf-grow">
+                        <ui:VisualElement class="phone__list-item">
+                            <ui:VisualElement class="wf-icon" />
+                            <ui:VisualElement class="phone__list-text"><ui:Label text="Pizza" class="wf-text" /><ui:Label text="$ 12" class="wf-caption" /></ui:VisualElement>
+                            <ui:Button text="+" class="wf-button wf-button--square" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="phone__list-item">
+                            <ui:VisualElement class="wf-icon" />
+                            <ui:VisualElement class="phone__list-text"><ui:Label text="Burger" class="wf-text" /><ui:Label text="$ 8" class="wf-caption" /></ui:VisualElement>
+                            <ui:Button text="+" class="wf-button wf-button--square" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="phone__list-item">
+                            <ui:VisualElement class="wf-icon" />
+                            <ui:VisualElement class="phone__list-text"><ui:Label text="Nước ngọt" class="wf-text" /><ui:Label text="$ 3" class="wf-caption" /></ui:VisualElement>
+                            <ui:Button text="+" class="wf-button wf-button--square" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="phone__list-item">
+                            <ui:VisualElement class="wf-icon" />
+                            <ui:VisualElement class="phone__list-text"><ui:Label text="Cà phê" class="wf-text" /><ui:Label text="$ 4" class="wf-caption" /></ui:VisualElement>
+                            <ui:Button text="+" class="wf-button wf-button--square" />
+                        </ui:VisualElement>
+                    </ui:ScrollView>
+                    <ui:VisualElement class="phone__cart">
+                        <ui:Label text="Tổng: $ 20" class="wf-subheading wf-grow" />
+                        <ui:Button name="orderButton" text="Đặt hàng" class="wf-button wf-button--primary wf-button--small" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="phone__home-bar" />
+            </ui:VisualElement>
+            <ui:Label text="3. Nội dung app (EatApps)" class="wf-board__caption" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

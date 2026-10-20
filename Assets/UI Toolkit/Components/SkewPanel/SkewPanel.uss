@@ -1,0 +1,58 @@
+.skew-panel {
+    position: relative;
+}
+
+.skew-panel__shape {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    --panel-fill-color: rgba(11, 26, 74, 0.92);
+    --panel-stroke-color: rgba(34, 211, 238, 0.85);
+    --panel-stroke-width: 3;
+    --panel-shadow-color: rgba(0, 0, 0, 0.85);
+    --panel-shadow-offset-x: 6;
+    --panel-shadow-offset-y: 8;
+    --panel-slant-x: 16;
+    --panel-slant-y: 0;
+}
+
+.skew-panel__content {
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
+}
+
+.skew-panel--dark > .skew-panel__shape {
+    --panel-fill-color: rgba(2, 11, 46, 0.94);
+    --panel-stroke-color: rgb(0, 0, 0);
+    --panel-stroke-width: 3;
+}
+
+.skew-panel--accent-yellow > .skew-panel__shape {
+    --panel-fill-color: rgb(253, 206, 3);
+    --panel-stroke-color: rgb(0, 0, 0);
+    --panel-stroke-width: 3;
+    --panel-shadow-color: rgb(0, 0, 0);
+    --panel-shadow-offset-x: 5;
+    --panel-shadow-offset-y: 7;
+}
+
+.skew-panel--accent-cyan > .skew-panel__shape {
+    --panel-fill-color: rgb(34, 211, 238);
+    --panel-stroke-color: rgb(0, 0, 0);
+    --panel-stroke-width: 3;
+    --panel-shadow-color: rgb(0, 0, 0);
+    --panel-shadow-offset-x: 5;
+    --panel-shadow-offset-y: 7;
+}
+
+.skew-panel--highlight > .skew-panel__shape {
+    --panel-fill-color: rgba(23, 45, 115, 0.96);
+    --panel-stroke-color: rgb(253, 206, 3);
+    --panel-stroke-width: 4;
+    --panel-shadow-color: rgb(0, 0, 0);
+    --panel-shadow-offset-x: 7;
+    --panel-shadow-offset-y: 9;
+}

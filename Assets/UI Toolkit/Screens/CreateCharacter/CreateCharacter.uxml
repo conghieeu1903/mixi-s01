@@ -1,0 +1,63 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="CreateCharacter.uss" />
+    <ui:VisualElement name="createCharacter" class="wf-screen create-char">
+        <ui:VisualElement name="options" class="wf-panel create-char__options">
+            <ui:VisualElement class="wf-panel__header">
+                <ui:Label text="Tạo nhân vật" class="wf-heading wf-grow" />
+                <ui:Label text="CustomizeCharacter" class="wf-note" />
+            </ui:VisualElement>
+            <ui:VisualElement class="wf-row create-char__option">
+                <ui:Label text="Giới tính" class="wf-text create-char__option-label" />
+                <ui:Button text="&lt;" class="wf-button wf-button--square" />
+                <ui:Label text="Nam" class="wf-text create-char__option-value" />
+                <ui:Button text="&gt;" class="wf-button wf-button--square" />
+            </ui:VisualElement>
+            <ui:VisualElement class="wf-row create-char__option">
+                <ui:Label text="Kiểu tóc" class="wf-text create-char__option-label" />
+                <ui:Button text="&lt;" class="wf-button wf-button--square" />
+                <ui:Label text="Kiểu 3" class="wf-text create-char__option-value" />
+                <ui:Button text="&gt;" class="wf-button wf-button--square" />
+            </ui:VisualElement>
+            <ui:VisualElement class="wf-row create-char__option">
+                <ui:Label text="Màu tóc" class="wf-text create-char__option-label" />
+                <ui:Button text="&lt;" class="wf-button wf-button--square" />
+                <ui:Label text="Đen" class="wf-text create-char__option-value" />
+                <ui:Button text="&gt;" class="wf-button wf-button--square" />
+            </ui:VisualElement>
+            <ui:VisualElement class="wf-row create-char__option">
+                <ui:Label text="Màu da" class="wf-text create-char__option-label" />
+                <ui:Button text="&lt;" class="wf-button wf-button--square" />
+                <ui:Label text="Tông 2" class="wf-text create-char__option-value" />
+                <ui:Button text="&gt;" class="wf-button wf-button--square" />
+            </ui:VisualElement>
+            <ui:VisualElement class="wf-row create-char__option">
+                <ui:Label text="Áo" class="wf-text create-char__option-label" />
+                <ui:Button text="&lt;" class="wf-button wf-button--square" />
+                <ui:Label text="Hoodie" class="wf-text create-char__option-value" />
+                <ui:Button text="&gt;" class="wf-button wf-button--square" />
+            </ui:VisualElement>
+            <ui:VisualElement class="wf-row create-char__option">
+                <ui:Label text="Quần" class="wf-text create-char__option-label" />
+                <ui:Button text="&lt;" class="wf-button wf-button--square" />
+                <ui:Label text="Jean" class="wf-text create-char__option-value" />
+                <ui:Button text="&gt;" class="wf-button wf-button--square" />
+            </ui:VisualElement>
+            <ui:VisualElement class="wf-row create-char__option">
+                <ui:Label text="Giày" class="wf-text create-char__option-label" />
+                <ui:Button text="&lt;" class="wf-button wf-button--square" />
+                <ui:Label text="Sneaker" class="wf-text create-char__option-value" />
+                <ui:Button text="&gt;" class="wf-button wf-button--square" />
+            </ui:VisualElement>
+            <ui:VisualElement class="wf-grow" />
+            <ui:TextField name="nameField" label="Tên streamer" value="Player" class="create-char__name" />
+            <ui:VisualElement class="create-char__actions">
+                <ui:Button name="backButton" text="Quay lại" class="wf-button" />
+                <ui:Button name="startButton" text="Bắt đầu" class="wf-button wf-button--primary" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="preview" class="wf-placeholder create-char__preview">
+            <ui:Label text="PREVIEW NHÂN VẬT 3D&#10;(kéo chuột để xoay)" class="wf-placeholder__label" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

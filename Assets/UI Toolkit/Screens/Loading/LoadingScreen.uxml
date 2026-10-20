@@ -1,0 +1,51 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="LoadingScreen.uss" />
+    <ui:VisualElement name="loadingRoot" picking-mode="Ignore" class="loading-root">
+        <ui:VisualElement name="loadingBg" picking-mode="Ignore" class="loading__bg" />
+        <ui:VisualElement name="loadingOverlay" picking-mode="Ignore" class="loading__overlay" />
+
+        <ui:VisualElement name="centerGroup" picking-mode="Ignore" class="loading__center">
+            <ui:VisualElement name="loadingCharacter" picking-mode="Ignore" class="loading__character" />
+        </ui:VisualElement>
+
+        <SafeAreaContainer name="loadingSafeAreaTop">
+            <ui:VisualElement name="logoSg02" picking-mode="Ignore" class="loading__logo-sg02" />
+            <ui:VisualElement name="logoArena" picking-mode="Ignore" class="loading__logo-arena" />
+            <ui:VisualElement name="crownIcon" picking-mode="Ignore" class="loading__crown" />
+
+            <ui:VisualElement name="tagGroup" picking-mode="Ignore" class="loading__right">
+                <ui:VisualElement name="tagPlay" picking-mode="Ignore" class="loading__tag loading__tag-play" />
+                <ui:VisualElement name="tagMatch" picking-mode="Ignore" class="loading__tag loading__tag-match" />
+                <ui:VisualElement name="tagWin" picking-mode="Ignore" class="loading__tag loading__tag-win" />
+                <ui:VisualElement name="tagGoodLuck" picking-mode="Ignore" class="loading__tag loading__tag-goodluck" />
+            </ui:VisualElement>
+        </SafeAreaContainer>
+
+        <ui:VisualElement name="bottomBand" picking-mode="Ignore" class="loading__bottom-band" />
+        <ui:VisualElement name="bandLine" picking-mode="Ignore" class="loading__band-line" />
+
+        <SafeAreaContainer name="loadingSafeAreaBottom">
+            <ui:VisualElement name="crownSmall" picking-mode="Ignore" class="loading__crown-small" />
+            <ui:Label name="statusLabel" text="LOADING..." picking-mode="Ignore" class="loading-title" />
+            <ui:Label name="subtitleLabel" text="The adventure is just beginning..." picking-mode="Ignore" class="loading-subtitle" />
+
+            <ui:VisualElement name="progressGroup" picking-mode="Ignore" class="loading__center">
+                <ui:VisualElement name="loadingTrack" picking-mode="Ignore" class="loading-track">
+                    <ui:VisualElement name="loadingFill" picking-mode="Ignore" class="loading-fill">
+                        <ui:VisualElement name="loadingFillShine" picking-mode="Ignore" class="loading-fill-shine" />
+                        <ui:VisualElement name="loadingLeadingGlow" picking-mode="Ignore" class="loading-leading-glow" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:Label name="percentLabel" text="78%" picking-mode="Ignore" class="loading-percent" />
+                <ui:Label name="resourceLabel" text="Đang tải tài nguyên..." picking-mode="Ignore" class="loading-resource" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="tipGroup" picking-mode="Ignore" class="loading__right">
+                <ui:VisualElement name="bottomDivider" picking-mode="Ignore" class="loading__divider" />
+                <ui:VisualElement name="tipIcon" picking-mode="Ignore" class="loading__tip-icon" />
+                <ui:Label name="tipTitleLabel" text="TIP:" picking-mode="Ignore" class="loading__tip-title" />
+                <ui:Label name="tipTextLabel" text="Mỗi phút bạn sẽ nhận được 100 xu từ Item Generator khi online!" picking-mode="Ignore" class="loading__tip-text" />
+            </ui:VisualElement>
+        </SafeAreaContainer>
+    </ui:VisualElement>
+</ui:UXML>

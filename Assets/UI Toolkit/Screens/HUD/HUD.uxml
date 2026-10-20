@@ -1,0 +1,90 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="HUD.uss" />
+    <ui:VisualElement name="hud" class="wf-screen">
+        <ui:VisualElement name="world" class="wf-world">
+            <ui:Label text="GÓC NHÌN 3D (FPS)" class="wf-world__label" />
+        </ui:VisualElement>
+        <ui:VisualElement class="hud__fader-note">
+            <ui:Label text="UIManager · Fader / Flashbang phủ toàn màn hình khi chuyển cảnh" class="wf-note" />
+            <ui:Label text="Prototype: ESC Pause · M Map · I/Tab Inventory · P Phone · C PC · L Stream · T NPC · B Blackjack · G Minigame · E World panel · PgUp/PgDn lật màn" class="wf-note" />
+        </ui:VisualElement>
+        <ui:VisualElement name="crosshairArea" class="wf-fill hud__crosshair-area" picking-mode="Ignore">
+            <ui:VisualElement name="crosshair" class="hud__crosshair" />
+            <ui:Label name="itemNameLabel" text="Máy tính" class="wf-subheading hud__item-name" />
+        </ui:VisualElement>
+        <ui:VisualElement name="warningPanel" class="wf-panel hud__warning">
+            <ui:VisualElement class="wf-icon wf-icon--sm hud__warning-icon">
+                <ui:Label text="!" class="wf-text" />
+            </ui:VisualElement>
+            <ui:Label name="warningLabel" text="Không thể dùng khi đang lái xe" class="wf-text" />
+        </ui:VisualElement>
+        <ui:VisualElement name="notify" class="hud__notify">
+            <ui:VisualElement class="hud__notify-item">
+                <ui:VisualElement class="wf-icon">
+                    <ui:Label text="Mail" class="wf-caption" />
+                    <ui:Label name="mailBadge" text="3" class="wf-badge" />
+                </ui:VisualElement>
+                <ui:Label text="Mail" class="wf-caption" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hud__notify-item">
+                <ui:VisualElement class="wf-icon">
+                    <ui:Label text="Bill" class="wf-caption" />
+                    <ui:Label name="billBadge" text="1" class="wf-badge" />
+                </ui:VisualElement>
+                <ui:Label text="Hóa đơn" class="wf-caption" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="skillPointToast" class="wf-panel hud__skill-toast">
+            <ui:VisualElement class="wf-icon">
+                <ui:Label text="+1" class="wf-subheading" />
+            </ui:VisualElement>
+            <ui:Label text="Bạn có 1 skill point mới. Mở app Skill trên điện thoại." class="wf-caption wf-wrap hud__skill-toast-text" />
+        </ui:VisualElement>
+        <ui:VisualElement name="contextHints" class="hud__context-hints">
+            <ui:VisualElement class="hud__context-hint">
+                <ui:Label text="LMB" class="wf-key" />
+                <ui:Label text="Build" class="wf-caption" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hud__context-hint">
+                <ui:Label text="R" class="wf-key" />
+                <ui:Label text="Rotate" class="wf-caption" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hud__context-hint">
+                <ui:Label text="RMB" class="wf-key" />
+                <ui:Label text="Cancel" class="wf-caption" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hud__context-hint">
+                <ui:Label text="G" class="wf-key" />
+                <ui:Label text="Drop" class="wf-caption" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="bottomInfo" class="hud__bottom-info">
+            <ui:Label text="+ $50 từ donate" class="wf-text hud__info-line hud__info-line--positive" />
+            <ui:Label text="Không đủ tiền" class="wf-text hud__info-line" />
+        </ui:VisualElement>
+        <ui:VisualElement name="heldItem" class="wf-panel hud__held-item">
+            <ui:VisualElement class="wf-icon wf-icon--lg">
+                <ui:Label text="Icon item" class="wf-caption" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hud__held-item-text">
+                <ui:Label text="Đang cầm" class="wf-caption" />
+                <ui:Label text="Chổi" class="wf-subheading" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="interactionHints" class="hud__hints">
+            <ui:VisualElement class="hud__hint">
+                <ui:Label text="E" class="wf-key" />
+                <ui:Label text="Sử dụng" class="wf-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hud__hint">
+                <ui:Label text="F" class="wf-key" />
+                <ui:Label text="Sweep" class="wf-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hud__hint">
+                <ui:Label text="Q" class="wf-key" />
+                <ui:Label text="Eat" class="wf-text" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

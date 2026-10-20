@@ -1,0 +1,85 @@
+.currency-pill {
+    position: relative;
+    width: 322px;
+    height: 96px;
+    flex-direction: row;
+    align-items: center;
+}
+
+.currency-pill__body {
+    margin-left: 22px;
+    width: 300px;
+    height: 72px;
+    padding-left: 74px;
+    padding-right: 4px;
+    flex-direction: row;
+    align-items: center;
+    background-color: rgba(2, 11, 46, 0.85);
+    border-top-left-radius: 36px;
+    border-top-right-radius: 36px;
+    border-bottom-left-radius: 36px;
+    border-bottom-right-radius: 36px;
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-left-color: rgba(34, 211, 238, 0.5);
+    border-right-color: rgba(34, 211, 238, 0.5);
+    border-top-color: rgba(34, 211, 238, 0.5);
+    border-bottom-color: rgba(34, 211, 238, 0.5);
+}
+
+.currency-pill__icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 96px;
+    height: 96px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_coin.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.currency-pill--diamonds > .currency-pill__icon {
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_diamond.png");
+}
+
+.currency-pill__value {
+    flex-grow: 1;
+    margin: 0;
+    padding: 0 0 0 34px;
+    font-size: 32px;
+    white-space: nowrap;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-ExtraBold%20SDF.asset?fileID=11400000&guid=3be00f7d20028454995018d5d6c0fbe4&type=2#Inter-ExtraBold SDF");
+}
+
+.currency-pill__plus {
+    width: 80px;
+    height: 80px;
+    margin: -4px -8px -12px -8px;
+    padding-bottom: 8px;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_btn_plus.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    transition-duration: 0.1s;
+}
+
+.currency-pill__plus:hover {
+    scale: 1.06 1.06;
+}
+
+.currency-pill__plus:active {
+    scale: 0.94 0.94;
+}
+
+.currency-pill__plus-text {
+    margin: 0;
+    padding: 0;
+    font-size: 44px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-ExtraBold%20SDF.asset?fileID=11400000&guid=3be00f7d20028454995018d5d6c0fbe4&type=2#Inter-ExtraBold SDF");
+}

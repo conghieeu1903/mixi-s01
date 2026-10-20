@@ -1,0 +1,271 @@
+.quest {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    background-color: rgb(1, 21, 69);
+}
+
+.quest__bg,
+.quest__overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.quest__bg {
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_bg.jpg");
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.quest__overlay {
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_overlay.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.quest__text {
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-ExtraBold%20SDF.asset?fileID=11400000&guid=3be00f7d20028454995018d5d6c0fbe4&type=2#Inter-ExtraBold SDF");
+}
+
+/* Nút quay lại góc trên trái */
+.quest__back-btn {
+    position: absolute;
+    left: 16px;
+    top: 10px;
+    width: 191px;
+    height: 148px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_back_bg.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    transition-duration: 0.1s;
+}
+
+.quest__back-btn:hover {
+    scale: 1.05 1.05;
+}
+
+.quest__back-btn:active {
+    scale: 0.95 0.95;
+}
+
+.quest__back-icon {
+    position: absolute;
+    left: 56px;
+    top: 42px;
+    width: 64px;
+    height: 64px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_back.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.quest__title {
+    position: absolute;
+    left: 230px;
+    top: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Tab DAILY / STORY */
+.quest__tabs {
+    position: absolute;
+    right: 120px;
+    top: 50px;
+    flex-direction: row;
+}
+
+.quest-tab {
+    width: 240px;
+    height: 84px;
+    margin-left: 18px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(8, 18, 56);
+    border-width: 3px;
+    border-color: rgb(34, 211, 238);
+    border-radius: 12px;
+    transition-duration: 0.1s;
+}
+
+.quest-tab:hover {
+    scale: 1.04 1.04;
+}
+
+.quest-tab--active {
+    background-color: rgb(253, 206, 3);
+    border-color: rgb(2, 11, 46);
+}
+
+.quest-tab__label {
+    font-size: 32px;
+    color: rgb(255, 255, 255);
+}
+
+.quest-tab--active > .quest-tab__label {
+    color: rgb(2, 11, 46);
+}
+
+.quest-tab__badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 26px;
+    height: 26px;
+    background-color: rgb(239, 68, 68);
+    border-width: 3px;
+    border-color: rgb(255, 255, 255);
+    border-radius: 13px;
+    display: none;
+}
+
+.quest-tab--ready > .quest-tab__badge {
+    display: flex;
+}
+
+/* Khung danh sách quest */
+.quest__panel {
+    position: absolute;
+    left: 120px;
+    right: 120px;
+    top: 180px;
+    bottom: 90px;
+    padding: 50px 70px 40px 70px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_list_panel.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.quest__list {
+    flex-grow: 1;
+}
+
+.quest__empty {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 45%;
+    font-size: 36px;
+    -unity-text-align: middle-center;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.quest__message {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 30px;
+    font-size: 30px;
+    -unity-text-align: middle-center;
+    color: rgb(253, 206, 3);
+}
+
+/* Một dòng quest */
+.quest-row {
+    flex-direction: row;
+    align-items: center;
+    min-height: 140px;
+    margin-bottom: 14px;
+    padding: 12px 30px;
+    background-color: rgba(8, 18, 56, 0.92);
+    border-width: 3px;
+    border-color: rgba(34, 211, 238, 0.6);
+    border-radius: 14px;
+}
+
+.quest-row--completed {
+    border-color: rgb(253, 206, 3);
+    background-color: rgba(30, 48, 120, 0.95);
+}
+
+.quest-row--claimed {
+    opacity: 0.55;
+}
+
+.quest-row__info {
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin-right: 20px;
+}
+
+.quest-row__group {
+    font-size: 20px;
+    color: rgb(34, 211, 238);
+}
+
+.quest-row__title {
+    margin-top: 4px;
+    font-size: 34px;
+    color: rgb(255, 255, 255);
+}
+
+.quest-row__desc {
+    margin-top: 4px;
+    font-size: 22px;
+    white-space: normal;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.quest-row__status {
+    margin-top: 6px;
+    font-size: 20px;
+    color: rgb(253, 206, 3);
+}
+
+.quest-row__rewards {
+    flex-direction: row;
+    align-items: center;
+    margin-right: 30px;
+}
+
+.quest-row__reward {
+    flex-direction: row;
+    align-items: center;
+    margin-left: 16px;
+}
+
+.quest-row__icon {
+    width: 52px;
+    height: 52px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.quest-row__icon--coins {
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_coin.png");
+}
+
+.quest-row__icon--diamonds {
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_diamond.png");
+}
+
+.quest-row__amount {
+    margin-left: 8px;
+    font-size: 28px;
+    color: rgb(255, 255, 255);
+}
+
+.quest-row__btn {
+    min-width: 230px;
+    min-height: 88px;
+    padding: 8px 24px 18px 24px;
+}
+
+.quest-row__btn:disabled {
+    opacity: 0.5;
+}
+
+.quest-row__btn > .skew-button__label {
+    font-size: 36px;
+}
+
+.quest-row__btn--check > .skew-button__shape {
+    --skew-fill-color: rgb(34, 211, 238);
+}
+
+.quest-row__btn--check:hover > .skew-button__shape {
+    --skew-fill-color: rgb(90, 225, 245);
+}

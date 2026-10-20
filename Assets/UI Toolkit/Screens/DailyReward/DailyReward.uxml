@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="../../Components/SkewButton/SkewButton.uss" />
+    <ui:Style src="DailyReward.uss" />
+
+    <ui:VisualElement name="dailyRewardRoot" class="daily">
+        <ui:VisualElement name="dailyDim" class="daily__dim" />
+        <SafeAreaContainer name="dailySafeArea">
+            <ui:VisualElement name="dailyPanel" class="daily__panel">
+                <GameText name="dailyTitle" text="DAILY REWARD" text-style="ComicTitle" picking-mode="Ignore" class="daily__title" />
+                <ui:Label name="dailyStreakLabel" text="LOGIN STREAK: 0 DAYS" picking-mode="Ignore" class="daily__text daily__streak" />
+                <ui:VisualElement name="dailyCards" picking-mode="Ignore" class="daily__cards" />
+                <ui:Label name="dailyTimerLabel" text="NEXT REWARD IN 00:00:00" picking-mode="Ignore" class="daily__text daily__timer" />
+                <ui:VisualElement picking-mode="Ignore" class="daily__actions">
+                    <SkewButton name="dailyCloseButton" text="LATER" class="daily__btn daily__btn--close" />
+                    <SkewButton name="dailyClaimButton" text="CLAIM" class="daily__btn daily__btn--claim" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </SafeAreaContainer>
+    </ui:VisualElement>
+</ui:UXML>

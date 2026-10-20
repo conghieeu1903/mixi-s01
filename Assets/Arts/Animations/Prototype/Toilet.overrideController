@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Toilet
+  m_Controller: {fileID: 9100000, guid: 08a03bd6d7770ac4fa5dea4763ad55e7, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 1fc1420cbd3060b48b2047dec6d94e82, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: e4527596c91f90b41a79c1adf7f9527e, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: e962461a014877e4a92a5e8150498f58, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 48c00c95a1100e24299c33af51c0451b, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 8eff24f470d58c343b149780e78c0263, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: cafde5a7a90d7d949b743e470478fad1, type: 2}

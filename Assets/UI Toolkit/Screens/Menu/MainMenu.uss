@@ -1,0 +1,530 @@
+<<<<<<< HEAD:Assets/UI/Screens/Menu/MainMenu.uss
+.main-menu__world {
+    padding-left: 520px;
+}
+
+.main-menu__sidebar {
+    position: absolute;
+    left: 80px;
+    top: 80px;
+    bottom: 80px;
+    width: 440px;
+}
+
+.main-menu__logo {
+    height: 200px;
+    margin-bottom: 40px;
+}
+
+.main-menu__button {
+    height: 68px;
+    font-size: 26px;
+    margin-bottom: 16px;
+}
+
+.main-menu__dialog {
+    width: 560px;
+}
+
+.main-menu__dialog-text {
+    margin-bottom: 20px;
+}
+
+.main-menu__save-info {
+    margin-bottom: 24px;
+}
+
+.main-menu__save-thumb {
+    width: 160px;
+    height: 90px;
+    margin-right: 16px;
+}
+
+.main-menu__dialog-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.main-menu__dialog-actions > .wf-button {
+    margin-left: 12px;
+}
+
+.main-menu__progress {
+    margin-bottom: 12px;
+}
+=======
+.menu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    background-color: rgb(1, 21, 69);
+}
+
+.menu__bg,
+.menu__overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.menu__bg {
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_bg.jpg");
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.menu__overlay {
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_overlay.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.menu__character {
+    position: absolute;
+    left: 50%;
+    top: 80px;
+    width: 930px;
+    height: 1000px;
+    margin-left: -490px;
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_character.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.menu__text {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BlackItalic%20SDF.asset?fileID=11400000&guid=6760fe27ba215f04189cb6a412f07c16&type=2#Inter-BlackItalic SDF");
+}
+
+/* Thẻ người chơi góc trên trái */
+.menu__player {
+    position: absolute;
+    left: 35px;
+    top: 27px;
+    width: 473px;
+    height: 112px;
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_player_bg.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.menu__player-avatar {
+    position: absolute;
+    left: 21px;
+    top: 8px;
+    width: 96px;
+    height: 96px;
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_avatar.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.menu__player-name {
+    left: 137px;
+    top: 13px;
+    font-size: 34px;
+    color: rgb(255, 255, 255);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-Bold%20SDF.asset?fileID=11400000&guid=41482344942c31f46aee1b5019cbf976&type=2#Inter-Bold SDF");
+}
+
+/* Thanh tiền tệ và nút cài đặt góc trên phải */
+.menu__top-bar {
+    position: absolute;
+    right: 70px;
+    top: 28px;
+    height: 96px;
+    flex-direction: row;
+    align-items: center;
+}
+
+.menu__currency-pill--coins {
+    margin-right: 38px;
+}
+
+.menu__currency-pill--diamonds {
+    margin-right: 50px;
+}
+
+/* Nút tròn Quest và điểm danh trên thanh trên cùng */
+.menu__icon-btn {
+    width: 88px;
+    height: 88px;
+    margin-right: 30px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(8, 18, 56);
+    border-width: 3px;
+    border-color: rgb(253, 206, 3);
+    border-radius: 44px;
+    transition-duration: 0.15s;
+}
+
+.menu__icon-btn:hover {
+    scale: 1.06 1.06;
+}
+
+.menu__icon-btn:active {
+    scale: 0.92 0.92;
+}
+
+.menu__icon-btn-icon {
+    width: 60px;
+    height: 60px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.menu__icon-btn--daily > .menu__icon-btn-icon {
+    background-image: url("/Assets/Arts/Sprites/Icons/icon_money_bag.png");
+}
+
+.menu__icon-btn--quest {
+    border-color: rgb(34, 211, 238);
+}
+
+.menu__icon-btn--quest > .menu__icon-btn-icon {
+    width: 52px;
+    height: 52px;
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_nav_mission.png");
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+}
+
+.menu__icon-btn-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 28px;
+    height: 28px;
+    background-color: rgb(239, 68, 68);
+    border-width: 3px;
+    border-color: rgb(255, 255, 255);
+    border-radius: 14px;
+    display: none;
+}
+
+.menu__icon-btn--ready > .menu__icon-btn-badge {
+    display: flex;
+}
+
+.menu__settings-btn {
+    width: 80px;
+    height: 80px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_settings.png");
+    -unity-background-scale-mode: scale-to-fit;
+    transition-duration: 0.15s;
+}
+
+.menu__settings-btn:hover {
+    rotate: 30deg;
+}
+
+.menu__settings-btn:active {
+    scale: 0.92 0.92;
+}
+
+/* Logo SG-02 ARENA */
+.menu__logo-crown {
+    position: absolute;
+    left: 180px;
+    top: 190px;
+    width: 90px;
+    height: 90px;
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_icon_crown.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.menu__logo-sg02 {
+    position: absolute;
+    left: 77px;
+    top: 220px;
+    width: 678px;
+    height: 253px;
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_logo_sg02.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.menu__logo-arena {
+    position: absolute;
+    left: 144px;
+    top: 451px;
+    width: 554px;
+    height: 197px;
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_logo_arena.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.menu__tagline-banner {
+    position: absolute;
+    left: 160px;
+    top: 643px;
+    width: 433px;
+    height: 103px;
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_subtitle_banner.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.menu__tagline {
+    left: 183px;
+    top: 684px;
+    width: 301px;
+    height: 34px;
+    font-size: 28px;
+    letter-spacing: 1.1px;
+    color: rgb(34, 211, 238);
+    rotate: -6deg;
+    -unity-text-align: middle-center;
+}
+
+/* Cột nút START / OPTIONS / SHOP */
+.menu__actions {
+    position: absolute;
+    right: 32px;
+    top: 221px;
+    width: 696px;
+    flex-direction: column;
+}
+
+.menu-btn {
+    width: 696px;
+    height: 244px;
+    margin-bottom: -14px;
+    flex-shrink: 0;
+    -unity-background-scale-mode: stretch-to-fill;
+    transition-duration: 0.12s;
+}
+
+.menu-btn:hover {
+    scale: 1.03 1.03;
+}
+
+.menu-btn:active {
+    scale: 0.97 0.97;
+}
+
+.menu-btn--start {
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_btn_start.png");
+}
+
+.menu-btn--options {
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_btn_options.png");
+}
+
+.menu-btn--shop {
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_btn_shop.png");
+}
+
+.menu-btn__icon {
+    position: absolute;
+    left: 88px;
+    top: 54px;
+    width: 100px;
+    height: 100px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.menu-btn--start > .menu-btn__icon {
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_icon_start.png");
+}
+
+.menu-btn--options > .menu-btn__icon {
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_icon_options.png");
+}
+
+.menu-btn--shop > .menu-btn__icon {
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_icon_shop.png");
+}
+
+.menu-btn__title {
+    left: 218px;
+    top: 31px;
+    font-size: 84px;
+    letter-spacing: 0.8px;
+    color: rgb(2, 11, 46);
+}
+
+.menu-btn__subtitle {
+    left: 224px;
+    top: 131px;
+    font-size: 28px;
+    letter-spacing: 0.8px;
+    color: rgba(2, 11, 46, 0.97);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-ExtraBoldItalic%20SDF.asset?fileID=11400000&guid=5f7f74bcfb7cfd54eb8de297c0336fba&type=2#Inter-ExtraBoldItalic SDF");
+}
+
+.menu-btn--shop > .menu-btn__title {
+    color: rgb(255, 255, 255);
+}
+
+.menu-btn--shop > .menu-btn__subtitle {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.menu-btn__chevron {
+    position: absolute;
+    left: 538px;
+    top: 75px;
+    width: 60px;
+    height: 60px;
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_icon_chevron.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* Thanh điều hướng dưới */
+.menu__nav-bg {
+    position: absolute;
+    left: 0;
+    top: 929px;
+    width: 822px;
+    height: 151px;
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_nav_bg.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.menu__nav-divider {
+    position: absolute;
+    top: 960px;
+    width: 2px;
+    height: 90px;
+    background-color: rgba(34, 211, 238, 0.3);
+}
+
+.menu__nav-divider--1 {
+    left: 202px;
+}
+
+.menu__nav-divider--2 {
+    left: 387px;
+}
+
+.menu__nav-divider--3 {
+    left: 572px;
+}
+
+.menu__nav {
+    position: absolute;
+    left: 17px;
+    top: 946px;
+    flex-direction: row;
+}
+
+.menu-nav-item {
+    width: 185px;
+    height: 110px;
+    align-items: center;
+    transition-duration: 0.12s;
+}
+
+.menu-nav-item:hover {
+    scale: 1.06 1.06;
+}
+
+.menu-nav-item:active {
+    scale: 0.95 0.95;
+}
+
+.menu-nav-item__icon {
+    width: 64px;
+    height: 64px;
+    margin-top: 4px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.menu-nav-item--ranking > .menu-nav-item__icon {
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_nav_ranking.png");
+}
+
+.menu-nav-item--achievements > .menu-nav-item__icon {
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_nav_achievements.png");
+}
+
+.menu-nav-item--mission > .menu-nav-item__icon {
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_nav_mission.png");
+}
+
+.menu-nav-item--news > .menu-nav-item__icon {
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_nav_news.png");
+}
+
+.menu-nav-item__label {
+    position: relative;
+    margin-top: 14px;
+    font-size: 20px;
+    letter-spacing: 0.4px;
+    color: rgb(255, 255, 255);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-ExtraBold%20SDF.asset?fileID=11400000&guid=3be00f7d20028454995018d5d6c0fbe4&type=2#Inter-ExtraBold SDF");
+}
+
+.menu-nav-item__badge {
+    position: absolute;
+    left: 115px;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    background-color: rgb(239, 68, 68);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+}
+
+/* Khẩu hiệu góc dưới phải */
+.menu__callout {
+    position: absolute;
+    right: 0;
+    top: 890px;
+    width: 480px;
+    height: 140px;
+}
+
+.menu__callout-crown {
+    position: absolute;
+    left: 320px;
+    top: 15px;
+    width: 56px;
+    height: 56px;
+    background-image: url("/Assets/Arts/Sprites/Menu/menu_icon_crown_small.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.menu__callout-line {
+    height: 56px;
+    font-size: 46px;
+    rotate: -6deg;
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 8px;
+    -unity-text-outline-color: rgb(2, 11, 46);
+}
+
+.menu__callout-line1 {
+    left: 2px;
+    top: 19px;
+    width: 304px;
+    color: rgb(255, 255, 255);
+}
+
+.menu__callout-line2 {
+    left: 32px;
+    top: 70px;
+    width: 387px;
+    color: rgb(34, 211, 238);
+}
+
+.subscreen-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+}
+>>>>>>> 37157e669918c4508205c48129ff513621872283:Assets/UI Toolkit/Screens/Menu/MainMenu.uss

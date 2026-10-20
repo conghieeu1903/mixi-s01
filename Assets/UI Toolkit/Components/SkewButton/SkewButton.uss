@@ -1,0 +1,42 @@
+.skew-button {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    min-width: 452px;
+    min-height: 114px;
+    padding: 22px 64px 34px 64px;
+    margin-right: 6px;
+    margin-bottom: 11px;
+    transition-duration: 0.12s;
+}
+
+.skew-button:hover {
+    scale: 1.04 1.04;
+}
+
+.skew-button:active {
+    translate: 3px 5px;
+}
+
+.skew-button__shape {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    --skew-fill-color: rgb(253, 206, 3);
+    --skew-stroke-color: rgb(0, 0, 0);
+    --skew-stroke-width: 3;
+    --skew-shadow-color: rgb(0, 0, 0);
+    --skew-shadow-offset-x: 6;
+    --skew-shadow-offset-y: 11;
+}
+
+.skew-button:hover > .skew-button__shape {
+    --skew-fill-color: rgb(255, 222, 70);
+}
+
+.skew-button:active > .skew-button__shape {
+    --skew-shadow-offset-x: 3;
+    --skew-shadow-offset-y: 6;
+}

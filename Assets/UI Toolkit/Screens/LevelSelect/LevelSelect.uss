@@ -1,0 +1,116 @@
+.level-select {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    background-color: rgb(1, 21, 69);
+}
+
+.level-select__bg,
+.level-select__vignette {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.level-select__bg {
+    background-image: url("/Assets/Arts/Sprites/LevelSelect/level_select_bg.png");
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.level-select__vignette {
+    background-image: url("/Assets/Arts/Sprites/LevelSelect/level_select_vignette.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.level-select__character {
+    position: absolute;
+    left: -204px;
+    top: 282px;
+    width: 840px;
+    height: 1681px;
+    background-image: url("/Assets/Arts/Sprites/LevelSelect/level_select_character.png");
+}
+
+.level-select__title {
+    position: absolute;
+    left: 50%;
+    top: -33px;
+    width: 886px;
+    height: 395px;
+    translate: -46% 0;
+    background-image: url("/Assets/Arts/Sprites/LevelSelect/level_select_title.png");
+}
+
+.level-select__cards {
+    position: absolute;
+    left: 520px;
+    right: 40px;
+    top: 330px;
+    bottom: 40px;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.level-card {
+    width: 400px;
+    height: 600px;
+    justify-content: center;
+    align-items: center;
+    background-image: url("/Assets/Arts/Sprites/LevelSelect/level_card.png");
+    transition-duration: 0.12s;
+}
+
+.level-card:hover {
+    scale: 1.05 1.05;
+}
+
+.level-card:active {
+    scale: 0.97 0.97;
+}
+
+.level-card__content {
+    align-items: center;
+    rotate: -8deg;
+}
+
+.level-card__number {
+    font-size: 220px;
+}
+
+.level-card__lock {
+    display: none;
+    font-size: 40px;
+}
+
+.level-card--locked {
+    background-image: url("/Assets/Arts/Sprites/LevelSelect/level_card_locked.png");
+}
+
+.level-card--locked:hover,
+.level-card--locked:active {
+    scale: 1 1;
+}
+
+.level-card--locked .level-card__caption,
+.level-card--locked .level-card__number {
+    opacity: 0.5;
+}
+
+.level-card--locked .level-card__lock {
+    display: flex;
+}
+
+.level-select__back {
+    position: absolute;
+    right: 40px;
+    top: 40px;
+    min-width: 260px;
+    min-height: 80px;
+    padding: 12px 36px 22px 36px;
+}

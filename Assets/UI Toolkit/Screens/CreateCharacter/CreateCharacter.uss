@@ -1,0 +1,35 @@
+.create-char {
+    flex-direction: row;
+    padding: 48px;
+}
+
+.create-char__options {
+    width: 520px;
+    margin-right: 32px;
+}
+
+.create-char__option {
+    margin-bottom: 14px;
+}
+
+.create-char__option-label {
+    flex-grow: 1;
+}
+
+.create-char__option-value {
+    width: 140px;
+    -unity-text-align: middle-center;
+}
+
+.create-char__preview {
+    flex-grow: 1;
+}
+
+.wf-screen .create-char__name {
+    margin-bottom: 16px;
+}
+
+.create-char__actions {
+    flex-direction: row;
+    justify-content: space-between;
+}

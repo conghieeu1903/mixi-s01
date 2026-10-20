@@ -1,0 +1,41 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="Blackjack.uss" />
+    <ui:VisualElement name="blackjack" class="wf-screen blackjack">
+        <ui:VisualElement name="table" class="wf-panel blackjack__table">
+            <ui:VisualElement name="dealerHand" class="blackjack__hand">
+                <ui:Label text="Nhà cái · 10 + ?" class="wf-subheading" />
+                <ui:VisualElement class="blackjack__cards">
+                    <ui:VisualElement class="blackjack__card"><ui:Label text="10" class="wf-heading" /></ui:VisualElement>
+                    <ui:VisualElement class="blackjack__card blackjack__card--hidden"><ui:Label text="?" class="wf-heading" /></ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label name="resultLabel" text="Lượt của bạn" class="wf-tag blackjack__result" />
+            <ui:VisualElement name="playerHand" class="blackjack__hand">
+                <ui:VisualElement class="blackjack__cards">
+                    <ui:VisualElement class="blackjack__card"><ui:Label text="A" class="wf-heading" /></ui:VisualElement>
+                    <ui:VisualElement class="blackjack__card"><ui:Label text="7" class="wf-heading" /></ui:VisualElement>
+                </ui:VisualElement>
+                <ui:Label text="Bạn · 18" class="wf-subheading" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="controls" class="blackjack__controls">
+            <ui:VisualElement class="blackjack__wallet">
+                <ui:Label text="Tiền: $ 1,250" class="wf-subheading" />
+                <ui:Label text="Cược: $ 100" class="wf-caption" />
+            </ui:VisualElement>
+            <ui:VisualElement name="chips" class="blackjack__chips">
+                <ui:Button text="10" class="wf-button blackjack__chip" />
+                <ui:Button text="50" class="wf-button blackjack__chip" />
+                <ui:Button text="100" class="wf-button blackjack__chip" />
+                <ui:Button text="500" class="wf-button blackjack__chip" />
+            </ui:VisualElement>
+            <ui:VisualElement class="blackjack__actions">
+                <ui:Button name="leaveButton" text="Rời bàn" class="wf-button" />
+                <ui:Button name="doubleButton" text="Double" class="wf-button" />
+                <ui:Button name="standButton" text="Stand" class="wf-button" />
+                <ui:Button name="hitButton" text="Hit" class="wf-button wf-button--primary" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

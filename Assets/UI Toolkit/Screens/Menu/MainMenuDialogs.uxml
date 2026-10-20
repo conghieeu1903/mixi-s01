@@ -1,0 +1,55 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="MainMenu.uss" />
+    <ui:VisualElement name="mainMenuDialogs" class="wf-screen wf-board">
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="saveFoundDialog" class="wf-panel main-menu__dialog">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Tìm thấy save cũ" class="wf-heading" />
+                </ui:VisualElement>
+                <ui:Label text="Bạn muốn tiếp tục từ lần chơi trước hay bắt đầu lại?" class="wf-text wf-wrap main-menu__dialog-text" />
+                <ui:VisualElement class="wf-row main-menu__save-info">
+                    <ui:VisualElement class="wf-placeholder main-menu__save-thumb">
+                        <ui:Label text="Ảnh save" class="wf-placeholder__label" />
+                    </ui:VisualElement>
+                    <ui:VisualElement>
+                        <ui:Label text="Ngày 12 · 21:40" class="wf-subheading" />
+                        <ui:Label text="Tiền: $ 3,450" class="wf-caption" />
+                        <ui:Label text="Follower: 1,208" class="wf-caption" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="main-menu__dialog-actions">
+                    <ui:Button name="cancelButton" text="Hủy" class="wf-button" />
+                    <ui:Button name="deleteSaveButton" text="Xóa save" class="wf-button" />
+                    <ui:Button name="continueButton" text="Continue" class="wf-button wf-button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Saved Game Found" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="deletingSaveDialog" class="wf-panel main-menu__dialog">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Đang xóa save…" class="wf-heading" />
+                </ui:VisualElement>
+                <ui:VisualElement class="wf-progress main-menu__progress">
+                    <ui:VisualElement class="wf-progress__fill wf-progress__fill--60" />
+                </ui:VisualElement>
+                <ui:Label text="Xong sẽ quay về Main Menu" class="wf-caption" />
+            </ui:VisualElement>
+            <ui:Label text="Deleting Save" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="exitConfirmDialog" class="wf-panel main-menu__dialog">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Thoát game?" class="wf-heading" />
+                </ui:VisualElement>
+                <ui:Label text="Tiến trình chưa lưu sẽ bị mất." class="wf-text wf-wrap main-menu__dialog-text" />
+                <ui:VisualElement class="main-menu__dialog-actions">
+                    <ui:Button name="noButton" text="Không" class="wf-button" />
+                    <ui:Button name="yesButton" text="Thoát" class="wf-button wf-button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Exit Confirm" class="wf-board__caption" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

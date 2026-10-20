@@ -1,0 +1,121 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="Minigames.uss" />
+    <ui:VisualElement name="minigames" class="wf-screen wf-board">
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="slotGame" class="wf-panel minigame">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Slot" class="wf-subheading wf-grow" />
+                    <ui:Label text="SlotMachineClub / SlotWebGame" class="wf-note" />
+                </ui:VisualElement>
+                <ui:VisualElement class="minigame__body">
+                    <ui:VisualElement class="minigame__reels">
+                        <ui:VisualElement class="minigame__reel"><ui:Label text="7" class="wf-title" /></ui:VisualElement>
+                        <ui:VisualElement class="minigame__reel"><ui:Label text="7" class="wf-title" /></ui:VisualElement>
+                        <ui:VisualElement class="minigame__reel"><ui:Label text="BAR" class="wf-heading" /></ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="minigame__footer">
+                    <ui:Label text="Cược: $ 10" class="wf-text wf-grow" />
+                    <ui:Button text="-" class="wf-button wf-button--square" />
+                    <ui:Button text="+" class="wf-button wf-button--square" />
+                    <ui:Button text="Quay" class="wf-button wf-button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Slot" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="scratchGame" class="wf-panel minigame">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Vé cào" class="wf-subheading wf-grow" />
+                    <ui:Label text="Trùng 3 ô để thắng" class="wf-caption" />
+                </ui:VisualElement>
+                <ui:VisualElement class="minigame__body">
+                    <ui:VisualElement class="minigame__scratch-grid">
+                        <ui:VisualElement class="wf-placeholder minigame__scratch-cell minigame__scratch-cell--revealed"><ui:Label text="$5" class="wf-subheading" /></ui:VisualElement>
+                        <ui:VisualElement class="wf-placeholder minigame__scratch-cell"><ui:Label text="?" class="wf-subheading" /></ui:VisualElement>
+                        <ui:VisualElement class="wf-placeholder minigame__scratch-cell minigame__scratch-cell--revealed"><ui:Label text="$5" class="wf-subheading" /></ui:VisualElement>
+                        <ui:VisualElement class="wf-placeholder minigame__scratch-cell"><ui:Label text="?" class="wf-subheading" /></ui:VisualElement>
+                        <ui:VisualElement class="wf-placeholder minigame__scratch-cell minigame__scratch-cell--revealed"><ui:Label text="$50" class="wf-subheading" /></ui:VisualElement>
+                        <ui:VisualElement class="wf-placeholder minigame__scratch-cell"><ui:Label text="?" class="wf-subheading" /></ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="minigame__footer">
+                    <ui:Label text="Giá vé: $ 2" class="wf-text wf-grow" />
+                    <ui:Button text="Cào hết" class="wf-button" />
+                    <ui:Button text="Vé mới" class="wf-button wf-button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Scratch" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="luckySpinGame" class="wf-panel minigame">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Vòng quay may mắn" class="wf-subheading wf-grow" />
+                </ui:VisualElement>
+                <ui:VisualElement class="minigame__body">
+                    <ui:VisualElement class="minigame__wheel-pointer" />
+                    <ui:VisualElement class="minigame__wheel">
+                        <ui:Label text="8 ô thưởng" class="wf-caption" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="minigame__footer">
+                    <ui:Label text="Còn 1 lượt miễn phí" class="wf-text wf-grow" />
+                    <ui:Button text="Quay" class="wf-button wf-button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="LuckySpin" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="danceGame" class="wf-panel minigame">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Dance" class="wf-subheading wf-grow" />
+                    <ui:Label text="Điểm: 12,400 · Combo x8" class="wf-caption" />
+                </ui:VisualElement>
+                <ui:VisualElement class="minigame__lanes">
+                    <ui:VisualElement class="minigame__lane"><ui:VisualElement class="minigame__note minigame__note--low" /><ui:Label text="&lt;" class="wf-key" /></ui:VisualElement>
+                    <ui:VisualElement class="minigame__lane"><ui:VisualElement class="minigame__note" /><ui:Label text="v" class="wf-key" /></ui:VisualElement>
+                    <ui:VisualElement class="minigame__lane"><ui:Label text="^" class="wf-key" /></ui:VisualElement>
+                    <ui:VisualElement class="minigame__lane"><ui:VisualElement class="minigame__note minigame__note--low" /><ui:Label text="&gt;" class="wf-key" /></ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="minigame__footer">
+                    <ui:Label text="Bấm phím khi nốt chạm vạch" class="wf-caption wf-grow" />
+                    <ui:Button text="Thoát" class="wf-button" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="DanceGame" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="raffleGame" class="wf-panel minigame">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Xổ số" class="wf-subheading wf-grow" />
+                    <ui:Label text="Quay thưởng lúc 20:00" class="wf-caption" />
+                </ui:VisualElement>
+                <ui:VisualElement class="minigame__body">
+                    <ui:VisualElement class="minigame__ticket">
+                        <ui:Label text="Vé của bạn" class="wf-caption" />
+                        <ui:Label text="04 · 17 · 23 · 38" class="wf-heading" />
+                        <ui:Label text="Giải đặc biệt: $ 5,000" class="wf-text" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="minigame__footer">
+                    <ui:Label text="Giá vé: $ 5" class="wf-text wf-grow" />
+                    <ui:Button text="Số ngẫu nhiên" class="wf-button" />
+                    <ui:Button text="Mua vé" class="wf-button wf-button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Raffle" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="otherGames" class="wf-panel minigame">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Minigame khác" class="wf-subheading wf-grow" />
+                </ui:VisualElement>
+                <ui:VisualElement class="wf-placeholder minigame__body">
+                    <ui:Label text="BrainRot · Asmr · Pogo · CamperStrike&#10;Chưa rõ giao diện, cần đọc code của từng game" class="wf-placeholder__label" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Chưa phác thảo" class="wf-board__caption" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

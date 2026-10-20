@@ -1,0 +1,16 @@
+{
+  "runtime.version": "Lua 5.1",
+  "workspace.library": [
+    "agents/skills/ss-go-lua/assets"
+  ],
+  "workspace.checkThirdParty": false,
+  "diagnostics.globals": [
+    "payload",
+    "ctx",
+    "output",
+    "game"
+  ],
+  "diagnostics.disable": [
+    "lowercase-global"
+  ]
+}

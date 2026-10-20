@@ -1,0 +1,36 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="LevelSelect.uss" />
+    <ui:Style src="../../Components/SkewButton/SkewButton.uss" />
+    <ui:VisualElement name="levelSelectRoot" class="level-select">
+        <ui:VisualElement picking-mode="Ignore" class="level-select__bg" />
+        <ui:VisualElement picking-mode="Ignore" class="level-select__vignette" />
+        <ui:VisualElement picking-mode="Ignore" class="level-select__character" />
+        <SafeAreaContainer name="levelSelectSafeArea">
+            <ui:VisualElement picking-mode="Ignore" class="level-select__title" />
+            <ui:VisualElement name="levelCards" picking-mode="Ignore" class="level-select__cards">
+                <ui:VisualElement name="levelCard1" class="level-card">
+                    <ui:VisualElement picking-mode="Ignore" class="level-card__content">
+                        <GameText text="LEVEL" text-style="ComicButton" picking-mode="Ignore" class="level-card__caption" />
+                        <GameText name="levelNumber" text="1" text-style="ComicTitle" picking-mode="Ignore" class="level-card__number" />
+                        <GameText name="lockLabel" text="LOCKED" text-style="ComicButton" picking-mode="Ignore" class="level-card__lock" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="levelCard2" class="level-card">
+                    <ui:VisualElement picking-mode="Ignore" class="level-card__content">
+                        <GameText text="LEVEL" text-style="ComicButton" picking-mode="Ignore" class="level-card__caption" />
+                        <GameText name="levelNumber" text="2" text-style="ComicTitle" picking-mode="Ignore" class="level-card__number" />
+                        <GameText name="lockLabel" text="LOCKED" text-style="ComicButton" picking-mode="Ignore" class="level-card__lock" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="levelCard3" class="level-card">
+                    <ui:VisualElement picking-mode="Ignore" class="level-card__content">
+                        <GameText text="LEVEL" text-style="ComicButton" picking-mode="Ignore" class="level-card__caption" />
+                        <GameText name="levelNumber" text="3" text-style="ComicTitle" picking-mode="Ignore" class="level-card__number" />
+                        <GameText name="lockLabel" text="LOCKED" text-style="ComicButton" picking-mode="Ignore" class="level-card__lock" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <SkewButton name="backButton" text="BACK" class="level-select__back" />
+        </SafeAreaContainer>
+    </ui:VisualElement>
+</ui:UXML>

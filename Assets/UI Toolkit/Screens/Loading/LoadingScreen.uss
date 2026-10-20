@@ -1,0 +1,284 @@
+.loading-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    background-color: rgb(1, 21, 69);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-Bold%20SDF.asset?fileID=11400000&guid=41482344942c31f46aee1b5019cbf976&type=2#Inter-Bold SDF");
+}
+
+.loading__bg,
+.loading__overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.loading__bg {
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_bg.png");
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.loading__overlay {
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_overlay.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.loading__center {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 0;
+    height: 100%;
+    overflow: visible;
+}
+
+.loading__right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 420px;
+    height: 100%;
+    overflow: visible;
+}
+
+.loading__character {
+    position: absolute;
+    left: -270px;
+    top: 53px;
+    width: 756px;
+    height: 1513px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_character.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.loading__logo-sg02 {
+    position: absolute;
+    left: 43px;
+    top: 25px;
+    width: 454px;
+    height: 171px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_logo_sg02.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.loading__logo-arena {
+    position: absolute;
+    left: 93px;
+    top: 174px;
+    width: 386px;
+    height: 139px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_logo_arena.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.loading__crown {
+    position: absolute;
+    left: 280px;
+    top: 22px;
+    width: 64px;
+    height: 64px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_crown.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.loading__tag {
+    position: absolute;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.loading__tag-play {
+    left: 221px;
+    top: 38px;
+    width: 116px;
+    height: 41px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_tag_play.png");
+}
+
+.loading__tag-match {
+    left: 191px;
+    top: 84px;
+    width: 159px;
+    height: 47px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_tag_match.png");
+}
+
+.loading__tag-win {
+    left: 276px;
+    top: 144px;
+    width: 86px;
+    height: 38px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_tag_win.png");
+}
+
+.loading__tag-goodluck {
+    left: 227px;
+    top: 196px;
+    width: 145px;
+    height: 32px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_tag_goodluck.png");
+}
+
+.loading__bottom-band {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 890px;
+    height: 190px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_bottom_band.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.loading__band-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 890px;
+    height: 3px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_band_line.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.loading__crown-small {
+    position: absolute;
+    left: 60px;
+    top: 912px;
+    width: 48px;
+    height: 48px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_crown_small.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.loading-title {
+    position: absolute;
+    left: 60px;
+    top: 950px;
+    margin: 0;
+    padding: 0;
+    font-size: 60px;
+    color: rgb(255, 255, 255);
+    letter-spacing: 1.2px;
+    text-shadow: 0px 0px 16px rgba(34, 211, 238, 0.5);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BoldItalic%20SDF.asset?fileID=11400000&guid=d9867da3a75c0484baaf443b83491d00&type=2#Inter-BoldItalic SDF");
+}
+
+.loading-subtitle {
+    position: absolute;
+    left: 64px;
+    top: 1028px;
+    margin: 0;
+    padding: 0;
+    font-size: 22px;
+    color: rgba(255, 255, 255, 0.7);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-Regular%20SDF.asset?fileID=11400000&guid=f59586bd3496b1c4a95aad2651928ee4&type=2#Inter-Regular SDF");
+}
+
+.loading-track {
+    position: absolute;
+    left: -400px;
+    top: 968px;
+    width: 760px;
+    height: 30px;
+    background-color: rgb(11, 26, 74);
+    border-width: 2px;
+    border-color: rgba(34, 211, 238, 0.5);
+    border-radius: 15px;
+}
+
+.loading-fill {
+    width: 78%;
+    height: 100%;
+    border-radius: 15px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_progress_fill.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.loading-fill-shine {
+    position: absolute;
+    left: 15px;
+    right: 15px;
+    top: 3px;
+    height: 6px;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.loading-leading-glow {
+    position: absolute;
+    right: -2px;
+    top: -10px;
+    width: 8px;
+    height: 46px;
+    border-radius: 4px;
+    background-color: rgb(255, 255, 255);
+}
+
+.loading-percent {
+    position: absolute;
+    left: 390px;
+    top: 952px;
+    margin: 0;
+    padding: 0;
+    font-size: 52px;
+    color: rgb(34, 211, 238);
+    text-shadow: 0px 0px 14px rgba(34, 211, 238, 0.5);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BoldItalic%20SDF.asset?fileID=11400000&guid=d9867da3a75c0484baaf443b83491d00&type=2#Inter-BoldItalic SDF");
+}
+
+.loading-resource {
+    position: absolute;
+    left: -400px;
+    top: 1014px;
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.36px;
+}
+
+.loading__divider {
+    position: absolute;
+    left: 0;
+    top: 925px;
+    width: 2px;
+    height: 120px;
+    background-color: rgba(34, 211, 238, 0.35);
+}
+
+.loading__tip-icon {
+    position: absolute;
+    left: 30px;
+    top: 924px;
+    width: 36px;
+    height: 36px;
+    background-image: url("/Assets/Arts/Sprites/Loading/loading_tip_icon.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.loading__tip-title {
+    position: absolute;
+    left: 76px;
+    top: 920px;
+    margin: 0;
+    padding: 0;
+    font-size: 28px;
+    color: rgb(253, 206, 3);
+    letter-spacing: 0.56px;
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BoldItalic%20SDF.asset?fileID=11400000&guid=d9867da3a75c0484baaf443b83491d00&type=2#Inter-BoldItalic SDF");
+}
+
+.loading__tip-text {
+    position: absolute;
+    left: 32px;
+    top: 966px;
+    width: 340px;
+    margin: 0;
+    padding: 0;
+    font-size: 22px;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: normal;
+}

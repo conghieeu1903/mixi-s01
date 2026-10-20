@@ -1,0 +1,232 @@
+.shop {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    background-color: rgb(1, 21, 69);
+}
+
+.shop__bg,
+.shop__overlay,
+.shop__frame {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.shop__bg {
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_bg.jpg");
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.shop__overlay {
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_overlay.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.shop__character {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 660px;
+    height: 970px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_character.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.shop__frame {
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_frame.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    -unity-slice-left: 320;
+    -unity-slice-top: 170;
+    -unity-slice-right: 40;
+    -unity-slice-bottom: 40;
+}
+
+.shop__text {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BlackItalic%20SDF.asset?fileID=11400000&guid=6760fe27ba215f04189cb6a412f07c16&type=2#Inter-BlackItalic SDF");
+}
+
+.shop__back-btn {
+    position: absolute;
+    left: 16px;
+    top: 10px;
+    width: 191px;
+    height: 148px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_back_bg.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    transition-duration: 0.1s;
+}
+
+.shop__back-btn:hover {
+    scale: 1.05 1.05;
+}
+
+.shop__back-btn:active {
+    scale: 0.95 0.95;
+}
+
+.shop__back-icon {
+    position: absolute;
+    left: 56px;
+    top: 42px;
+    width: 64px;
+    height: 64px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_back.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.shop__top-bar {
+    position: absolute;
+    right: 70px;
+    top: 28px;
+    height: 96px;
+    flex-direction: row;
+    align-items: center;
+}
+
+.shop__currency-pill--coins {
+    margin-right: 38px;
+}
+
+.shop__currency-pill--diamonds {
+    margin-right: 50px;
+}
+
+.shop__settings-btn {
+    width: 80px;
+    height: 80px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_settings.png");
+    -unity-background-scale-mode: scale-to-fit;
+    transition-duration: 0.15s;
+}
+
+.shop__settings-btn:hover {
+    rotate: 30deg;
+}
+
+.shop__settings-btn:active {
+    scale: 0.92 0.92;
+}
+
+.shop__title {
+    left: 80px;
+    top: 150px;
+    font-size: 170px;
+    letter-spacing: 1.7px;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 12px;
+    -unity-text-outline-color: rgb(2, 11, 46);
+}
+
+.shop__subtitle-banner {
+    position: absolute;
+    left: 127px;
+    top: 289px;
+    width: 628px;
+    height: 150px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_subtitle_banner.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.shop__subtitle {
+    left: 137px;
+    top: 342px;
+    width: 537px;
+    height: 41px;
+    font-size: 34px;
+    letter-spacing: 1.4px;
+    color: rgb(34, 211, 238);
+    rotate: -6deg;
+    -unity-text-align: middle-center;
+}
+
+.shop__list-panel {
+    position: absolute;
+    left: 10px;
+    top: 398px;
+    width: 902px;
+    height: 682px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_list_panel.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.shop__pack-list {
+    position: absolute;
+    left: 108px;
+    top: 470px;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.shop__row--2 {
+    margin-left: -6px;
+}
+
+.shop__row--3 {
+    margin-left: -11px;
+}
+
+.shop__row--4 {
+    margin-left: -17px;
+}
+
+.shop__row--5 {
+    margin-left: -22px;
+}
+
+.shop__ad-card {
+    position: absolute;
+    left: 859px;
+    top: 240px;
+}
+
+.shop__callout {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 470px;
+    height: 230px;
+}
+
+.shop__callout-crown {
+    position: absolute;
+    left: 270px;
+    top: 10px;
+    width: 60px;
+    height: 60px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_crown.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.shop__callout-line {
+    height: 73px;
+    font-size: 60px;
+    letter-spacing: 0.6px;
+    rotate: -7deg;
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 9px;
+    -unity-text-outline-color: rgb(2, 11, 46);
+}
+
+.shop__callout-line1 {
+    left: 3px;
+    top: 27px;
+    width: 382px;
+    color: rgb(255, 255, 255);
+}
+
+.shop__callout-line2 {
+    left: 23px;
+    top: 88px;
+    width: 454px;
+    color: rgb(34, 211, 238);
+}

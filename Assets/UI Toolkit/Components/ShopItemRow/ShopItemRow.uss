@@ -1,0 +1,101 @@
+.shop-item-row {
+    position: relative;
+    width: 722px;
+    height: 97px;
+    margin-bottom: 15px;
+    flex-shrink: 0;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_row_bg.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.shop-item-row__icon {
+    position: absolute;
+    left: 21px;
+    top: 10px;
+    width: 77px;
+    height: 77px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_row_diamond.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.shop-item-row--coins .shop-item-row__icon {
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_icon_coin.png");
+}
+
+.shop-item-row__amount {
+    position: absolute;
+    left: 121px;
+    top: 18px;
+    margin: 0;
+    padding: 0;
+    font-size: 50px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    color: rgb(255, 255, 255);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BlackItalic%20SDF.asset?fileID=11400000&guid=6760fe27ba215f04189cb6a412f07c16&type=2#Inter-BlackItalic SDF");
+    -unity-text-outline-width: 8px;
+    -unity-text-outline-color: rgb(2, 11, 46);
+}
+
+.shop-item-row__buy-btn {
+    position: absolute;
+    left: 483px;
+    top: 9px;
+    width: 216px;
+    height: 86px;
+    padding: 4px 8px 12px 8px;
+    justify-content: center;
+    align-items: center;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_btn_price.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    transition-duration: 0.1s;
+}
+
+.shop-item-row__buy-btn:hover {
+    scale: 1.04 1.04;
+}
+
+.shop-item-row__buy-btn:active {
+    scale: 0.96 0.96;
+}
+
+.shop-item-row__buy-btn:disabled {
+    opacity: 0.6;
+}
+
+.shop-item-row__price {
+    margin: 0;
+    padding: 0;
+    font-size: 38px;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BlackItalic%20SDF.asset?fileID=11400000&guid=6760fe27ba215f04189cb6a412f07c16&type=2#Inter-BlackItalic SDF");
+    -unity-text-outline-width: 7px;
+    -unity-text-outline-color: rgb(2, 11, 46);
+}
+
+.shop-item-row__badge {
+    position: absolute;
+    left: 509px;
+    top: -32px;
+    width: 167px;
+    height: 59px;
+    justify-content: center;
+    align-items: center;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_tag_best.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.shop-item-row__badge-text {
+    margin: 0;
+    padding: 0;
+    font-size: 22px;
+    letter-spacing: 0.9px;
+    white-space: nowrap;
+    color: rgb(2, 11, 46);
+    rotate: -6deg;
+    -unity-text-align: middle-center;
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BlackItalic%20SDF.asset?fileID=11400000&guid=6760fe27ba215f04189cb6a412f07c16&type=2#Inter-BlackItalic SDF");
+}

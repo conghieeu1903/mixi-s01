@@ -1,0 +1,47 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Style src="../../Components/StrokeText/StrokeText.uss" />
+    <ui:Style src="../../Components/CurrencyPill/CurrencyPill.uss" />
+    <ui:Style src="../../Components/ShopItemRow/ShopItemRow.uss" />
+    <ui:Style src="../../Components/RewardAdCard/RewardAdCard.uss" />
+    <ui:Style src="Shop.uss" />
+
+    <ui:VisualElement name="shopRoot" class="shop">
+        <ui:VisualElement name="shopBg" picking-mode="Ignore" class="shop__bg" />
+        <ui:VisualElement name="shopOverlay" picking-mode="Ignore" class="shop__overlay" />
+        <ui:VisualElement name="shopCharacter" picking-mode="Ignore" class="shop__character" />
+        <ui:VisualElement name="shopFrame" picking-mode="Ignore" class="shop__frame" />
+
+        <SafeAreaContainer name="shopSafeArea">
+            <ui:VisualElement name="backButton" class="shop__back-btn">
+                <ui:VisualElement name="backIcon" picking-mode="Ignore" class="shop__back-icon" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="topBar" picking-mode="Ignore" class="shop__top-bar">
+                <CurrencyPill name="coinsPill" currency-type="Coins" value="1,250" class="shop__currency-pill shop__currency-pill--coins" />
+                <CurrencyPill name="diamondsPill" currency-type="Diamonds" value="50" class="shop__currency-pill shop__currency-pill--diamonds" />
+                <ui:VisualElement name="settingsButton" class="shop__settings-btn" />
+            </ui:VisualElement>
+
+            <StrokeText name="shopTitle" text="SHOP" picking-mode="Ignore" class="shop__text shop__title" />
+            <ui:VisualElement name="subtitleBanner" picking-mode="Ignore" class="shop__subtitle-banner" />
+            <ui:Label name="shopSubtitle" text="EXCHANGE DIAMOND FOR XU" picking-mode="Ignore" class="shop__text shop__subtitle" />
+
+            <ui:VisualElement name="listPanel" picking-mode="Ignore" class="shop__list-panel" />
+            <ui:VisualElement name="packList" picking-mode="Ignore" class="shop__pack-list">
+                <ShopItemRow name="shopRow1" pack-id="coins_500" amount-text="500" unit-text="Xu" price-text="$0.99" class="shop__row shop__row--1" />
+                <ShopItemRow name="shopRow2" pack-id="coins_1k" amount-text="1,000" unit-text="Xu" price-text="$1.99" class="shop__row shop__row--2" />
+                <ShopItemRow name="shopRow3" pack-id="coins_2500" amount-text="2,500" unit-text="Xu" price-text="$4.99" class="shop__row shop__row--3" />
+                <ShopItemRow name="shopRow4" pack-id="coins_5k" amount-text="5,500" unit-text="Xu" price-text="$9.99" class="shop__row shop__row--4" />
+                <ShopItemRow name="shopRow5" pack-id="coins_12k" amount-text="13,000" unit-text="Xu" price-text="$19.99" badge-text="BEST VALUE" highlighted="true" class="shop__row shop__row--5" />
+            </ui:VisualElement>
+
+            <RewardAdCard name="rewardAdCard" title-text="WATCH AD" reward-text="GET 100" unit-text="Xu" button-text="WATCH NOW" class="shop__ad-card" />
+
+            <ui:VisualElement name="characterCallout" picking-mode="Ignore" class="shop__callout">
+                <ui:VisualElement name="calloutCrown" picking-mode="Ignore" class="shop__callout-crown" />
+                <StrokeText name="calloutLine1" text="WATCH ADS" picking-mode="Ignore" class="shop__text shop__callout-line shop__callout-line1" />
+                <StrokeText name="calloutLine2" text="GET REWARDS" picking-mode="Ignore" class="shop__text shop__callout-line shop__callout-line2" />
+            </ui:VisualElement>
+        </SafeAreaContainer>
+    </ui:VisualElement>
+</ui:UXML>

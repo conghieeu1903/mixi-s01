@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="Pause.uss" />
+    <ui:VisualElement name="pause" class="wf-screen">
+        <ui:VisualElement name="world" class="wf-world">
+            <ui:Label text="GÓC NHÌN 3D (đã dừng)" class="wf-world__label" />
+        </ui:VisualElement>
+        <ui:VisualElement name="overlay" class="wf-overlay">
+            <ui:VisualElement name="pausePanel" class="wf-panel pause__panel">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Tạm dừng" class="wf-heading wf-grow" />
+                    <ui:Label text="PausePanel" class="wf-note" />
+                </ui:VisualElement>
+                <ui:Button name="resumeButton" text="Tiếp tục" class="wf-button wf-button--primary pause__button" />
+                <ui:Button name="settingsButton" text="Settings" class="wf-button pause__button" />
+                <ui:Button name="controlsButton" text="Controls" class="wf-button pause__button" />
+                <ui:Button name="mainMenuButton" text="Về Main Menu" class="wf-button pause__button" />
+                <ui:Button name="quitButton" text="Thoát game" class="wf-button pause__button" />
+                <ui:Label text="ESC để tiếp tục · Browser JS tạm dừng" class="wf-caption pause__footer" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

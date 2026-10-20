@@ -1,0 +1,127 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="WorldPanels.uss" />
+    <ui:VisualElement name="worldPanels" class="wf-screen wf-board">
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="buildCasePanel" class="wf-panel world-panel">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Lắp ráp PC" class="wf-subheading wf-grow" />
+                    <ui:Button name="closeButton" text="×" class="wf-button wf-button--square" />
+                </ui:VisualElement>
+                <ui:VisualElement class="world-panel__row"><ui:Label text="CPU" class="wf-text world-panel__row-name" /><ui:Label text="Core i5 – đã lắp" class="wf-caption world-panel__row-value" /><ui:Button text="Tháo" class="wf-button wf-button--small" /></ui:VisualElement>
+                <ui:VisualElement class="world-panel__row"><ui:Label text="GPU" class="wf-text world-panel__row-name" /><ui:Label text="Trống" class="wf-caption world-panel__row-value" /><ui:Button text="Lắp" class="wf-button wf-button--small" /></ui:VisualElement>
+                <ui:VisualElement class="world-panel__row"><ui:Label text="RAM" class="wf-text world-panel__row-name" /><ui:Label text="16 GB – đã lắp" class="wf-caption world-panel__row-value" /><ui:Button text="Tháo" class="wf-button wf-button--small" /></ui:VisualElement>
+                <ui:VisualElement class="world-panel__row"><ui:Label text="Ổ cứng" class="wf-text world-panel__row-name" /><ui:Label text="Trống" class="wf-caption world-panel__row-value" /><ui:Button text="Lắp" class="wf-button wf-button--small" /></ui:VisualElement>
+                <ui:VisualElement class="world-panel__row"><ui:Label text="Nguồn" class="wf-text world-panel__row-name" /><ui:Label text="550W – đã lắp" class="wf-caption world-panel__row-value" /><ui:Button text="Tháo" class="wf-button wf-button--small" /></ui:VisualElement>
+                <ui:VisualElement class="wf-grow" />
+                <ui:VisualElement class="world-panel__footer">
+                    <ui:Label text="Thiếu: GPU, Ổ cứng" class="wf-caption wf-grow" />
+                    <ui:Button text="Hoàn tất" class="wf-button wf-button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Build case / Rig case" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="wallPaintPanel" class="wf-panel world-panel">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Sơn tường" class="wf-subheading wf-grow" />
+                    <ui:Button text="×" class="wf-button wf-button--square" />
+                </ui:VisualElement>
+                <ui:VisualElement class="world-panel__swatches">
+                    <ui:VisualElement class="world-panel__swatch world-panel__swatch--1" />
+                    <ui:VisualElement class="world-panel__swatch world-panel__swatch--2" />
+                    <ui:VisualElement class="world-panel__swatch world-panel__swatch--3 world-panel__swatch--selected" />
+                    <ui:VisualElement class="world-panel__swatch world-panel__swatch--4" />
+                    <ui:VisualElement class="world-panel__swatch world-panel__swatch--5" />
+                    <ui:VisualElement class="world-panel__swatch world-panel__swatch--6" />
+                    <ui:VisualElement class="world-panel__swatch world-panel__swatch--7" />
+                    <ui:VisualElement class="world-panel__swatch world-panel__swatch--8" />
+                </ui:VisualElement>
+                <ui:VisualElement class="wf-grow" />
+                <ui:VisualElement class="world-panel__footer">
+                    <ui:Label text="Giá: $ 40 / bức tường" class="wf-caption wf-grow" />
+                    <ui:Button text="Áp dụng" class="wf-button wf-button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Wall Paint" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="streamInteractPanel" class="wf-panel world-panel">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Bắt đầu stream" class="wf-subheading wf-grow" />
+                    <ui:Button text="×" class="wf-button wf-button--square" />
+                </ui:VisualElement>
+                <ui:DropdownField label="Nội dung" choices="Game,Just Chatting,ASMR" index="0" />
+                <ui:Label text="Chọn worker" class="wf-caption" />
+                <ui:VisualElement class="world-panel__row"><ui:VisualElement class="wf-icon wf-icon--sm" /><ui:Label text="Mod chat – $20/giờ" class="wf-text world-panel__row-value" /><ui:Toggle value="true" /></ui:VisualElement>
+                <ui:VisualElement class="world-panel__row"><ui:VisualElement class="wf-icon wf-icon--sm" /><ui:Label text="Editor – $35/giờ" class="wf-text world-panel__row-value" /><ui:Toggle /></ui:VisualElement>
+                <ui:VisualElement class="world-panel__row"><ui:VisualElement class="wf-icon wf-icon--sm" /><ui:Label text="Quay phim – $50/giờ" class="wf-text world-panel__row-value" /><ui:Toggle /></ui:VisualElement>
+                <ui:VisualElement class="wf-grow" />
+                <ui:VisualElement class="world-panel__footer">
+                    <ui:Label text="StreamWorker" class="wf-note wf-grow" />
+                    <ui:Button name="goLiveButton" text="Lên sóng" class="wf-button wf-button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Stream Interact" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="sleepPanel" class="wf-panel world-panel">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Giường" class="wf-subheading wf-grow" />
+                    <ui:Button text="×" class="wf-button wf-button--square" />
+                </ui:VisualElement>
+                <ui:Label text="Ngủ trong" class="wf-caption" />
+                <ui:VisualElement class="world-panel__options">
+                    <ui:Button text="2 giờ" class="wf-button world-panel__option" />
+                    <ui:Button text="4 giờ" class="wf-button world-panel__option" />
+                    <ui:Button text="8 giờ" class="wf-button world-panel__option" />
+                    <ui:Button text="Đến sáng" class="wf-button world-panel__option" />
+                </ui:VisualElement>
+                <ui:VisualElement class="wf-divider" />
+                <ui:Label text="Cùng kiểu hộp này: Shower, Toilet" class="wf-caption" />
+                <ui:VisualElement class="wf-grow" />
+                <ui:VisualElement class="world-panel__footer">
+                    <ui:Label text="Lưu lần cuối: Ngày 12" class="wf-caption wf-grow" />
+                    <ui:Button text="Lưu game" class="wf-button wf-button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Sleep / Save / Shower / Toilet" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="barberPanel" class="wf-panel world-panel">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Barber" class="wf-subheading wf-grow" />
+                    <ui:Button text="×" class="wf-button wf-button--square" />
+                </ui:VisualElement>
+                <ui:VisualElement class="wf-placeholder world-panel__preview">
+                    <ui:Label text="Camera soi mặt nhân vật" class="wf-placeholder__label" />
+                </ui:VisualElement>
+                <ui:VisualElement class="world-panel__row"><ui:Label text="Kiểu tóc" class="wf-text world-panel__row-name" /><ui:Button text="&lt;" class="wf-button wf-button--square" /><ui:Label text="Undercut" class="wf-text world-panel__row-value wf-center-text" /><ui:Button text="&gt;" class="wf-button wf-button--square" /></ui:VisualElement>
+                <ui:VisualElement class="world-panel__row"><ui:Label text="Màu" class="wf-text world-panel__row-name" /><ui:Button text="&lt;" class="wf-button wf-button--square" /><ui:Label text="Nâu" class="wf-text world-panel__row-value wf-center-text" /><ui:Button text="&gt;" class="wf-button wf-button--square" /></ui:VisualElement>
+                <ui:VisualElement class="wf-grow" />
+                <ui:VisualElement class="world-panel__footer">
+                    <ui:Label text="$ 25" class="wf-subheading wf-grow" />
+                    <ui:Button text="Cắt" class="wf-button wf-button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Hairdresser / Cloth camera (BarberShop)" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="pawnShopPanel" class="wf-panel world-panel">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Pawn shop" class="wf-subheading wf-grow" />
+                    <ui:Button text="×" class="wf-button wf-button--square" />
+                </ui:VisualElement>
+                <ui:VisualElement class="world-panel__row"><ui:VisualElement class="wf-icon" /><ui:Label text="GPU cũ" class="wf-text world-panel__row-value" /><ui:Label text="$ 120" class="wf-text world-panel__row-name" /><ui:Button text="Bán" class="wf-button wf-button--small" /></ui:VisualElement>
+                <ui:VisualElement class="world-panel__row"><ui:VisualElement class="wf-icon" /><ui:Label text="Đồng hồ" class="wf-text world-panel__row-value" /><ui:Label text="$ 60" class="wf-text world-panel__row-name" /><ui:Button text="Bán" class="wf-button wf-button--small" /></ui:VisualElement>
+                <ui:VisualElement class="world-panel__row"><ui:VisualElement class="wf-icon" /><ui:Label text="Tai nghe" class="wf-text world-panel__row-value" /><ui:Label text="$ 35" class="wf-text world-panel__row-name" /><ui:Button text="Bán" class="wf-button wf-button--small" /></ui:VisualElement>
+                <ui:VisualElement class="wf-grow" />
+                <ui:VisualElement class="world-panel__footer">
+                    <ui:Label text="PawnShop" class="wf-note wf-grow" />
+                    <ui:Button text="Bán tất cả" class="wf-button" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Bảng Pawn" class="wf-board__caption" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

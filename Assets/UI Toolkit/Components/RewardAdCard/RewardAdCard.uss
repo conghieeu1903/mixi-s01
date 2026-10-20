@@ -1,0 +1,98 @@
+.reward-ad-card {
+    position: relative;
+    width: 642px;
+    height: 802px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_ad_card.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.reward-ad-card__title,
+.reward-ad-card__reward,
+.reward-ad-card__action-label {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BlackItalic%20SDF.asset?fileID=11400000&guid=6760fe27ba215f04189cb6a412f07c16&type=2#Inter-BlackItalic SDF");
+}
+
+.reward-ad-card__title {
+    left: 154px;
+    top: 100px;
+    font-size: 64px;
+    letter-spacing: 0.6px;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 9px;
+    -unity-text-outline-color: rgb(2, 11, 46);
+}
+
+.reward-ad-card__reward {
+    left: 101px;
+    top: 180px;
+    font-size: 84px;
+    letter-spacing: 0.8px;
+    color: rgb(255, 210, 63);
+    -unity-text-outline-width: 10px;
+    -unity-text-outline-color: rgb(2, 11, 46);
+}
+
+.reward-ad-card__video-box {
+    position: absolute;
+    left: 183px;
+    top: 270px;
+    width: 280px;
+    height: 210px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_video_box.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.reward-ad-card__play-icon {
+    position: absolute;
+    left: 115px;
+    top: 69px;
+    width: 62px;
+    height: 72px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_play.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.reward-ad-card__coins {
+    position: absolute;
+    left: 134px;
+    top: 469px;
+    width: 289px;
+    height: 171px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_ad_coins.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.reward-ad-card__action-btn {
+    position: absolute;
+    left: 91px;
+    top: 594px;
+    width: 432px;
+    height: 152px;
+    background-image: url("/Assets/Arts/Sprites/Shop/shop_btn_watch.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    transition-duration: 0.1s;
+}
+
+.reward-ad-card__action-btn:hover {
+    scale: 1.03 1.03;
+}
+
+.reward-ad-card__action-btn:active {
+    scale: 0.97 0.97;
+}
+
+.reward-ad-card__action-btn:disabled {
+    opacity: 0.55;
+}
+
+.reward-ad-card__action-label {
+    left: 50px;
+    top: 39px;
+    font-size: 48px;
+    letter-spacing: 0.5px;
+    color: rgb(2, 11, 46);
+}

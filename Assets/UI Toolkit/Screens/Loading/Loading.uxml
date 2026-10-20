@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="Loading.uss" />
+    <ui:VisualElement name="loading" class="wf-screen loading">
+        <ui:VisualElement name="logo" class="wf-placeholder loading__logo">
+            <ui:Label text="LOGO GAME" class="wf-placeholder__label" />
+        </ui:VisualElement>
+        <ui:Label name="tipLabel" text="Mẹo: Stream đều đặn mỗi ngày để giữ follower." class="wf-text wf-wrap loading__tip" />
+        <ui:VisualElement name="footer" class="loading__footer">
+            <ui:VisualElement class="wf-progress">
+                <ui:VisualElement name="progressFill" class="wf-progress__fill wf-progress__fill--60" />
+            </ui:VisualElement>
+            <ui:VisualElement class="wf-row loading__status">
+                <ui:Label text="Đang tải MainScene…" class="wf-caption wf-grow" />
+                <ui:Label name="percentLabel" text="60%" class="wf-caption" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

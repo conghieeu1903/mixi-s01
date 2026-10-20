@@ -1,0 +1,80 @@
+.map__panel {
+    width: 1600px;
+    height: 900px;
+}
+
+.map__body {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.map__view {
+    flex-grow: 1;
+}
+
+.map__pin {
+    position: absolute;
+    flex-direction: row;
+    align-items: center;
+}
+
+.map__pin > .wf-caption {
+    margin-left: 6px;
+    color: var(--wf-ink);
+}
+
+.map__pin--player {
+    left: 46%;
+    top: 52%;
+}
+
+.map__pin--home {
+    left: 40%;
+    top: 60%;
+}
+
+.map__pin--pc-shop {
+    left: 62%;
+    top: 30%;
+}
+
+.map__pin--barber {
+    left: 22%;
+    top: 34%;
+}
+
+.map__pin--pawn {
+    left: 70%;
+    top: 70%;
+}
+
+.map__pin--club {
+    left: 28%;
+    top: 76%;
+}
+
+.map__marker {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: var(--wf-fill-strong);
+    border-width: 2px;
+    border-color: var(--wf-ink);
+}
+
+.map__marker--player {
+    background-color: var(--wf-ink);
+}
+
+.map__legend {
+    width: 300px;
+    margin-left: 24px;
+}
+
+.map__legend-item {
+    margin-bottom: 14px;
+}
+
+.map__legend-item > .wf-text {
+    margin-left: 12px;
+}

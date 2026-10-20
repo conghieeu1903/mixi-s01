@@ -1,0 +1,27 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="Computer.uss" />
+    <ui:VisualElement name="computerStates" class="wf-screen wf-board">
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="bootPanel" class="computer__state-frame computer__boot">
+                <ui:VisualElement class="wf-placeholder computer__boot-logo">
+                    <ui:Label text="LOGO OS" class="wf-placeholder__label" />
+                </ui:VisualElement>
+                <ui:VisualElement class="wf-progress computer__boot-progress">
+                    <ui:VisualElement class="wf-progress__fill wf-progress__fill--30" />
+                </ui:VisualElement>
+                <ui:Label text="Booting… bước 2 / 7" class="wf-caption" />
+            </ui:VisualElement>
+            <ui:Label text="Boot Panel 1..7 (BootingPanel)" class="wf-board__caption" />
+        </ui:VisualElement>
+        <ui:VisualElement class="wf-board__item">
+            <ui:VisualElement name="blueScreen" class="computer__state-frame computer__bsod">
+                <ui:Label text=":(" class="wf-label-inverse computer__bsod-face" />
+                <ui:Label text="Máy tính gặp sự cố do virus và cần khởi động lại." class="wf-subheading wf-wrap wf-label-inverse" />
+                <ui:Label text="Tiến trình: 45%" class="wf-text wf-label-inverse" />
+                <ui:Label text="Gợi ý: cài VirusScanner để tránh lỗi này." class="wf-caption wf-label-inverse" />
+            </ui:VisualElement>
+            <ui:Label text="Blue Screen (nhiễm virus)" class="wf-board__caption" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

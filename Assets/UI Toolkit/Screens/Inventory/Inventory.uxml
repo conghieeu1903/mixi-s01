@@ -1,0 +1,57 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="../../Common/Wireframe.uss" />
+    <ui:Style src="Inventory.uss" />
+    <ui:VisualElement name="inventory" class="wf-screen">
+        <ui:VisualElement name="world" class="wf-world">
+            <ui:Label text="GÓC NHÌN 3D" class="wf-world__label" />
+        </ui:VisualElement>
+        <ui:VisualElement name="overlay" class="wf-overlay">
+            <ui:VisualElement name="inventoryPanel" class="wf-panel inventory__panel">
+                <ui:VisualElement class="wf-panel__header">
+                    <ui:Label text="Inventory" class="wf-heading" />
+                    <ui:Label text="  (I / Tab)" class="wf-caption wf-grow" />
+                    <ui:Button name="closeButton" text="×" class="wf-button wf-button--square" />
+                </ui:VisualElement>
+                <ui:VisualElement class="inventory__body">
+                    <ui:VisualElement name="slotGrid" class="inventory__grid">
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--selected"><ui:Label text="Pizza" class="wf-placeholder__label" /></ui:VisualElement>
+                        <ui:VisualElement class="wf-placeholder inventory__slot"><ui:Label text="Nước" class="wf-placeholder__label" /></ui:VisualElement>
+                        <ui:VisualElement class="wf-placeholder inventory__slot"><ui:Label text="Chổi" class="wf-placeholder__label" /></ui:VisualElement>
+                        <ui:VisualElement class="wf-placeholder inventory__slot"><ui:Label text="GPU" class="wf-placeholder__label" /></ui:VisualElement>
+                        <ui:VisualElement class="wf-placeholder inventory__slot"><ui:Label text="RAM" class="wf-placeholder__label" /></ui:VisualElement>
+                        <ui:VisualElement class="wf-placeholder inventory__slot"><ui:Label text="Sơn tường" class="wf-placeholder__label" /></ui:VisualElement>
+                        <ui:VisualElement class="wf-placeholder inventory__slot"><ui:Label text="Vé số" class="wf-placeholder__label" /></ui:VisualElement>
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                        <ui:VisualElement class="wf-placeholder inventory__slot inventory__slot--empty" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="detail" class="inventory__detail">
+                        <ui:VisualElement class="wf-placeholder inventory__detail-image">
+                            <ui:Label text="Ảnh item" class="wf-placeholder__label" />
+                        </ui:VisualElement>
+                        <ui:Label name="itemName" text="Pizza" class="wf-subheading" />
+                        <ui:Label text="Đồ ăn · x2" class="wf-caption" />
+                        <ui:Label name="itemDesc" text="Hồi 40 điểm đói. Mua từ app Eat trên điện thoại." class="wf-text wf-wrap inventory__detail-desc" />
+                        <ui:VisualElement class="wf-grow" />
+                        <ui:Button name="useButton" text="Dùng" class="wf-button wf-button--primary inventory__detail-button" />
+                        <ui:Button name="dropButton" text="Thả" class="wf-button inventory__detail-button" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

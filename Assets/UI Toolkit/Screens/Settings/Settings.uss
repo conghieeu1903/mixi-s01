@@ -1,0 +1,290 @@
+.settings {
+    padding: 64px 240px;
+}
+
+.settings__panel {
+    flex-grow: 1;
+}
+
+.settings__tabs {
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+
+.settings__list {
+    flex-grow: 1;
+}
+
+.settings__group {
+    margin: 8px 0 12px 0;
+}
+
+.settings__row {
+    padding: 10px 0;
+    border-bottom-width: 1px;
+    border-color: var(--wf-line-soft);
+}
+
+.settings__footer {
+    flex-direction: row;
+    margin-top: 20px;
+}
+
+<<<<<<< HEAD:Assets/UI/Screens/Settings/Settings.uss
+.settings__footer > .wf-button {
+    margin-left: 12px;
+=======
+.settings-tab--1 {
+    left: 50px;
+}
+
+.settings-tab--2 {
+    left: 286px;
+}
+
+.settings-tab--3 {
+    left: 522px;
+}
+
+.settings-tab--4 {
+    left: 758px;
+}
+
+.settings-tab--active {
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_tab_active.png");
+}
+
+.settings-tab__label {
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+    letter-spacing: 0.7px;
+    color: rgba(255, 255, 255, 0.7);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-ExtraBoldItalic%20SDF.asset?fileID=11400000&guid=5f7f74bcfb7cfd54eb8de297c0336fba&type=2#Inter-ExtraBoldItalic SDF");
+}
+
+.settings-tab--active > .settings-tab__label {
+    color: rgb(1, 21, 69);
+}
+
+.settings__divider {
+    position: absolute;
+    left: 51px;
+    top: 137px;
+    width: 940px;
+    height: 2px;
+    background-color: rgba(34, 211, 238, 0.25);
+}
+
+.settings__page {
+    position: absolute;
+    left: 51px;
+    top: 161px;
+    flex-direction: column;
+}
+
+/* Nút RESET / APPLY */
+.settings__btn {
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    -unity-background-scale-mode: stretch-to-fill;
+    transition-duration: 0.12s;
+}
+
+.settings__btn:hover {
+    scale: 1.04 1.04;
+}
+
+.settings__btn:active {
+    scale: 0.96 0.96;
+}
+
+.settings__btn--reset {
+    left: 520px;
+    top: 700px;
+    width: 223px;
+    height: 66px;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_btn_reset.png");
+}
+
+.settings__btn--apply {
+    left: 726px;
+    top: 677px;
+    width: 290px;
+    height: 113px;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_btn_apply.png");
+}
+
+/* Nút LOGOUT góc dưới trái panel, bấm vào mở hộp xác nhận */
+.settings__btn--logout {
+    left: 51px;
+    top: 700px;
+    width: 223px;
+    height: 66px;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_btn_reset.png");
+    -unity-background-image-tint-color: rgb(248, 113, 113);
+}
+
+/* Hộp xác nhận đăng xuất phủ giữa màn hình */
+.settings-dialog {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(1, 10, 35, 0.75);
+}
+
+.settings-dialog--hidden {
+    display: none;
+}
+
+.settings-dialog__box {
+    width: 760px;
+    padding: 48px 56px 40px 56px;
+    align-items: center;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_panel.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    -unity-slice-left: 48;
+    -unity-slice-top: 48;
+    -unity-slice-right: 48;
+    -unity-slice-bottom: 48;
+}
+
+.settings-dialog__title {
+    margin: 0;
+    padding: 0;
+    font-size: 48px;
+    letter-spacing: 1.1px;
+    color: rgb(255, 255, 255);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BlackItalic%20SDF.asset?fileID=11400000&guid=6760fe27ba215f04189cb6a412f07c16&type=2#Inter-BlackItalic SDF");
+}
+
+.settings-dialog__message {
+    margin: 18px 0 0 0;
+    padding: 0;
+    font-size: 24px;
+    white-space: normal;
+    -unity-text-align: middle-center;
+    color: rgba(255, 255, 255, 0.8);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-Medium%20SDF.asset?fileID=11400000&guid=7732124c92e6d4744ad7088a3055cb79&type=2#Inter-Medium SDF");
+}
+
+.settings-dialog__row {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 36px;
+}
+
+.settings-dialog__btn {
+    position: relative;
+    width: 260px;
+    height: 72px;
+    margin: 0 14px;
+}
+
+.settings-dialog__btn:disabled {
+    opacity: 0.5;
+    scale: 1 1;
+}
+
+.settings-dialog__btn--cancel {
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_btn_reset.png");
+}
+
+.settings-dialog__btn--confirm {
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_btn_reset.png");
+    -unity-background-image-tint-color: rgb(248, 113, 113);
+}
+
+.settings__btn-label {
+    margin: 0;
+    padding: 0;
+    font-size: 26px;
+    letter-spacing: 0.8px;
+    color: rgb(255, 255, 255);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BlackItalic%20SDF.asset?fileID=11400000&guid=6760fe27ba215f04189cb6a412f07c16&type=2#Inter-BlackItalic SDF");
+}
+
+.settings__btn--apply > .settings__btn-label {
+    color: rgb(1, 21, 69);
+}
+
+.settings__btn--logout > .settings__btn-label,
+.settings-dialog__btn--confirm > .settings__btn-label {
+    color: rgb(248, 113, 113);
+}
+
+/* Gợi ý phím ESC / F góc dưới trái */
+.settings__hint {
+    position: absolute;
+    top: 990px;
+    height: 37px;
+    transition-duration: 0.1s;
+}
+
+.settings__hint:hover {
+    scale: 1.05 1.05;
+}
+
+.settings__hint--back {
+    left: 79px;
+    width: 150px;
+}
+
+.settings__hint--reset {
+    left: 269px;
+    width: 240px;
+}
+
+.settings__key {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 37px;
+    justify-content: center;
+    align-items: center;
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.settings__key--esc {
+    width: 72px;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_key_esc.png");
+}
+
+.settings__key--f {
+    width: 52px;
+    background-image: url("/Assets/Arts/Sprites/Settings/settings_key_f.png");
+}
+
+.settings__key-label {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BoldItalic%20SDF.asset?fileID=11400000&guid=d9867da3a75c0484baaf443b83491d00&type=2#Inter-BoldItalic SDF");
+}
+
+.settings__hint-label {
+    position: absolute;
+    top: 6px;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.8);
+    -unity-font-definition: url("project://database/Assets/Arts/Fonts/Inter/Inter-BoldItalic%20SDF.asset?fileID=11400000&guid=d9867da3a75c0484baaf443b83491d00&type=2#Inter-BoldItalic SDF");
+}
+
+.settings__hint--back > .settings__hint-label {
+    left: 87px;
+}
+
+.settings__hint--reset > .settings__hint-label {
+    left: 67px;
+>>>>>>> 37157e669918c4508205c48129ff513621872283:Assets/UI Toolkit/Screens/Settings/Settings.uss
+}
