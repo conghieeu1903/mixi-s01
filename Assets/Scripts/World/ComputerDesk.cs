@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-// Bàn máy tính: chuyển camera góc nhìn thứ nhất nhìn thẳng vào màn hình monitor và hiển thị UI trên màn hình
+// Bàn máy tính: chuyển camera góc nhìn thứ nhất mượt từ đứng sang ngồi nhìn vào màn hình monitor và ngược lại
+[DefaultExecutionOrder(100)]
 public class ComputerDesk : MonoBehaviour, IInteractable
 {
     [Tooltip("Điểm đặt camera góc nhìn thứ nhất khi ngồi vào máy")]
@@ -19,12 +20,26 @@ public class ComputerDesk : MonoBehaviour, IInteractable
     [Tooltip("Panel chọn chủ đề và quản lý stream")]
     [SerializeField] StreamStartPanel streamStartPanel;
 
+    [Tooltip("Thời gian lia camera từ đứng sang ngồi (giây)")]
+    [SerializeField] float sitTransitionDuration = 0.65f;
+
+    [Tooltip("Thời gian lia camera từ ngồi sang đứng dậy (giây)")]
+    [SerializeField] float standTransitionDuration = 0.55f;
+
     PlayerMotor activeMotor;
     PlayerLook activeLook;
     Camera activeCamera;
     Vector3 savedCamLocalPos = new Vector3(0f, 1.7f, 0f);
     Quaternion savedCamLocalRot = Quaternion.identity;
     float savedCamFov = 70f;
+
+    Vector3 transitionStartPos;
+    Quaternion transitionStartRot;
+    float transitionStartFov = 70f;
+    float transitionElapsed;
+    bool isSittingTransition;
+    bool isStandingTransition;
+
     Texture2D wallpaperTexture;
     Material runtimeScreenMat;
 
@@ -34,6 +49,9 @@ public class ComputerDesk : MonoBehaviour, IInteractable
     public bool IsOccupied { get; private set; }
 
     public Transform MonitorScreen => EnsureMonitorScreen();
+
+    // Tiến độ lia camera ngồi vào máy (0 -> 1)
+    public float SitProgress => !IsOccupied ? 0f : (isSittingTransition ? Mathf.Clamp01(transitionElapsed / Mathf.Max(0.05f, sitTransitionDuration)) : 1f);
 
     void Awake()
     {
@@ -87,22 +105,21 @@ public class ComputerDesk : MonoBehaviour, IInteractable
                 float v = (float)y / (h - 1);
                 for (int x = 0; x < w; x++)
                 {
-                    float u = (float)x / (w - 1);
-                    Color col = Color.Lerp(new Color(0.10f, 0.14f, 0.22f), new Color(0.16f, 0.24f, 0.36f), v);
+                    Color col = Color.Lerp(new Color(0.07f, 0.13f, 0.26f), new Color(0.04f, 0.07f, 0.14f), 1f - v);
 
                     // Thanh taskbar phía dưới màn hình
                     if (y < 14)
-                        col = new Color(0.08f, 0.09f, 0.12f);
+                        col = new Color(0.06f, 0.08f, 0.11f);
                     // Nút Start ở góc trái dưới
-                    if (y >= 3 && y <= 11 && x >= 6 && x <= 32)
-                        col = new Color(0.22f, 0.48f, 0.78f);
+                    if (y >= 3 && y <= 11 && x >= 6 && x <= 34)
+                        col = new Color(0.16f, 0.44f, 0.84f);
                     // Các icon desktop cột bên trái
                     if (x >= 10 && x <= 24 && ((y >= 112 && y <= 126) || (y >= 88 && y <= 102) || (y >= 64 && y <= 78)))
-                        col = new Color(0.75f, 0.82f, 0.92f);
-                    // Khung cửa sổ ứng dụng giữa màn hình
-                    if (x >= 48 && x <= 236 && y >= 24 && y <= 128)
+                        col = new Color(0.28f, 0.58f, 0.92f);
+                    // Khung cửa sổ ứng dụng OBS giữa màn hình
+                    if (x >= 48 && x <= 236 && y >= 22 && y <= 128)
                     {
-                        col = y >= 116 ? new Color(0.18f, 0.22f, 0.30f) : new Color(0.92f, 0.94f, 0.97f);
+                        col = y >= 116 ? new Color(0.10f, 0.12f, 0.16f) : new Color(0.13f, 0.15f, 0.19f);
                     }
 
                     wallpaperTexture.SetPixel(x, y, col);
@@ -135,15 +152,80 @@ public class ComputerDesk : MonoBehaviour, IInteractable
         if (playerMesh != null && playerMesh.activeSelf)
             playerMesh.SetActive(false);
 
-        if (!IsOccupied) return;
-
         if (activeCamera == null)
             activeCamera = Camera.main;
 
-        if (activeCamera != null && seatPoint != null)
+        if (IsOccupied)
+        {
+            UpdateOccupiedCamera(Time.unscaledDeltaTime);
+        }
+        else if (isStandingTransition)
+        {
+            UpdateStandingCamera(Time.unscaledDeltaTime);
+        }
+    }
+
+    void UpdateOccupiedCamera(float dt)
+    {
+        if (activeCamera == null || seatPoint == null) return;
+
+        if (isSittingTransition)
+        {
+            transitionElapsed += dt;
+            float dur = Mathf.Max(0.05f, sitTransitionDuration);
+            float t = Mathf.Clamp01(transitionElapsed / dur);
+            float s = t * t * (3f - 2f * t);
+            Vector3 sitArc = Vector3.up * (Mathf.Sin(t * Mathf.PI) * -0.05f);
+
+            Vector3 pos = Vector3.Lerp(transitionStartPos, seatPoint.position, s) + sitArc;
+            Quaternion rot = Quaternion.Slerp(transitionStartRot, seatPoint.rotation, s);
+            float fov = Mathf.Lerp(transitionStartFov, 53f, s);
+
+            activeCamera.transform.SetPositionAndRotation(pos, rot);
+            activeCamera.fieldOfView = fov;
+
+            if (t >= 1f)
+                isSittingTransition = false;
+        }
+        else
         {
             activeCamera.transform.SetPositionAndRotation(seatPoint.position, seatPoint.rotation);
             activeCamera.fieldOfView = 53f;
+        }
+    }
+
+    void UpdateStandingCamera(float dt)
+    {
+        if (activeCamera == null)
+        {
+            isStandingTransition = false;
+            return;
+        }
+
+        transitionElapsed += dt;
+        float dur = Mathf.Max(0.05f, standTransitionDuration);
+        float t = Mathf.Clamp01(transitionElapsed / dur);
+        float s = t * t * (3f - 2f * t);
+        Vector3 standArc = Vector3.up * (Mathf.Sin(t * Mathf.PI) * 0.04f);
+
+        Vector3 targetWorldPos = activeCamera.transform.parent != null
+            ? activeCamera.transform.parent.TransformPoint(savedCamLocalPos)
+            : activeCamera.transform.position;
+        Quaternion targetWorldRot = activeCamera.transform.parent != null
+            ? activeCamera.transform.parent.rotation * savedCamLocalRot
+            : activeCamera.transform.rotation;
+
+        activeCamera.transform.SetPositionAndRotation(
+            Vector3.Lerp(transitionStartPos, targetWorldPos, s) + standArc,
+            Quaternion.Slerp(transitionStartRot, targetWorldRot, s));
+        activeCamera.fieldOfView = Mathf.Lerp(transitionStartFov, savedCamFov, s);
+
+        if (t >= 1f)
+        {
+            isStandingTransition = false;
+            activeCamera.transform.localPosition = savedCamLocalPos;
+            activeCamera.transform.localRotation = savedCamLocalRot;
+            activeCamera.fieldOfView = savedCamFov;
         }
     }
 
@@ -153,19 +235,26 @@ public class ComputerDesk : MonoBehaviour, IInteractable
         return !IsOccupied;
     }
 
-    // Ngồi vào máy ở góc nhìn thứ nhất và mở giao diện trên màn hình
+    // Ngồi vào máy ở góc nhìn thứ nhất và mở màn hình Windows Desktop (kèm cửa sổ OBS Studio)
     public void Interact(PlayerInteractor interactor)
     {
+        SitDown();
+        DesktopOS desktop = FindFirstObjectByType<DesktopOS>();
+        if (desktop != null)
+        {
+            desktop.Open();
+            desktop.OpenObsWindow();
+            return;
+        }
+
         if (streamStartPanel == null)
             streamStartPanel = FindFirstObjectByType<StreamStartPanel>();
 
-        if (streamStartPanel == null) return;
-
-        SitDown();
-        streamStartPanel.Open(this);
+        if (streamStartPanel != null)
+            streamStartPanel.Open(this);
     }
 
-    // Đưa nhân vật và camera góc nhìn thứ nhất vào vị trí ngồi nhìn thẳng vào màn hình monitor
+    // Đưa nhân vật vào ghế và lia camera mượt từ góc nhìn đang đứng sang nhìn thẳng vào màn hình monitor
     public void SitDown()
     {
         if (playerMesh != null)
@@ -178,11 +267,25 @@ public class ComputerDesk : MonoBehaviour, IInteractable
         if (activeCamera == null)
             activeCamera = Camera.main;
 
-        if (!IsOccupied && activeCamera != null)
+        if (seatPoint != null)
+        {
+            seatPoint.localPosition = new Vector3(0f, 1.185f, 0.34f);
+            seatPoint.localRotation = Quaternion.Euler(0f, 180f, 0f);
+        }
+
+        bool wasAlreadyOccupied = IsOccupied;
+        if (!wasAlreadyOccupied && activeCamera != null)
         {
             savedCamLocalPos = new Vector3(0f, 1.7f, 0f);
             savedCamLocalRot = Quaternion.identity;
             savedCamFov = activeCamera.fieldOfView > 55f ? activeCamera.fieldOfView : 70f;
+
+            transitionStartPos = activeCamera.transform.position;
+            transitionStartRot = activeCamera.transform.rotation;
+            transitionStartFov = activeCamera.fieldOfView;
+            transitionElapsed = 0f;
+            isSittingTransition = true;
+            isStandingTransition = false;
         }
 
         IsOccupied = true;
@@ -204,29 +307,41 @@ public class ComputerDesk : MonoBehaviour, IInteractable
             activeLook.enabled = false;
         }
 
-        if (seatPoint != null)
-        {
-            seatPoint.localPosition = new Vector3(0f, 1.185f, 0.34f);
-            seatPoint.localRotation = Quaternion.Euler(0f, 180f, 0f);
-        }
-
         if (activeCamera != null && seatPoint != null)
         {
-            activeCamera.transform.SetPositionAndRotation(seatPoint.position, seatPoint.rotation);
-            activeCamera.fieldOfView = 53f;
+            if (isSittingTransition)
+            {
+                activeCamera.transform.SetPositionAndRotation(transitionStartPos, transitionStartRot);
+                activeCamera.fieldOfView = transitionStartFov;
+            }
+            else
+            {
+                activeCamera.transform.SetPositionAndRotation(seatPoint.position, seatPoint.rotation);
+                activeCamera.fieldOfView = 53f;
+            }
         }
 
         SetHudVisible(false);
     }
 
-    // Đứng dậy khỏi máy, trả lại góc nhìn thứ nhất đi bộ bình thường
+    // Đứng dậy khỏi máy, lia camera mượt từ ghế ngồi về độ cao mắt đứng góc nhìn thứ nhất
     public void StandUp()
     {
         if (!IsOccupied) return;
         IsOccupied = false;
+        isSittingTransition = false;
 
         if (playerMesh != null)
             playerMesh.SetActive(false);
+
+        if (activeCamera != null)
+        {
+            transitionStartPos = activeCamera.transform.position;
+            transitionStartRot = activeCamera.transform.rotation;
+            transitionStartFov = activeCamera.fieldOfView;
+            transitionElapsed = 0f;
+            isStandingTransition = true;
+        }
 
         SetHudVisible(true);
 
@@ -281,7 +396,7 @@ public class ComputerDesk : MonoBehaviour, IInteractable
 
         Camera cam = activeCamera != null ? activeCamera : Camera.main;
         Transform screen = EnsureMonitorScreen();
-        if (cam == null || screen == null)
+        if (cam == null || screen == null || seatPoint == null)
         {
             element.style.position = Position.Absolute;
             element.style.left = Length.Percent(15.5f);
@@ -292,7 +407,21 @@ public class ComputerDesk : MonoBehaviour, IInteractable
             return;
         }
 
-        if (IsOccupied && seatPoint != null)
+        if (isSittingTransition)
+        {
+            float p = SitProgress;
+            element.style.opacity = Mathf.Clamp01((p - 0.25f) / 0.75f);
+        }
+        else
+        {
+            element.style.opacity = 1f;
+        }
+
+        Vector3 savedPos = cam.transform.position;
+        Quaternion savedRot = cam.transform.rotation;
+        float savedFov = cam.fieldOfView;
+
+        if (!isSittingTransition && IsOccupied)
         {
             cam.transform.SetPositionAndRotation(seatPoint.position, seatPoint.rotation);
             cam.fieldOfView = 53f;
@@ -305,6 +434,12 @@ public class ComputerDesk : MonoBehaviour, IInteractable
 
         Vector3 vpA = cam.WorldToViewportPoint(center + right + up);
         Vector3 vpB = cam.WorldToViewportPoint(center - right - up);
+
+        if (isSittingTransition)
+        {
+            cam.transform.SetPositionAndRotation(savedPos, savedRot);
+            cam.fieldOfView = savedFov;
+        }
 
         if (vpA.z <= 0f || vpB.z <= 0f) return;
 

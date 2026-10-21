@@ -88,6 +88,25 @@ public class NeedsView : MonoBehaviour
         container.Add(statsLabel);
         container.Add(debuffRow);
         root.Add(container);
+
+        VisualElement status = root.Q<VisualElement>("statusPanel");
+        if (status != null)
+            status.RegisterCallback<GeometryChangedEvent>(_ => StackBelow(container, status));
+        container.RegisterCallback<GeometryChangedEvent>(_ => LayoutTutorialBanner());
+    }
+
+    // Đặt element ngay dưới anchor để các khung góc trái không đè nhau
+    static void StackBelow(VisualElement element, VisualElement anchor)
+    {
+        if (element?.parent == null || anchor == null || float.IsNaN(anchor.worldBound.yMax)) return;
+        element.style.top = element.parent.WorldToLocal(new Vector2(0f, anchor.worldBound.yMax)).y + 10f;
+    }
+
+    // Đẩy khung hướng dẫn (TutorialView) xuống dưới khung chỉ số
+    void LayoutTutorialBanner()
+    {
+        VisualElement banner = document != null ? document.rootVisualElement.Q<VisualElement>("tutorialBanner") : null;
+        StackBelow(banner, container);
     }
 
     // Cập nhật icon debuff theo SurvivalNeeds và Economy
@@ -95,6 +114,7 @@ public class NeedsView : MonoBehaviour
     {
         EnsureElements();
         if (!GameWorld.HasInstance || container == null) return;
+        LayoutTutorialBanner();
 
         GameWorld world = GameWorld.Instance;
         SurvivalNeeds needs = world.Needs;

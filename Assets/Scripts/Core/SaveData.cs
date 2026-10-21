@@ -36,6 +36,10 @@ public class SaveData
     public List<PlacedItemRecord> placedItems = new List<PlacedItemRecord>();
     public List<Order> pendingOrders = new List<Order>();
 
+    // Save cũ chưa có dữ liệu tủ lạnh thì giữ đồ ăn có sẵn trong scene
+    public bool hasFridgeData;
+    public List<string> fridgeItemIds = new List<string>();
+
     public int skillPoints = 1;
     public List<SkillId> learnedSkills = new List<SkillId>();
 }

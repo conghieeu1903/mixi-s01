@@ -44,7 +44,7 @@
                             <ui:Label text="Ảnh item" class="wf-placeholder__label" />
                         </ui:VisualElement>
                         <ui:Label name="itemName" text="Pizza" class="wf-subheading" />
-                        <ui:Label text="Đồ ăn · x2" class="wf-caption" />
+                        <ui:Label name="itemMeta" text="Đồ ăn · x2" class="wf-caption" />
                         <ui:Label name="itemDesc" text="Hồi 40 điểm đói. Mua từ app Eat trên điện thoại." class="wf-text wf-wrap inventory__detail-desc" />
                         <ui:VisualElement class="wf-grow" />
                         <ui:Button name="useButton" text="Dùng" class="wf-button wf-button--primary inventory__detail-button" />

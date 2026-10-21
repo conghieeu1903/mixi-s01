@@ -49,6 +49,9 @@ public class CargoBox : MonoBehaviour, IInteractable
             }
         }
 
+        if (order != null)
+            GameWorld.Instance.Orders.MarkOpened(order);
+
         HudView hud = FindFirstObjectByType<HudView>();
         if (hud != null)
         {

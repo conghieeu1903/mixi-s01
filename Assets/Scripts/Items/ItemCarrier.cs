@@ -116,19 +116,20 @@ public class ItemCarrier : MonoBehaviour
         ItemData data = Held.Data;
         if (data is FoodData food)
         {
-            GameWorld.Instance.Needs.Eat(food.hungerRelief, food.stressDelta);
-            GameWorld.Instance.Mood.Change(4f);
-            FindFirstObjectByType<HudView>()?.ShowInfo($"Đã ăn {food.displayName} (-{food.hungerRelief} Đói)", true);
             ConsumeHeldObject();
+            FindFirstObjectByType<HudView>()?.ShowInfo(NeedActions.Eat(food), true);
             return;
         }
 
         if (data is MedicineData)
         {
-            GameWorld.Instance.Needs.Cure();
-            GameWorld.Instance.Mood.Change(5f);
-            FindFirstObjectByType<HudView>()?.ShowInfo($"Đã uống {data.displayName} — khỏi bệnh!", true);
+            if (!NeedActions.TakeMedicine())
+            {
+                FindFirstObjectByType<HudView>()?.ShowInfo("Bạn đang khỏe, chưa cần uống thuốc", false);
+                return;
+            }
             ConsumeHeldObject();
+            FindFirstObjectByType<HudView>()?.ShowInfo($"Đã uống {data.displayName} — khỏi bệnh!", true);
             return;
         }
 

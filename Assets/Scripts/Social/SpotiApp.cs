@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-// App nghe nhạc Spoti
+// App nghe nhạc Spoti trên Windows Desktop: trình phát nhạc thư giãn (+Mood)
 public class SpotiApp : PcApp
 {
     static readonly string[] DefaultTrackNames =
@@ -14,6 +14,8 @@ public class SpotiApp : PcApp
     };
 
     [SerializeField] List<AudioClip> songs = new List<AudioClip>();
+
+    public override string AppName => "Spoti";
 
     AudioSource audioSource;
     public int CurrentTrackIndex { get; private set; } = -1;
@@ -60,31 +62,53 @@ public class SpotiApp : PcApp
     {
         if (content == null) return;
         content.Clear();
+        content.style.flexDirection = FlexDirection.Column;
+        content.style.paddingLeft = 14;
+        content.style.paddingRight = 14;
+        content.style.paddingTop = 12;
+        content.style.paddingBottom = 12;
+        content.style.backgroundColor = new Color(0.08f, 0.11f, 0.10f, 1f);
 
-        Label title = new Label("Spoti — Trình phát nhạc thư giãn (+Mood)");
-        title.AddToClassList("wf-subheading");
+        Label title = new Label("♪ SPOTI MUSIC — Playlist Streamer (+Mood)");
+        title.style.fontSize = 14;
+        title.style.unityFontStyleAndWeight = FontStyle.Bold;
+        title.style.color = new Color(0.20f, 0.88f, 0.48f, 1f);
         title.style.marginBottom = 8;
         content.Add(title);
 
         Label status = new Label(IsPlaying && CurrentTrackIndex >= 0
-            ? $"Đang phát: {DefaultTrackNames[CurrentTrackIndex]}"
-            : "Trạng thái: Đang dừng");
-        status.AddToClassList("wf-text");
-        status.style.marginBottom = 8;
+            ? $"▶ Đang phát: {DefaultTrackNames[CurrentTrackIndex]}"
+            : "⏸ Trạng thái: Đang dừng phát");
+        status.style.fontSize = 12;
+        status.style.color = new Color(0.84f, 0.96f, 0.88f, 1f);
+        status.style.marginBottom = 10;
         content.Add(status);
 
         for (int i = 0; i < DefaultTrackNames.Length; i++)
         {
             int idx = i;
+            bool playingThis = IsPlaying && CurrentTrackIndex == idx;
+
             VisualElement row = new VisualElement();
             row.style.flexDirection = FlexDirection.Row;
             row.style.justifyContent = Justify.SpaceBetween;
             row.style.alignItems = Align.Center;
-            row.style.paddingTop = 4;
-            row.style.paddingBottom = 4;
+            row.style.paddingLeft = 10;
+            row.style.paddingRight = 10;
+            row.style.paddingTop = 7;
+            row.style.paddingBottom = 7;
+            row.style.marginBottom = 5;
+            row.style.backgroundColor = playingThis
+                ? new Color(0.12f, 0.28f, 0.18f, 1f)
+                : new Color(0.13f, 0.16f, 0.16f, 1f);
+            row.style.borderTopLeftRadius = 5;
+            row.style.borderTopRightRadius = 5;
+            row.style.borderBottomLeftRadius = 5;
+            row.style.borderBottomRightRadius = 5;
 
             Label trackLbl = new Label($"{i + 1}. {DefaultTrackNames[i]}");
-            trackLbl.AddToClassList("wf-text");
+            trackLbl.style.fontSize = 12;
+            trackLbl.style.color = playingThis ? new Color(0.28f, 0.96f, 0.56f, 1f) : Color.white;
 
             Button playBtn = new Button(() =>
             {
@@ -92,10 +116,14 @@ public class SpotiApp : PcApp
                 BuildWindowContent(content);
             })
             {
-                text = IsPlaying && CurrentTrackIndex == idx ? "Đang phát" : "Phát"
+                text = playingThis ? "Đang phát ♪" : "▶ Phát"
             };
-            playBtn.AddToClassList("wf-button");
-            playBtn.AddToClassList("wf-button--small");
+            playBtn.style.height = 24;
+            playBtn.style.paddingLeft = 10;
+            playBtn.style.paddingRight = 10;
+            playBtn.style.fontSize = 11;
+            playBtn.style.color = Color.white;
+            playBtn.style.backgroundColor = new Color(0.14f, 0.72f, 0.38f, 1f);
 
             row.Add(trackLbl);
             row.Add(playBtn);
@@ -108,10 +136,12 @@ public class SpotiApp : PcApp
             BuildWindowContent(content);
         })
         {
-            text = "Dừng nhạc"
+            text = "⏹ Dừng phát nhạc"
         };
-        stopBtn.AddToClassList("wf-button");
-        stopBtn.style.marginTop = 10;
+        stopBtn.style.height = 28;
+        stopBtn.style.marginTop = 8;
+        stopBtn.style.color = Color.white;
+        stopBtn.style.backgroundColor = new Color(0.24f, 0.28f, 0.32f, 1f);
         content.Add(stopBtn);
     }
 }

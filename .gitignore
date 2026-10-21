@@ -110,3 +110,6 @@ InitTestScene*.unity*
 
 # không up thư mục agents
 /[Aa]gents
+
+# Agent
+agent/

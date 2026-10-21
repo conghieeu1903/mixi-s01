@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: SaiGame
+  companyName: DefaultCompany
   productName: doMixiSimulator
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -171,9 +171,9 @@ PlayerSettings:
   androidMaxAspectRatio: 2.4
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Android: com.SaiGame.doMixiSimulator
-    Standalone: com.SaiGame.doMixiSimulator
-    iPhone: com.SaiGame.doMixiSimulator
+    Android: com.DefaultCompany.doMixiSimulator
+    Standalone: com.DefaultCompany.doMixiSimulator
+    iPhone: com.DefaultCompany.doMixiSimulator
   buildNumber:
     Standalone: 0
     VisionOS: 0

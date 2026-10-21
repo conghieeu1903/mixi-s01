@@ -43,6 +43,12 @@ public class GameClock
         while ((Hour != targetHour || Minute != 0) && guard-- > 0) AdvanceMinute();
     }
 
+    // Tua thêm một số phút (hành động tốn thời gian như ăn, tắm), vẫn phát đủ sự kiện từng phút
+    public void AdvanceMinutes(int minutes)
+    {
+        for (int i = 0; i < minutes; i++) AdvanceMinute();
+    }
+
     // Đặt lại thời gian khi tải save, không phát sự kiện
     public void Set(int day, int hour, int minute)
     {

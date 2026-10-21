@@ -26,9 +26,10 @@ public class PcBuildView : UIPanel
         buildPanel = Root.Q<VisualElement>("buildCasePanel");
         if (board != null && buildPanel != null)
         {
-            board.style.backgroundColor = new Color(0f, 0f, 0f, 0.45f);
-            board.style.alignItems = Align.Center;
+            board.style.backgroundColor = new Color(0f, 0f, 0f, 0.16f);
+            board.style.alignItems = Align.FlexEnd;
             board.style.justifyContent = Justify.Center;
+            board.style.paddingRight = 44;
 
             foreach (VisualElement child in board.Children())
             {
@@ -40,7 +41,7 @@ public class PcBuildView : UIPanel
         }
 
         if (buildPanel == null) return;
-        buildPanel.style.width = 560;
+        buildPanel.style.width = 500;
         buildPanel.style.minHeight = 460;
 
         Button closeBtn = buildPanel.Q<Button>("closeButton");
@@ -80,8 +81,33 @@ public class PcBuildView : UIPanel
         SetupPanel();
         if (currentCase == null)
             currentCase = FindFirstObjectByType<PcCase>();
+
+        if (currentCase != null)
+        {
+            currentCase.SetSidePanelOpen(true);
+            PlayerLook look = FindFirstObjectByType<PlayerLook>();
+            if (look != null)
+            {
+                Vector3 camPos = currentCase.transform.TransformPoint(new Vector3(0.56f, 0.30f, 0.08f));
+                Vector3 lookTarget = currentCase.transform.TransformPoint(new Vector3(0.0f, 0.24f, -0.10f));
+                Vector3 dir = lookTarget - camPos;
+                Quaternion camRot = dir.sqrMagnitude > 0.0001f
+                    ? Quaternion.LookRotation(dir.normalized, Vector3.up)
+                    : currentCase.transform.rotation;
+                look.HoldCameraPose(camPos, camRot, 0.45f, 54f);
+            }
+        }
+
         Rebuild();
         base.Show();
+    }
+
+    public override void Hide()
+    {
+        if (currentCase != null)
+            currentCase.SetSidePanelOpen(false);
+        FindFirstObjectByType<PlayerLook>()?.ReleaseCameraPose(0.42f);
+        base.Hide();
     }
 
     // Dựng lại danh sách slot
@@ -99,9 +125,11 @@ public class PcBuildView : UIPanel
             VisualElement row = new VisualElement();
             row.AddToClassList("world-panel__row");
 
-            Label typeLabel = new Label(slot.type.ToString());
+            Label typeLabel = new Label(SlotName(slot.type));
             typeLabel.AddToClassList("wf-text");
             typeLabel.AddToClassList("world-panel__row-name");
+            typeLabel.style.width = 130;
+            typeLabel.style.flexShrink = 0;
 
             string desc = slot.IsEmpty
                 ? "Trống"
@@ -131,6 +159,23 @@ public class PcBuildView : UIPanel
             int fps = RigPerformance.Fps(currentCase);
             string boot = currentCase.IsBootable ? "Đủ linh kiện chạy" : "Chưa đủ linh kiện";
             statusLabel.text = $"{boot} · Chất lượng: {qual:0}/100 · {fps} FPS";
+        }
+    }
+
+    // Tên tiếng Việt của khe linh kiện
+    static string SlotName(PcPartType type)
+    {
+        switch (type)
+        {
+            case PcPartType.Motherboard: return "Mainboard";
+            case PcPartType.Cpu: return "CPU";
+            case PcPartType.CpuCooler: return "Tản nhiệt";
+            case PcPartType.Ram: return "RAM";
+            case PcPartType.GraphicsCard: return "Card đồ họa";
+            case PcPartType.Psu: return "Nguồn";
+            case PcPartType.Storage: return "Ổ cứng";
+            case PcPartType.Optical: return "Ổ đĩa";
+            default: return type.ToString();
         }
     }
 

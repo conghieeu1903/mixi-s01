@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-// Trình duyệt web nội bộ: các trang giả, back/forward, quản lý việc làm thêm, đào coin, nhân viên, diệt virus
+// Trình duyệt web kiểu Chrome/Edge trên Windows Desktop: thanh Tab, thanh địa chỉ URL, Mail, Crypto, Nhân viên, Antivirus
 public class BrowserApp : PcApp
 {
     readonly List<string> history = new List<string> { "work://mail" };
     int historyIndex;
     VisualElement activeContent;
 
+    public override string AppName => "Browser";
     public string CurrentUrl => history[Mathf.Clamp(historyIndex, 0, history.Count - 1)];
 
     void Awake()
@@ -56,45 +57,88 @@ public class BrowserApp : PcApp
         if (content == null) return;
         activeContent = content;
         content.Clear();
+        content.style.flexDirection = FlexDirection.Column;
+        content.style.paddingLeft = 12;
+        content.style.paddingRight = 12;
+        content.style.paddingTop = 10;
+        content.style.paddingBottom = 10;
+        content.style.backgroundColor = new Color(0.11f, 0.13f, 0.17f, 1f);
 
-        VisualElement navBar = new VisualElement();
-        navBar.style.flexDirection = FlexDirection.Row;
-        navBar.style.flexWrap = Wrap.Wrap;
-        navBar.style.marginBottom = 8;
-
-        Button backBtn = new Button(GoBack) { text = "<" };
-        backBtn.AddToClassList("wf-button");
-        backBtn.AddToClassList("wf-button--square");
-        backBtn.style.marginRight = 4;
-
-        Button fwdBtn = new Button(GoForward) { text = ">" };
-        fwdBtn.AddToClassList("wf-button");
-        fwdBtn.AddToClassList("wf-button--square");
-        fwdBtn.style.marginRight = 8;
-
-        navBar.Add(backBtn);
-        navBar.Add(fwdBtn);
+        VisualElement tabBar = new VisualElement();
+        tabBar.style.flexDirection = FlexDirection.Row;
+        tabBar.style.alignItems = Align.Center;
+        tabBar.style.marginBottom = 6;
 
         (string label, string url)[] tabs =
         {
-            ("Thư việc làm (Mail)", "work://mail"),
-            ("Đào Bitcoin (Crypto)", "btc://wallet"),
-            ("Nhân viên Stream", "work://agency"),
-            ("Diệt Virus & Điện", "av://defender")
+            ("✉ Hộp thư Việc làm", "work://mail"),
+            ("₿ Ví Đào Bitcoin", "btc://wallet"),
+            ("👥 Quản lý Nhân viên", "work://agency"),
+            ("🛡 Windows Defender & Điện", "av://defender")
         };
 
         for (int i = 0; i < tabs.Length; i++)
         {
             string targetUrl = tabs[i].url;
+            bool active = CurrentUrl == targetUrl;
             Button tabBtn = new Button(() => Navigate(targetUrl)) { text = tabs[i].label };
-            tabBtn.AddToClassList("wf-button");
-            tabBtn.AddToClassList("wf-button--small");
-            if (CurrentUrl == targetUrl) tabBtn.AddToClassList("wf-button--primary");
-            tabBtn.style.marginRight = 6;
-            navBar.Add(tabBtn);
+            tabBtn.style.height = 26;
+            tabBtn.style.marginRight = 5;
+            tabBtn.style.paddingLeft = 10;
+            tabBtn.style.paddingRight = 10;
+            tabBtn.style.fontSize = 11;
+            tabBtn.style.color = active ? Color.white : new Color(0.74f, 0.80f, 0.88f, 1f);
+            tabBtn.style.backgroundColor = active
+                ? new Color(0.18f, 0.48f, 0.88f, 1f)
+                : new Color(0.16f, 0.19f, 0.24f, 1f);
+            tabBtn.style.borderTopLeftRadius = 5;
+            tabBtn.style.borderTopRightRadius = 5;
+            tabBtn.style.borderBottomLeftRadius = 0;
+            tabBtn.style.borderBottomRightRadius = 0;
+            tabBtn.style.borderTopWidth = 0;
+            tabBtn.style.borderBottomWidth = 0;
+            tabBtn.style.borderLeftWidth = 0;
+            tabBtn.style.borderRightWidth = 0;
+            tabBar.Add(tabBtn);
         }
+        content.Add(tabBar);
 
-        content.Add(navBar);
+        VisualElement urlBar = new VisualElement();
+        urlBar.style.flexDirection = FlexDirection.Row;
+        urlBar.style.alignItems = Align.Center;
+        urlBar.style.paddingLeft = 8;
+        urlBar.style.paddingRight = 8;
+        urlBar.style.paddingTop = 4;
+        urlBar.style.paddingBottom = 4;
+        urlBar.style.marginBottom = 10;
+        urlBar.style.backgroundColor = new Color(0.08f, 0.09f, 0.12f, 1f);
+        urlBar.style.borderTopLeftRadius = 5;
+        urlBar.style.borderTopRightRadius = 5;
+        urlBar.style.borderBottomLeftRadius = 5;
+        urlBar.style.borderBottomRightRadius = 5;
+
+        Button backBtn = new Button(GoBack) { text = "←" };
+        backBtn.style.width = 24;
+        backBtn.style.height = 22;
+        backBtn.style.marginRight = 4;
+        backBtn.style.color = Color.white;
+        backBtn.style.backgroundColor = new Color(0.18f, 0.22f, 0.28f, 1f);
+
+        Button fwdBtn = new Button(GoForward) { text = "→" };
+        fwdBtn.style.width = 24;
+        fwdBtn.style.height = 22;
+        fwdBtn.style.marginRight = 8;
+        fwdBtn.style.color = Color.white;
+        fwdBtn.style.backgroundColor = new Color(0.18f, 0.22f, 0.28f, 1f);
+
+        Label urlLbl = new Label($"🔒 https://{CurrentUrl.Replace("://", ".mixi/")}");
+        urlLbl.style.fontSize = 11;
+        urlLbl.style.color = new Color(0.68f, 0.84f, 0.98f, 1f);
+
+        urlBar.Add(backBtn);
+        urlBar.Add(fwdBtn);
+        urlBar.Add(urlLbl);
+        content.Add(urlBar);
 
         ScrollView body = new ScrollView();
         body.style.flexGrow = 1;
@@ -105,9 +149,11 @@ public class BrowserApp : PcApp
 
         if (CurrentUrl == "btc://wallet")
         {
-            Label btcLbl = new Label($"Số dư ví: {gw.Crypto.Bitcoin:0.0000} BTC (Tỷ giá: $ {CryptoMining.UsdPerBitcoin:N0}/BTC)");
-            btcLbl.AddToClassList("wf-subheading");
-            btcLbl.style.marginBottom = 8;
+            Label btcLbl = new Label($"₿ Số dư ví đào: {gw.Crypto.Bitcoin:0.0000} BTC (Tỷ giá: $ {CryptoMining.UsdPerBitcoin:N0} / BTC)");
+            btcLbl.style.fontSize = 14;
+            btcLbl.style.unityFontStyleAndWeight = FontStyle.Bold;
+            btcLbl.style.color = new Color(0.98f, 0.76f, 0.22f, 1f);
+            btcLbl.style.marginBottom = 10;
             body.Add(btcLbl);
 
             Button sellBtn = new Button(() =>
@@ -117,16 +163,19 @@ public class BrowserApp : PcApp
                 BuildWindowContent(content);
             })
             {
-                text = "Bán toàn bộ Bitcoin sang USD"
+                text = "💰 Bán toàn bộ Bitcoin sang USD"
             };
-            sellBtn.AddToClassList("wf-button");
-            sellBtn.AddToClassList("wf-button--primary");
+            sellBtn.style.height = 30;
+            sellBtn.style.color = Color.white;
+            sellBtn.style.backgroundColor = new Color(0.86f, 0.52f, 0.12f, 1f);
             body.Add(sellBtn);
         }
         else if (CurrentUrl == "work://agency")
         {
-            Label wTitle = new Label($"Đội ngũ nhân viên Stream ({gw.Workers.Workers.Count}/{WorkerManager.MaxWorkers})");
-            wTitle.AddToClassList("wf-subheading");
+            Label wTitle = new Label($"👥 Đội ngũ nhân viên Stream ({gw.Workers.Workers.Count}/{WorkerManager.MaxWorkers})");
+            wTitle.style.fontSize = 13;
+            wTitle.style.unityFontStyleAndWeight = FontStyle.Bold;
+            wTitle.style.color = Color.white;
             wTitle.style.marginBottom = 8;
             body.Add(wTitle);
 
@@ -136,17 +185,12 @@ public class BrowserApp : PcApp
                 StreamWorker cand = candidates[i];
                 StreamWorker hired = gw.Workers.Workers.Find(w => w.name == cand.name);
 
-                VisualElement row = new VisualElement();
-                row.style.flexDirection = FlexDirection.Row;
-                row.style.justifyContent = Justify.SpaceBetween;
-                row.style.alignItems = Align.Center;
-                row.style.paddingTop = 4;
-                row.style.paddingBottom = 4;
-
+                VisualElement row = CreateCardRow();
                 Label info = new Label(hired != null
                     ? $"{hired.name} · Lương $ {hired.salary}/ngày · Năng lượng {hired.energy:0}% · Đã kiếm $ {hired.earnedMoney:0.##}"
                     : $"{cand.name} · Lương $ {cand.salary}/ngày · Follower khởi điểm {cand.followers}");
-                info.AddToClassList("wf-text");
+                info.style.fontSize = 11;
+                info.style.color = Color.white;
 
                 Button actBtn = new Button(() =>
                 {
@@ -157,11 +201,16 @@ public class BrowserApp : PcApp
                     BuildWindowContent(content);
                 })
                 {
-                    text = hired != null ? "Sa thải" : "Thuê"
+                    text = hired != null ? "Sa thải" : "Thuê ngay"
                 };
-                actBtn.AddToClassList("wf-button");
-                actBtn.AddToClassList("wf-button--small");
-                if (hired == null) actBtn.AddToClassList("wf-button--primary");
+                actBtn.style.height = 24;
+                actBtn.style.paddingLeft = 10;
+                actBtn.style.paddingRight = 10;
+                actBtn.style.fontSize = 11;
+                actBtn.style.color = Color.white;
+                actBtn.style.backgroundColor = hired != null
+                    ? new Color(0.68f, 0.22f, 0.24f, 1f)
+                    : new Color(0.18f, 0.62f, 0.36f, 1f);
 
                 row.Add(info);
                 row.Add(actBtn);
@@ -171,15 +220,20 @@ public class BrowserApp : PcApp
         else if (CurrentUrl == "av://defender")
         {
             Label vStatus = new Label(gw.Virus.IsInfected
-                ? "Trạng thái máy tính: ĐANG NHIỄM VIRUS (Stream bị chặn tăng trưởng!)"
-                : "Trạng thái máy tính: An toàn, không có Virus");
-            vStatus.AddToClassList("wf-subheading");
-            vStatus.style.marginBottom = 6;
+                ? "⚠ CẢNH BÁO: Máy tính đang nhiễm Virus (Stream bị kìm hãm người xem!)"
+                : "🛡 Windows Defender: Máy tính an toàn, không phát hiện mã độc.");
+            vStatus.style.fontSize = 13;
+            vStatus.style.unityFontStyleAndWeight = FontStyle.Bold;
+            vStatus.style.color = gw.Virus.IsInfected
+                ? new Color(1f, 0.36f, 0.38f, 1f)
+                : new Color(0.36f, 0.92f, 0.56f, 1f);
+            vStatus.style.marginBottom = 8;
             body.Add(vStatus);
 
-            Label eStatus = new Label($"Điện năng tiêu thụ hôm nay: {gw.Electricity.KwhToday:0.00} kWh");
-            eStatus.AddToClassList("wf-text");
-            eStatus.style.marginBottom = 8;
+            Label eStatus = new Label($"⚡ Điện năng tiêu thụ hôm nay: {gw.Electricity.KwhToday:0.00} kWh");
+            eStatus.style.fontSize = 12;
+            eStatus.style.color = new Color(0.84f, 0.90f, 0.98f, 1f);
+            eStatus.style.marginBottom = 10;
             body.Add(eStatus);
 
             Button scanBtn = new Button(() =>
@@ -189,31 +243,30 @@ public class BrowserApp : PcApp
                 BuildWindowContent(content);
             })
             {
-                text = "Quét & Diệt Virus ngay"
+                text = "🛡 Quét & Diệt sạch Virus ngay"
             };
-            scanBtn.AddToClassList("wf-button");
-            scanBtn.AddToClassList("wf-button--primary");
+            scanBtn.style.height = 30;
+            scanBtn.style.color = Color.white;
+            scanBtn.style.backgroundColor = new Color(0.18f, 0.58f, 0.36f, 1f);
             body.Add(scanBtn);
         }
         else
         {
-            Label mTitle = new Label("Hộp thư việc làm thêm & Tài trợ");
-            mTitle.AddToClassList("wf-subheading");
+            Label mTitle = new Label("✉ Hộp thư Việc làm thêm & Hợp đồng Tài trợ");
+            mTitle.style.fontSize = 13;
+            mTitle.style.unityFontStyleAndWeight = FontStyle.Bold;
+            mTitle.style.color = Color.white;
             mTitle.style.marginBottom = 8;
             body.Add(mTitle);
 
             for (int i = 0; i < gw.Mail.Inbox.Count; i++)
             {
                 MailJob job = gw.Mail.Inbox[i];
-                VisualElement row = new VisualElement();
-                row.style.flexDirection = FlexDirection.Row;
-                row.style.justifyContent = Justify.SpaceBetween;
-                row.style.alignItems = Align.Center;
-                row.style.paddingTop = 4;
-                row.style.paddingBottom = 4;
+                VisualElement row = CreateCardRow();
 
                 Label lbl = new Label($"[{job.sender}] {job.title} — Thù lao: $ {job.reward:0.##}");
-                lbl.AddToClassList("wf-text");
+                lbl.style.fontSize = 11;
+                lbl.style.color = Color.white;
 
                 Button btn = new Button(() =>
                 {
@@ -222,11 +275,16 @@ public class BrowserApp : PcApp
                     BuildWindowContent(content);
                 })
                 {
-                    text = job.done ? "Đã nhận" : "Làm ngay"
+                    text = job.done ? "✓ Đã nhận" : "Nhận việc"
                 };
-                btn.AddToClassList("wf-button");
-                btn.AddToClassList("wf-button--small");
-                if (!job.done) btn.AddToClassList("wf-button--primary");
+                btn.style.height = 24;
+                btn.style.paddingLeft = 10;
+                btn.style.paddingRight = 10;
+                btn.style.fontSize = 11;
+                btn.style.color = Color.white;
+                btn.style.backgroundColor = job.done
+                    ? new Color(0.26f, 0.30f, 0.36f, 1f)
+                    : new Color(0.18f, 0.56f, 0.88f, 1f);
                 btn.SetEnabled(!job.done);
 
                 row.Add(lbl);
@@ -234,5 +292,24 @@ public class BrowserApp : PcApp
                 body.Add(row);
             }
         }
+    }
+
+    static VisualElement CreateCardRow()
+    {
+        VisualElement row = new VisualElement();
+        row.style.flexDirection = FlexDirection.Row;
+        row.style.justifyContent = Justify.SpaceBetween;
+        row.style.alignItems = Align.Center;
+        row.style.paddingLeft = 10;
+        row.style.paddingRight = 10;
+        row.style.paddingTop = 7;
+        row.style.paddingBottom = 7;
+        row.style.marginBottom = 5;
+        row.style.backgroundColor = new Color(0.15f, 0.18f, 0.23f, 1f);
+        row.style.borderTopLeftRadius = 5;
+        row.style.borderTopRightRadius = 5;
+        row.style.borderBottomLeftRadius = 5;
+        row.style.borderBottomRightRadius = 5;
+        return row;
     }
 }

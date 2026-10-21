@@ -8,6 +8,7 @@ public class InventoryView : UIPanel
     VisualElement slotGrid;
     Label itemNameLabel;
     Label itemDescLabel;
+    Label itemMetaLabel;
     Button useButton;
     Button dropButton;
     ItemData selectedItem;
@@ -35,6 +36,7 @@ public class InventoryView : UIPanel
         slotGrid = Root.Q<VisualElement>("slotGrid");
         itemNameLabel = Root.Q<Label>("itemName");
         itemDescLabel = Root.Q<Label>("itemDesc");
+        itemMetaLabel = Root.Q<Label>("itemMeta");
         useButton = Root.Q<Button>("useButton");
         dropButton = Root.Q<Button>("dropButton");
 
@@ -111,6 +113,7 @@ public class InventoryView : UIPanel
         {
             if (itemNameLabel != null) itemNameLabel.text = "Chưa chọn vật phẩm";
             if (itemDescLabel != null) itemDescLabel.text = "Kho đồ trống hoặc chưa chọn ô nào.";
+            if (itemMetaLabel != null) itemMetaLabel.text = string.Empty;
             if (useButton != null) useButton.SetEnabled(false);
             if (dropButton != null) dropButton.SetEnabled(false);
             return;
@@ -118,6 +121,12 @@ public class InventoryView : UIPanel
 
         if (itemNameLabel != null)
             itemNameLabel.text = selectedItem.displayName;
+
+        if (itemMetaLabel != null)
+        {
+            int count = GameWorld.HasInstance ? GameWorld.Instance.Inventory.Items.FindAll(i => i == selectedItem).Count : 1;
+            itemMetaLabel.text = $"{CategoryName(selectedItem.category)} · x{count}";
+        }
 
         if (itemDescLabel != null)
         {
@@ -146,6 +155,22 @@ public class InventoryView : UIPanel
             dropButton.SetEnabled(true);
     }
 
+    // Tên tiếng Việt của nhóm vật phẩm
+    static string CategoryName(ItemCategory category)
+    {
+        switch (category)
+        {
+            case ItemCategory.Food: return "Đồ ăn";
+            case ItemCategory.Medicine: return "Thuốc";
+            case ItemCategory.PcPart: return "Linh kiện PC";
+            case ItemCategory.Network: return "Thiết bị mạng";
+            case ItemCategory.StreamGear: return "Thiết bị stream";
+            case ItemCategory.Furniture: return "Nội thất";
+            case ItemCategory.Decoration: return "Trang trí";
+            default: return "Vật phẩm";
+        }
+    }
+
     void UseSelected()
     {
         if (selectedItem == null || !GameWorld.HasInstance) return;
@@ -155,18 +180,19 @@ public class InventoryView : UIPanel
         if (item is FoodData food)
         {
             GameWorld.Instance.Inventory.Remove(item);
-            GameWorld.Instance.Needs.Eat(food.hungerRelief, food.stressDelta);
-            GameWorld.Instance.Mood.Change(4f);
-            hud?.ShowInfo($"Đã ăn {food.displayName} (-{food.hungerRelief} Đói)", true);
+            hud?.ShowInfo(NeedActions.Eat(food), true);
             Rebuild();
             return;
         }
 
         if (item is MedicineData)
         {
+            if (!NeedActions.TakeMedicine())
+            {
+                hud?.ShowInfo("Bạn đang khỏe, chưa cần uống thuốc", false);
+                return;
+            }
             GameWorld.Instance.Inventory.Remove(item);
-            GameWorld.Instance.Needs.Cure();
-            GameWorld.Instance.Mood.Change(5f);
             hud?.ShowInfo($"Đã uống {item.displayName} — khỏi bệnh!", true);
             Rebuild();
             return;

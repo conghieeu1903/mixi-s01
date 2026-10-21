@@ -23,8 +23,8 @@ public class Courier : MonoBehaviour
         Deliver(order, defaultDropPoint != null ? defaultDropPoint : transform);
     }
 
-    // Bắt đầu giao một đơn hàng
-    public void Deliver(Order order, Transform dropPoint)
+    // Bắt đầu giao một đơn hàng, announce = false khi chỉ đặt lại thùng lúc tải save
+    public void Deliver(Order order, Transform dropPoint, bool announce = true)
     {
         if (order == null) return;
 
@@ -46,6 +46,7 @@ public class Courier : MonoBehaviour
         }
 
         box.Setup(order);
-        FindFirstObjectByType<HudView>()?.ShowInfo("Đơn hàng Zamazor đã giao tới trước cửa!", true);
+        if (announce)
+            FindFirstObjectByType<HudView>()?.ShowInfo("Đơn hàng Zamazor đã giao tới trước cửa!", true);
     }
 }

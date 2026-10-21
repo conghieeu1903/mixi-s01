@@ -8,6 +8,9 @@ public class OrderService
 
     public List<Order> Pending { get; } = new List<Order>();
 
+    // Đơn đã giao tới cửa nhưng người chơi chưa mở thùng, vẫn được lưu để không mất hàng
+    public List<Order> AwaitingPickup { get; } = new List<Order>();
+
     public event Action<Order> Delivered;
 
     readonly GameClock clock;
@@ -67,21 +70,37 @@ public class OrderService
             {
                 order.delivered = true;
                 Pending.RemoveAt(i);
+                AwaitingPickup.Add(order);
                 Delivered?.Invoke(order);
             }
         }
     }
 
+    // Người chơi đã mở thùng hàng của đơn này
+    public void MarkOpened(Order order)
+    {
+        AwaitingPickup.Remove(order);
+    }
+
+    // Ghi cả đơn đang chờ giao và đơn đã giao nhưng chưa mở (phân biệt bằng cờ delivered)
     public void Export(SaveData data)
     {
         if (data == null) return;
         data.pendingOrders = new List<Order>(Pending);
+        data.pendingOrders.AddRange(AwaitingPickup);
     }
 
     public void Import(SaveData data)
     {
         Pending.Clear();
-        if (data?.pendingOrders != null)
-            Pending.AddRange(data.pendingOrders);
+        AwaitingPickup.Clear();
+        if (data?.pendingOrders == null) return;
+        for (int i = 0; i < data.pendingOrders.Count; i++)
+        {
+            Order order = data.pendingOrders[i];
+            if (order == null) continue;
+            if (order.delivered) AwaitingPickup.Add(order);
+            else Pending.Add(order);
+        }
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Bồn tắm / vòi sen: tắm để reset bộ đếm
+// Bồn tắm / vòi sen: lia camera bước vào bồn tắm rồi bước ra và reset bộ đếm
 public class Bathtub : MonoBehaviour, IInteractable
 {
     public string Prompt => "Tắm";
@@ -12,9 +12,17 @@ public class Bathtub : MonoBehaviour, IInteractable
 
     public void Interact(PlayerInteractor interactor)
     {
-        GameWorld.Instance.Needs.Shower();
-        GameWorld.Instance.Needs.ChangeStress(-10f);
-        GameWorld.Instance.Mood.Change(5f);
-        FindFirstObjectByType<HudView>()?.ShowInfo("Đã tắm rửa sạch sẽ (+5 Mood, -10 Stress)", true);
+        string message = NeedActions.Shower();
+        FindFirstObjectByType<HudView>()?.ShowInfo(message, true);
+
+        PlayerLook look = interactor != null
+            ? interactor.GetComponent<PlayerLook>()
+            : FindFirstObjectByType<PlayerLook>();
+        if (look != null)
+        {
+            Vector3 bathPos = transform.TransformPoint(new Vector3(0f, 1.18f, 0f));
+            Quaternion bathRot = Quaternion.Euler(-12f, transform.eulerAngles.y, 0f);
+            look.PlayPoseTransition(bathPos, bathRot, 0.45f, 0.3f, 0.45f);
+        }
     }
 }

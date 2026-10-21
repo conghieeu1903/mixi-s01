@@ -70,6 +70,9 @@ public class PlayerMotor : MonoBehaviour
     // Cập nhật cúi, tốc độ ngang, trọng lực rồi di chuyển
     void Update()
     {
+        // Controller đang tắt (lên xe, dịch chuyển) thì không di chuyển
+        if (!controller.enabled) return;
+
         float dt = Time.deltaTime;
         UpdateCrouch(dt);
         UpdateHorizontal(dt);

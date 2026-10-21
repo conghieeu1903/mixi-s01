@@ -262,8 +262,14 @@ public class GameWorld : MonoBehaviour
             for (int i = 0; i < worldItems.Length; i++)
             {
                 WorldItem wi = worldItems[i];
-                if (wi == null || wi.IsHeld || wi.Data == null || string.IsNullOrEmpty(wi.Data.id))
+                if (wi == null || wi.Data == null || string.IsNullOrEmpty(wi.Data.id))
                     continue;
+                // Đồ đang cầm trên tay được lưu vào kho để không mất khi tự lưu lúc ngủ hoặc qua ngày
+                if (wi.IsHeld)
+                {
+                    data.inventoryItemIds.Add(wi.Data.id);
+                    continue;
+                }
                 data.placedItems.Add(new PlacedItemRecord
                 {
                     itemId = wi.Data.id,
@@ -275,6 +281,15 @@ public class GameWorld : MonoBehaviour
         else if (pendingSceneData?.placedItems != null)
         {
             data.placedItems = new List<PlacedItemRecord>(pendingSceneData.placedItems);
+        }
+
+        Fridge fridge = FindFirstObjectByType<Fridge>();
+        if (fridge != null)
+            fridge.Export(data);
+        else if (pendingSceneData != null && pendingSceneData.hasFridgeData)
+        {
+            data.hasFridgeData = true;
+            data.fridgeItemIds = new List<string>(pendingSceneData.fridgeItemIds);
         }
 
         SaveService.Save(data);
@@ -331,6 +346,19 @@ public class GameWorld : MonoBehaviour
                 if (itemData != null)
                     WorldItem.Spawn(itemData, rec.position, Quaternion.Euler(rec.eulerAngles));
             }
+        }
+
+        FindFirstObjectByType<Fridge>()?.Import(data);
+
+        // Đặt lại các thùng hàng đã giao nhưng chưa mở
+        CargoBox[] boxes = FindObjectsByType<CargoBox>(FindObjectsSortMode.None);
+        for (int i = 0; i < boxes.Length; i++)
+            Destroy(boxes[i].gameObject);
+        Courier courier = FindFirstObjectByType<Courier>();
+        if (courier != null)
+        {
+            for (int i = 0; i < Orders.AwaitingPickup.Count; i++)
+                courier.Deliver(Orders.AwaitingPickup[i], null, false);
         }
 
         FindFirstObjectByType<StreamSetup>()?.RefreshComponents();
