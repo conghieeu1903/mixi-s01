@@ -21,6 +21,12 @@ public class ComputerDesk : MonoBehaviour, IInteractable
     [Tooltip("Panel chọn chủ đề và quản lý stream")]
     [SerializeField] StreamStartPanel streamStartPanel;
 
+    [Tooltip("Thời gian lia camera từ đứng sang ngồi (giây)")]
+    [SerializeField] float sitTransitionDuration = 0.65f;
+
+    [Tooltip("Thời gian lia camera từ ngồi sang đứng dậy (giây)")]
+    [SerializeField] float standTransitionDuration = 0.55f;
+
     PlayerMotor activeMotor;
     PlayerLook activeLook;
     Camera activeCamera;
@@ -28,12 +34,20 @@ public class ComputerDesk : MonoBehaviour, IInteractable
     Quaternion savedCamLocalRot = Quaternion.identity;
     float savedCamFov = 70f;
 
+    Vector3 transitionStartPos;
+    Quaternion transitionStartRot;
+    float transitionStartFov = 70f;
+    float transitionElapsed;
+    bool isSittingTransition;
+    bool isStandingTransition;
+
     // Trạng thái camera đung đưa theo chuột và chế độ Focus cận cảnh màn hình giống CamControl & PcRayControl của SLS2
     bool isMonitorFocused;
+    float focusBlend;
     float currentSwayYaw;
     float currentSwayPitch;
     Vector3 currentSwayOffset;
-    float currentCamFov = 50f;
+    float currentCamFov = 43f;
     float lastFocusToggleTime;
 
     public const int ScreenTexWidth = 1280;
@@ -54,8 +68,8 @@ public class ComputerDesk : MonoBehaviour, IInteractable
     public Transform MonitorScreen => EnsureMonitorScreen();
     public RenderTexture MonitorRenderTexture => EnsureMonitorRenderTexture();
 
-    // Tiến độ ngồi vào máy (luôn là 1 khi đã ngồi)
-    public float SitProgress => IsOccupied ? 1f : 0f;
+    // Tiến độ lia camera ngồi vào máy (0 -> 1)
+    public float SitProgress => !IsOccupied ? 0f : (isSittingTransition ? Mathf.Clamp01(transitionElapsed / Mathf.Max(0.05f, sitTransitionDuration)) : 1f);
 
     void Awake()
     {
@@ -118,8 +132,8 @@ public class ComputerDesk : MonoBehaviour, IInteractable
             Transform frame = monitor.Find("Mesh_Frame");
             if (frame != null)
             {
-                frame.localPosition = new Vector3(0f, 0.415f, 0f);
-                frame.localScale = new Vector3(0.65f, 0.40f, 0.035f);
+                frame.localPosition = new Vector3(0f, 0.424f, 0f);
+                frame.localScale = new Vector3(0.602f, 0.362f, 0.035f);
             }
             if (monitorScreen == null)
                 monitorScreen = monitor.Find("Mesh_Screen");
@@ -127,7 +141,7 @@ public class ComputerDesk : MonoBehaviour, IInteractable
             {
                 monitorScreen.localPosition = new Vector3(0f, 0.425f, 0.019f);
                 monitorScreen.localRotation = Quaternion.identity;
-                monitorScreen.localScale = new Vector3(0.58f, 0.33f, 1f);
+                monitorScreen.localScale = new Vector3(0.58f, 0.344f, 1f);
                 EnsureMonitorQuadMesh(monitorScreen);
             }
             EnsureMonitorBezelDetails(monitor);
@@ -267,10 +281,15 @@ public class ComputerDesk : MonoBehaviour, IInteractable
         if (playerMesh != null && playerMesh.activeSelf)
             playerMesh.SetActive(false);
 
-        if (!IsOccupied) return;
-
         if (activeCamera == null)
             activeCamera = Camera.main;
+
+        if (!IsOccupied)
+        {
+            if (isStandingTransition)
+                UpdateStandingCamera(Mathf.Clamp(Time.unscaledDeltaTime, 0.001f, 0.05f));
+            return;
+        }
 
         Keyboard kb = Keyboard.current;
         if (kb != null)
@@ -300,7 +319,7 @@ public class ComputerDesk : MonoBehaviour, IInteractable
         }
     }
 
-    // Cập nhật vị trí và góc xoay đung đưa của camera theo chuyển động chuột giống CamControl của SLS2
+    // Cập nhật vị trí và góc xoay đung đưa của camera: mặc định là góc nhìn ngồi cận vừa phải, nhấn F sẽ zoom sát viền màn hình như SLS2
     void UpdateCameraSwayAndPose()
     {
         float dt = Mathf.Clamp(Time.unscaledDeltaTime, 0.001f, 0.05f);
@@ -315,11 +334,14 @@ public class ComputerDesk : MonoBehaviour, IInteractable
         float nx = Screen.width > 1 ? Mathf.Clamp((mousePos.x / Screen.width) * 2f - 1f, -1f, 1f) : 0f;
         float ny = Screen.height > 1 ? Mathf.Clamp((mousePos.y / Screen.height) * 2f - 1f, -1f, 1f) : 0f;
 
-        // Nhịp thở nhẹ kết hợp góc lia đầu theo vị trí con trỏ trên màn hình
+        focusBlend = Mathf.MoveTowards(focusBlend, isMonitorFocused ? 1f : 0f, 5.5f * dt);
+        float smoothFocus = focusBlend * focusBlend * (3f - 2f * focusBlend);
+
+        // Nhịp thở nhẹ kết hợp góc lia đầu theo vị trí con trỏ trên màn hình ở trạng thái ngồi mặc định
         float breatheX = Mathf.Sin(Time.unscaledTime * 1.35f) * 0.22f;
         float breatheY = Mathf.Cos(Time.unscaledTime * 1.05f) * 0.18f;
 
-        float swayScale = isMonitorFocused ? 0.25f : 1f;
+        float swayScale = Mathf.Lerp(0.25f, 0.015f, smoothFocus);
         float targetYaw = (nx * 3.8f + breatheX) * swayScale;
         float targetPitch = (-ny * 2.6f + breatheY) * swayScale;
 
@@ -329,17 +351,96 @@ public class ComputerDesk : MonoBehaviour, IInteractable
         Vector3 localShift = new Vector3(
             nx * 0.016f * swayScale,
             ny * 0.011f * swayScale,
-            isMonitorFocused ? -0.11f : 0f);
+            -0.11f);
         currentSwayOffset = Vector3.Lerp(currentSwayOffset, localShift, 6.5f * dt);
 
-        float targetFov = isMonitorFocused ? 43f : 52f;
-        currentCamFov = Mathf.Lerp(currentCamFov, targetFov, 7.5f * dt);
+        // Trạng thái mặc định khi ngồi vào máy (tương ứng góc Focus cũ FOV 43)
+        Vector3 defaultWorldPos = seatPoint.position + seatPoint.TransformVector(currentSwayOffset);
+        Quaternion defaultWorldRot = seatPoint.rotation * Quaternion.Euler(currentSwayPitch, currentSwayYaw, -currentSwayYaw * 0.1f);
+        float defaultFov = 43f;
 
-        Vector3 worldPos = seatPoint.position + seatPoint.TransformVector(currentSwayOffset);
-        Quaternion worldRot = seatPoint.rotation * Quaternion.Euler(currentSwayPitch, currentSwayYaw, -currentSwayYaw * 0.1f);
+        // Trạng thái khi nhấn F (Focus): zoom sát vừa khít viền monitor 3D tràn sát mép khung hình 16:9
+        Transform screen = EnsureMonitorScreen();
+        float focusedFov = 36f;
+        Vector3 focusedWorldPos = defaultWorldPos;
+        Quaternion focusedWorldRot = defaultWorldRot;
 
-        activeCamera.transform.SetPositionAndRotation(worldPos, worldRot);
-        activeCamera.fieldOfView = currentCamFov;
+        if (screen != null)
+        {
+            float aspect = activeCamera != null && activeCamera.aspect > 0.5f ? activeCamera.aspect : (16f / 9f);
+            float halfTanV = Mathf.Tan(focusedFov * 0.5f * Mathf.Deg2Rad);
+            float screenWorldHeight = Mathf.Abs(screen.lossyScale.y);
+            float screenWorldWidth = Mathf.Abs(screen.lossyScale.x);
+
+            float distForHeight = (screenWorldHeight * 1.042f) / (2f * halfTanV);
+            float distForWidth = (screenWorldWidth * 1.032f) / (2f * halfTanV * aspect);
+            float focusDist = Mathf.Max(distForHeight, distForWidth);
+
+            focusedWorldPos = screen.position + screen.forward * focusDist;
+            focusedWorldRot = Quaternion.LookRotation(-screen.forward, screen.up);
+        }
+
+        Vector3 worldPos = Vector3.Lerp(defaultWorldPos, focusedWorldPos, smoothFocus);
+        Quaternion worldRot = Quaternion.Slerp(defaultWorldRot, focusedWorldRot, smoothFocus);
+        currentCamFov = Mathf.Lerp(defaultFov, focusedFov, smoothFocus);
+
+        if (isSittingTransition)
+        {
+            transitionElapsed += dt;
+            float dur = Mathf.Max(0.05f, sitTransitionDuration);
+            float t = Mathf.Clamp01(transitionElapsed / dur);
+            float s = t * t * (3f - 2f * t);
+            Vector3 sitArc = Vector3.up * (Mathf.Sin(t * Mathf.PI) * -0.05f);
+
+            activeCamera.transform.SetPositionAndRotation(
+                Vector3.Lerp(transitionStartPos, worldPos, s) + sitArc,
+                Quaternion.Slerp(transitionStartRot, worldRot, s));
+            activeCamera.fieldOfView = Mathf.Lerp(transitionStartFov, currentCamFov, s);
+
+            if (t >= 1f)
+                isSittingTransition = false;
+        }
+        else
+        {
+            activeCamera.transform.SetPositionAndRotation(worldPos, worldRot);
+            activeCamera.fieldOfView = currentCamFov;
+        }
+    }
+
+    // Lia camera mượt từ tư thế ngồi ghế trở về góc nhìn đứng thứ nhất khi đứng dậy
+    void UpdateStandingCamera(float dt)
+    {
+        if (activeCamera == null)
+        {
+            isStandingTransition = false;
+            return;
+        }
+
+        transitionElapsed += dt;
+        float dur = Mathf.Max(0.05f, standTransitionDuration);
+        float t = Mathf.Clamp01(transitionElapsed / dur);
+        float s = t * t * (3f - 2f * t);
+        Vector3 standArc = Vector3.up * (Mathf.Sin(t * Mathf.PI) * 0.04f);
+
+        Vector3 targetWorldPos = activeCamera.transform.parent != null
+            ? activeCamera.transform.parent.TransformPoint(savedCamLocalPos)
+            : activeCamera.transform.position;
+        Quaternion targetWorldRot = activeCamera.transform.parent != null
+            ? activeCamera.transform.parent.rotation * savedCamLocalRot
+            : activeCamera.transform.rotation;
+
+        activeCamera.transform.SetPositionAndRotation(
+            Vector3.Lerp(transitionStartPos, targetWorldPos, s) + standArc,
+            Quaternion.Slerp(transitionStartRot, targetWorldRot, s));
+        activeCamera.fieldOfView = Mathf.Lerp(transitionStartFov, savedCamFov, s);
+
+        if (t >= 1f)
+        {
+            isStandingTransition = false;
+            activeCamera.transform.localPosition = savedCamLocalPos;
+            activeCamera.transform.localRotation = savedCamLocalRot;
+            activeCamera.fieldOfView = savedCamFov;
+        }
     }
 
     // Có thể tương tác khi chưa ngồi vào máy
@@ -367,7 +468,7 @@ public class ComputerDesk : MonoBehaviour, IInteractable
             streamStartPanel.Open(this);
     }
 
-    // Đưa nhân vật vào ghế với khoảng cách nhìn thấy trọn bộ vỏ viền monitor, chân đế và mặt bàn giống SLS2
+    // Đưa nhân vật vào ghế và chạy animation lia camera mượt từ góc nhìn đứng sang ngồi nhìn vào màn hình monitor
     public void SitDown()
     {
         if (playerMesh != null)
@@ -393,16 +494,24 @@ public class ComputerDesk : MonoBehaviour, IInteractable
             savedCamLocalPos = new Vector3(0f, 1.7f, 0f);
             savedCamLocalRot = Quaternion.identity;
             savedCamFov = activeCamera.fieldOfView > 55f ? activeCamera.fieldOfView : 70f;
+
+            transitionStartPos = activeCamera.transform.position;
+            transitionStartRot = activeCamera.transform.rotation;
+            transitionStartFov = activeCamera.fieldOfView;
+            transitionElapsed = 0f;
+            isSittingTransition = true;
+            isStandingTransition = false;
         }
 
         if (!IsOccupied)
         {
             AudioManager.Play("sit_down");
             isMonitorFocused = false;
+            focusBlend = 0f;
             currentSwayYaw = 0f;
             currentSwayPitch = 0f;
-            currentSwayOffset = Vector3.zero;
-            currentCamFov = 52f;
+            currentSwayOffset = new Vector3(0f, 0f, -0.11f);
+            currentCamFov = 43f;
         }
         IsOccupied = true;
 
@@ -425,7 +534,15 @@ public class ComputerDesk : MonoBehaviour, IInteractable
 
         if (activeCamera != null && seatPoint != null)
         {
-            UpdateCameraSwayAndPose();
+            if (isSittingTransition)
+            {
+                activeCamera.transform.SetPositionAndRotation(transitionStartPos, transitionStartRot);
+                activeCamera.fieldOfView = transitionStartFov;
+            }
+            else
+            {
+                UpdateCameraSwayAndPose();
+            }
         }
 
         UnityEngine.Cursor.lockState = CursorLockMode.None;
@@ -433,28 +550,31 @@ public class ComputerDesk : MonoBehaviour, IInteractable
         SetHudVisible(false);
     }
 
-    // Đứng dậy khỏi máy và trả camera ngay về góc nhìn thứ nhất
+    // Đứng dậy khỏi máy và chạy animation lia camera mượt từ ghế ngồi về góc nhìn đứng thứ nhất
     public void StandUp()
     {
         if (!IsOccupied) return;
         IsOccupied = false;
+        isSittingTransition = false;
         isMonitorFocused = false;
         AudioManager.Play("get_up");
 
         if (playerMesh != null)
             playerMesh.SetActive(false);
 
+        if (activeCamera != null)
+        {
+            transitionStartPos = activeCamera.transform.position;
+            transitionStartRot = activeCamera.transform.rotation;
+            transitionStartFov = activeCamera.fieldOfView;
+            transitionElapsed = 0f;
+            isStandingTransition = true;
+        }
+
         SetHudVisible(true);
 
         float deskFacingYaw = transform.eulerAngles.y + 180f;
         Vector3 standWorldPos = transform.TransformPoint(new Vector3(0f, 0.05f, 0.95f));
-
-        if (activeCamera != null)
-        {
-            activeCamera.transform.localPosition = savedCamLocalPos;
-            activeCamera.transform.localRotation = savedCamLocalRot;
-            activeCamera.fieldOfView = savedCamFov;
-        }
 
         if (activeMotor != null)
         {
@@ -466,6 +586,12 @@ public class ComputerDesk : MonoBehaviour, IInteractable
         {
             activeLook.enabled = true;
             activeLook.SetRotation(deskFacingYaw, 0f);
+        }
+
+        if (activeCamera != null && isStandingTransition)
+        {
+            activeCamera.transform.SetPositionAndRotation(transitionStartPos, transitionStartRot);
+            activeCamera.fieldOfView = transitionStartFov;
         }
     }
 
@@ -512,10 +638,13 @@ public class ComputerDesk : MonoBehaviour, IInteractable
         };
         labelStyle.normal.textColor = Color.white;
 
+        GUIStyle focusLabelStyle = new GUIStyle(labelStyle);
+        focusLabelStyle.normal.textColor = new Color(0.22f, 0.71f, 1.0f, 1f);
+
         float rightX = Screen.width - 118f;
         float bottomY = Screen.height - 78f;
 
-        DrawKeyRow(new Rect(rightX, bottomY, 98f, 28f), "F", "Focus", keyStyle, labelStyle);
+        DrawKeyRow(new Rect(rightX, bottomY, 98f, 28f), "F", "Focus", keyStyle, focusLabelStyle);
         DrawKeyRow(new Rect(rightX, bottomY + 34f, 98f, 28f), "Q", "Exit", keyStyle, labelStyle);
     }
 

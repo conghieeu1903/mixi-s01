@@ -619,7 +619,13 @@ public static class Phase1SceneBuilder
         spinObj.AddComponent<LuckySpin>();
 
         GameObject shelfObj = InstantiatePrefab("Assets/Prefabs/Prototype/Furniture/Proto_Shelf.prefab", envRoot, new Vector3(0.4f, 0.1f, -2.5f), Vector3.zero);
-        shelfObj.AddComponent<ComicBook>();
+        ComicBook.MakeShelfHollowForRaycast(shelfObj.transform);
+        GameObject comicBookObj = new GameObject("ComicBook_Vol_1");
+        comicBookObj.transform.SetParent(shelfObj.transform, false);
+        comicBookObj.transform.localPosition = new Vector3(0.04f, 0.935f, 0.04f);
+        comicBookObj.transform.localRotation = Quaternion.Euler(0f, -18f, 0f);
+        ComicBook comicComp = comicBookObj.AddComponent<ComicBook>();
+        comicComp.EnsureBookMeshAndCollider();
 
         GameObject talkerObj = InstantiatePrefab("Assets/Prefabs/Prototype/Characters/Proto_NpcCivil.prefab", cityRoot.transform, new Vector3(2.2f, 0.1f, 5.2f), new Vector3(0f, 180f, 0f));
         talkerObj.name = "NpcTalker_River";
