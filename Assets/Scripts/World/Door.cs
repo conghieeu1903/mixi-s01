@@ -1,19 +1,18 @@
 using System.Collections;
 using UnityEngine;
 
-// Cửa nhà: tương tác để mở cánh cửa và bước mượt ra ngoài phố hoặc quay vào trong phòng
+// Cửa nhà: nhấn E để mở hoặc đóng cánh cửa tại chỗ, người chơi tự đi bộ qua cửa
 public class Door : MonoBehaviour, IInteractable
 {
-    [SerializeField] Vector3 insidePoint = new Vector3(0f, 0.15f, 1.8f);
-    [SerializeField] Vector3 outsidePoint = new Vector3(0f, 0.15f, 5.2f);
-
     Transform hinge;
     Transform handle;
+    Collider panelCollider;
     Quaternion hingeClosedRot = Quaternion.identity;
     Quaternion handleClosedRot = Quaternion.identity;
     Coroutine swingRoutine;
 
-    public string Prompt => IsPlayerInside() ? "Mở cửa ra phố" : "Mở cửa vào nhà";
+    public bool IsOpen { get; private set; }
+    public string Prompt => IsOpen ? "Đóng cửa" : "Mở cửa";
 
     void Awake()
     {
@@ -27,14 +26,23 @@ public class Door : MonoBehaviour, IInteractable
             handle = hinge.Find("Mesh_Handle");
             if (handle != null)
                 handleClosedRot = handle.localRotation;
+
+            Transform panel = hinge.Find("Mesh_Panel");
+            if (panel != null)
+                panelCollider = panel.GetComponent<Collider>();
         }
+
+        EnsureOutdoorGround();
     }
 
-    bool IsPlayerInside()
+    // Đảm bảo nền đất bên ngoài cửa liền mạch với sàn phòng để đi bộ qua cửa không bị hụt chân
+    void EnsureOutdoorGround()
     {
-        PlayerMotor pm = FindFirstObjectByType<PlayerMotor>();
-        if (pm == null) return true;
-        return pm.transform.position.z < transform.position.z + 0.2f;
+        if (GameObject.Find("OutdoorGroundCollider") != null) return;
+        GameObject ground = new GameObject("OutdoorGroundCollider");
+        ground.transform.position = new Vector3(0f, 0.04f, 12f);
+        BoxCollider box = ground.AddComponent<BoxCollider>();
+        box.size = new Vector3(60f, 0.12f, 40f);
     }
 
     public bool CanInteract(PlayerInteractor interactor)
@@ -44,83 +52,54 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Interact(PlayerInteractor interactor)
     {
-        PlayerMotor pm = interactor != null ? interactor.GetComponent<PlayerMotor>() : FindFirstObjectByType<PlayerMotor>();
-        if (pm == null) return;
-
-        PlayerLook look = pm.GetComponent<PlayerLook>();
-        Vector3 startCamPos = look != null && look.CameraPivot != null
-            ? look.CameraPivot.position
-            : pm.transform.position + Vector3.up * 1.7f;
-        Quaternion startCamRot = look != null && look.CameraPivot != null
-            ? look.CameraPivot.rotation
-            : pm.transform.rotation;
-
-        bool goingOutside = IsPlayerInside();
-        Vector3 target = goingOutside ? outsidePoint : insidePoint;
-        float targetYaw = goingOutside ? 0f : 180f;
-
-        CharacterController cc = pm.GetComponent<CharacterController>();
-        if (cc != null) cc.enabled = false;
-        pm.transform.position = target;
-        pm.transform.rotation = Quaternion.Euler(0f, targetYaw, 0f);
-        if (cc != null) cc.enabled = true;
-
-        if (look != null)
-        {
-            look.SetRotation(targetYaw, 0f);
-            look.PlayOneWayTransition(startCamPos, startCamRot, 0.52f, 0.045f);
-        }
+        IsOpen = !IsOpen;
 
         if (swingRoutine != null)
             StopCoroutine(swingRoutine);
-        swingRoutine = StartCoroutine(DoorSwingRoutine(goingOutside));
-
-        FindFirstObjectByType<HudView>()?.ShowInfo(
-            goingOutside ? "Đã bước ra ngoài khu phố" : "Đã quay về phòng Streamer",
-            true);
+        swingRoutine = StartCoroutine(DoorSwingRoutine(IsOpen));
     }
 
-    IEnumerator DoorSwingRoutine(bool goingOutside)
+    IEnumerator DoorSwingRoutine(bool open)
     {
         if (hinge == null)
             hinge = transform.Find("Hinge");
         if (hinge == null)
             yield break;
 
-        Quaternion openRot = hingeClosedRot * Quaternion.Euler(0f, goingOutside ? -82f : 82f, 0f);
-        Quaternion handleDownRot = handleClosedRot * Quaternion.Euler(0f, 0f, -26f);
+        // Khi cửa đang xoay hoặc đang mở, chuyển collider cánh cửa sang trigger để không đẩy nhân vật
+        if (panelCollider != null)
+            panelCollider.isTrigger = true;
+
+        Quaternion startRot = hinge.localRotation;
+        Quaternion targetRot = open
+            ? hingeClosedRot * Quaternion.Euler(0f, -92f, 0f)
+            : hingeClosedRot;
+        Quaternion handleDownRot = handleClosedRot * Quaternion.Euler(0f, 0f, -28f);
 
         float elapsed = 0f;
-        const float openDuration = 0.22f;
-        while (elapsed < openDuration)
+        const float duration = 0.35f;
+        while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / openDuration);
+            float t = Mathf.Clamp01(elapsed / duration);
             float s = t * t * (3f - 2f * t);
-            hinge.localRotation = Quaternion.Slerp(hingeClosedRot, openRot, s);
+            hinge.localRotation = Quaternion.Slerp(startRot, targetRot, s);
+
             if (handle != null)
-                handle.localRotation = Quaternion.Slerp(handleClosedRot, handleDownRot, Mathf.Clamp01(t * 2f));
+            {
+                float handleArc = Mathf.Sin(t * Mathf.PI);
+                handle.localRotation = Quaternion.Slerp(handleClosedRot, handleDownRot, handleArc);
+            }
             yield return null;
         }
 
-        hinge.localRotation = openRot;
+        hinge.localRotation = targetRot;
         if (handle != null)
             handle.localRotation = handleClosedRot;
 
-        yield return new WaitForSeconds(0.16f);
+        if (panelCollider != null)
+            panelCollider.isTrigger = open;
 
-        elapsed = 0f;
-        const float closeDuration = 0.24f;
-        while (elapsed < closeDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / closeDuration);
-            float s = t * t * (3f - 2f * t);
-            hinge.localRotation = Quaternion.Slerp(openRot, hingeClosedRot, s);
-            yield return null;
-        }
-
-        hinge.localRotation = hingeClosedRot;
         swingRoutine = null;
     }
 }

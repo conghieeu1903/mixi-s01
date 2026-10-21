@@ -1,14 +1,29 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Tủ lạnh: chứa đồ ăn, mở ra để lấy đồ ăn hoặc cất đồ ăn đang cầm
+// Tủ lạnh: chứa đồ ăn, có hiệu ứng mở cánh tủ, nghiêng người lấy/cất đồ ăn rồi đóng lại
 public class Fridge : MonoBehaviour, IInteractable
 {
     [SerializeField] List<FoodData> contents = new List<FoodData>();
 
+    Transform doorHinge;
+    Quaternion closedRot = Quaternion.identity;
+    Coroutine doorRoutine;
+
     public IReadOnlyList<FoodData> Contents => contents;
 
     public string Prompt => contents.Count > 0 ? $"Ăn ({contents[0].displayName}, còn {contents.Count})" : "Tủ lạnh trống";
+
+    void Awake()
+    {
+        Animator anim = GetComponent<Animator>();
+        if (anim != null) anim.enabled = false;
+
+        doorHinge = transform.Find("Hinge");
+        if (doorHinge != null)
+            closedRot = doorHinge.localRotation;
+    }
 
     public bool CanInteract(PlayerInteractor interactor)
     {
@@ -17,9 +32,7 @@ public class Fridge : MonoBehaviour, IInteractable
 
     public void Interact(PlayerInteractor interactor)
     {
-        Animator anim = GetComponent<Animator>();
-        if (anim != null)
-            anim.SetBool("IsOpen", !anim.GetBool("IsOpen"));
+        PlayDoorSwing();
 
         ItemCarrier carrier = interactor != null ? interactor.GetComponent<ItemCarrier>() : null;
         if (carrier != null && carrier.Held != null && carrier.Held.Data is FoodData heldFood)
@@ -39,6 +52,51 @@ public class Fridge : MonoBehaviour, IInteractable
         }
 
         FindFirstObjectByType<HudView>()?.ShowInfo("Tủ lạnh trống, hãy mua đồ ăn trên Zamazor", false);
+    }
+
+    void PlayDoorSwing()
+    {
+        if (!isActiveAndEnabled) return;
+        if (doorRoutine != null)
+            StopCoroutine(doorRoutine);
+        doorRoutine = StartCoroutine(DoorSwingRoutine());
+    }
+
+    IEnumerator DoorSwingRoutine()
+    {
+        if (doorHinge == null)
+            doorHinge = transform.Find("Hinge");
+        if (doorHinge == null)
+            yield break;
+
+        Quaternion openRot = closedRot * Quaternion.Euler(0f, 88f, 0f);
+        float elapsed = 0f;
+        const float openDur = 0.22f;
+        while (elapsed < openDur)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / openDur);
+            float s = t * t * (3f - 2f * t);
+            doorHinge.localRotation = Quaternion.Slerp(closedRot, openRot, s);
+            yield return null;
+        }
+
+        doorHinge.localRotation = openRot;
+        yield return new WaitForSeconds(0.32f);
+
+        elapsed = 0f;
+        const float closeDur = 0.24f;
+        while (elapsed < closeDur)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / closeDur);
+            float s = t * t * (3f - 2f * t);
+            doorHinge.localRotation = Quaternion.Slerp(openRot, closedRot, s);
+            yield return null;
+        }
+
+        doorHinge.localRotation = closedRot;
+        doorRoutine = null;
     }
 
     // Thêm đồ ăn vào tủ lạnh

@@ -26,10 +26,10 @@ public class PcBuildView : UIPanel
         buildPanel = Root.Q<VisualElement>("buildCasePanel");
         if (board != null && buildPanel != null)
         {
-            board.style.backgroundColor = new Color(0f, 0f, 0f, 0.16f);
-            board.style.alignItems = Align.FlexEnd;
+            board.style.backgroundColor = new Color(0f, 0f, 0f, 0.35f);
+            board.style.alignItems = Align.Center;
             board.style.justifyContent = Justify.Center;
-            board.style.paddingRight = 44;
+            board.style.paddingRight = 0;
 
             foreach (VisualElement child in board.Children())
             {
@@ -41,7 +41,7 @@ public class PcBuildView : UIPanel
         }
 
         if (buildPanel == null) return;
-        buildPanel.style.width = 500;
+        buildPanel.style.width = 560;
         buildPanel.style.minHeight = 460;
 
         Button closeBtn = buildPanel.Q<Button>("closeButton");
@@ -83,20 +83,7 @@ public class PcBuildView : UIPanel
             currentCase = FindFirstObjectByType<PcCase>();
 
         if (currentCase != null)
-        {
             currentCase.SetSidePanelOpen(true);
-            PlayerLook look = FindFirstObjectByType<PlayerLook>();
-            if (look != null)
-            {
-                Vector3 camPos = currentCase.transform.TransformPoint(new Vector3(0.56f, 0.30f, 0.08f));
-                Vector3 lookTarget = currentCase.transform.TransformPoint(new Vector3(0.0f, 0.24f, -0.10f));
-                Vector3 dir = lookTarget - camPos;
-                Quaternion camRot = dir.sqrMagnitude > 0.0001f
-                    ? Quaternion.LookRotation(dir.normalized, Vector3.up)
-                    : currentCase.transform.rotation;
-                look.HoldCameraPose(camPos, camRot, 0.45f, 54f);
-            }
-        }
 
         Rebuild();
         base.Show();
@@ -106,7 +93,6 @@ public class PcBuildView : UIPanel
     {
         if (currentCase != null)
             currentCase.SetSidePanelOpen(false);
-        FindFirstObjectByType<PlayerLook>()?.ReleaseCameraPose(0.42f);
         base.Hide();
     }
 

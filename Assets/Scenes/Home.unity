@@ -2592,8 +2592,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fef2f3945b98af5428046b6a05ef0da8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
-  insidePoint: {x: 0, y: 0.15, z: 1.8}
-  outsidePoint: {x: 0, y: 0.15, z: 5.2}
 --- !u!1001 &1097160708
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4399,6 +4397,13 @@ MonoBehaviour:
   maxPitchDown: 85
   invertY: 0
   eyeOffsetFromTop: 0.1
+  walkBobFrequency: 9.5
+  sprintBobFrequency: 13.5
+  crouchBobFrequency: 6.5
+  walkBobAmplitudeY: 0.032
+  sprintBobAmplitudeY: 0.055
+  walkBobAmplitudeX: 0.016
+  strafeTiltAngle: 2.2
 --- !u!114 &1708521733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5270,6 +5275,8 @@ MonoBehaviour:
   playerMesh: {fileID: 556372332}
   monitorScreen: {fileID: 407107226}
   streamStartPanel: {fileID: 1850267131}
+  sitTransitionDuration: 0.65
+  standTransitionDuration: 0.55
 --- !u!1001 &1933277095
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5353,6 +5360,57 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NpcCivilian
   walkSpeed: 1.4
+--- !u!1 &1937413124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1937413126}
+  - component: {fileID: 1937413125}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1937413125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937413124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c389380d0a551e4459341e31eec2bee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  catalog: {fileID: 11400000, guid: d603613fa6322b74e896d14375bcf44c, type: 2}
+  sfxGroup: {fileID: 8536828374434990974, guid: d09a2142d1ecf8a48add33d0c424b422, type: 2}
+  musicGroup: {fileID: -6376523725025820929, guid: d09a2142d1ecf8a48add33d0c424b422, type: 2}
+  sfx: []
+  music: []
+  voices: 8
+  musicFadeSeconds: 0.8
+--- !u!4 &1937413126
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937413124}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1946492358
 GameObject:
   m_ObjectHideFlags: 0
@@ -6033,3 +6091,4 @@ SceneRoots:
   - {fileID: 495748691}
   - {fileID: 1708521729}
   - {fileID: 515949413}
+  - {fileID: 1937413126}

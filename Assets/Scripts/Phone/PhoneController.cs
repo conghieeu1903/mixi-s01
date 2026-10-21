@@ -1,16 +1,19 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-// Điện thoại: mở/đóng, màn Home, mở app (chặn khi đang lái xe)
+// Điện thoại: có hiệu ứng rút điện thoại từ dưới lên, màn Home và mở ứng dụng
 [RequireComponent(typeof(UIDocument))]
 public class PhoneController : UIPanel
 {
     [SerializeField] List<PhoneApp> apps = new List<PhoneApp>();
 
+    VisualElement phoneBox;
     VisualElement contentArea;
     PhoneApp activeApp;
     bool built;
+    Coroutine slideRoutine;
 
     void OnEnable()
     {
@@ -41,7 +44,7 @@ public class PhoneController : UIPanel
         host.style.alignItems = Align.Center;
         host.style.justifyContent = Justify.Center;
 
-        VisualElement phoneBox = new VisualElement();
+        phoneBox = new VisualElement();
         phoneBox.AddToClassList("wf-panel");
         phoneBox.style.width = 420;
         phoneBox.style.height = 560;
@@ -120,6 +123,36 @@ public class PhoneController : UIPanel
         EnsurePhoneFrame();
         ShowHomeScreen();
         base.Show();
+
+        if (isActiveAndEnabled && phoneBox != null)
+        {
+            if (slideRoutine != null)
+                StopCoroutine(slideRoutine);
+            slideRoutine = StartCoroutine(SlidePhoneInRoutine());
+        }
+    }
+
+    IEnumerator SlidePhoneInRoutine()
+    {
+        if (phoneBox == null) yield break;
+        float elapsed = 0f;
+        const float duration = 0.24f;
+        phoneBox.style.opacity = 0f;
+        phoneBox.style.translate = new Translate(0f, 340f, 0f);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float ease = 1f - Mathf.Pow(1f - t, 3f);
+            phoneBox.style.opacity = ease;
+            phoneBox.style.translate = new Translate(0f, Mathf.Lerp(340f, 0f, ease), 0f);
+            yield return null;
+        }
+
+        phoneBox.style.opacity = 1f;
+        phoneBox.style.translate = new Translate(0f, 0f, 0f);
+        slideRoutine = null;
     }
 
     public void ShowHomeScreen()

@@ -56,8 +56,15 @@ public class PlayerMotor : MonoBehaviour
     // Tốc độ ngang hiện tại (m/s), dùng cho animation và tiếng bước chân
     public float PlanarSpeed => planarVelocity.magnitude;
 
-    // Chiều cao capsule hiện tại, PlayerLook dùng để đặt độ cao camera
-    public float CurrentHeight => controller.height;
+    // Chiều cao capsule hiện tại, PlayerLook dùng để đặt độ cao camera (an toàn cả khi gọi trước Awake)
+    public float CurrentHeight
+    {
+        get
+        {
+            if (controller == null) controller = GetComponent<CharacterController>();
+            return controller.height;
+        }
+    }
 
     // Lấy component cần dùng
     void Awake()

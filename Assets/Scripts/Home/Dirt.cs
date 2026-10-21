@@ -16,6 +16,7 @@ public class Dirt : MonoBehaviour, IInteractable
     public void Interact(PlayerInteractor interactor)
     {
         Clean(0.6f);
+        FindFirstObjectByType<Mop>()?.PlaySweepAnimation(transform.position);
         FindFirstObjectByType<HudView>()?.ShowInfo("Đã lau dọn vết bẩn trên sàn!", true);
     }
 

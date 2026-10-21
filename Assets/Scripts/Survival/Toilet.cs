@@ -1,9 +1,30 @@
+using System.Collections;
 using UnityEngine;
 
-// Toilet: lia camera từ đứng xuống ngồi vệ sinh rồi đứng dậy và reset bộ đếm
+// Toilet: mở nắp bồn cầu, lia camera xuống ngồi vệ sinh, nhấn nút xả nước rồi đóng nắp
 public class Toilet : MonoBehaviour, IInteractable
 {
     public string Prompt => "Đi vệ sinh";
+
+    Transform lidHinge;
+    Transform flushButton;
+    Quaternion lidClosedRot = Quaternion.identity;
+    Vector3 flushRestPos;
+    Coroutine lidRoutine;
+
+    void Awake()
+    {
+        Animator anim = GetComponent<Animator>();
+        if (anim != null) anim.enabled = false;
+
+        lidHinge = transform.Find("Hinge");
+        if (lidHinge != null)
+            lidClosedRot = lidHinge.localRotation;
+
+        flushButton = transform.Find("Mesh_Flush");
+        if (flushButton != null)
+            flushRestPos = flushButton.localPosition;
+    }
 
     public bool CanInteract(PlayerInteractor interactor)
     {
@@ -12,12 +33,15 @@ public class Toilet : MonoBehaviour, IInteractable
 
     public void Interact(PlayerInteractor interactor)
     {
-        Animator anim = GetComponent<Animator>();
-        if (anim != null)
-            anim.SetBool("IsOpen", !anim.GetBool("IsOpen"));
-
         string message = NeedActions.UseToilet();
         FindFirstObjectByType<HudView>()?.ShowInfo(message, true);
+
+        if (isActiveAndEnabled)
+        {
+            if (lidRoutine != null)
+                StopCoroutine(lidRoutine);
+            lidRoutine = StartCoroutine(ToiletLidAndFlushRoutine());
+        }
 
         PlayerLook look = interactor != null
             ? interactor.GetComponent<PlayerLook>()
@@ -28,5 +52,50 @@ public class Toilet : MonoBehaviour, IInteractable
             Quaternion sitRot = Quaternion.Euler(6f, transform.eulerAngles.y, 0f);
             look.PlayPoseTransition(sitPos, sitRot, 0.4f, 0.25f, 0.4f);
         }
+    }
+
+    IEnumerator ToiletLidAndFlushRoutine()
+    {
+        if (lidHinge == null)
+            lidHinge = transform.Find("Hinge");
+        if (lidHinge == null)
+            yield break;
+
+        Quaternion openRot = lidClosedRot * Quaternion.Euler(-88f, 0f, 0f);
+        float elapsed = 0f;
+        const float openDur = 0.22f;
+        while (elapsed < openDur)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / openDur);
+            float s = t * t * (3f - 2f * t);
+            lidHinge.localRotation = Quaternion.Slerp(lidClosedRot, openRot, s);
+            yield return null;
+        }
+
+        lidHinge.localRotation = openRot;
+        yield return new WaitForSeconds(0.42f);
+
+        // Nhấn nút xả nước trên két bồn cầu trước khi đóng nắp
+        if (flushButton != null)
+        {
+            flushButton.localPosition = flushRestPos + new Vector3(0f, -0.008f, 0f);
+            yield return new WaitForSeconds(0.12f);
+            flushButton.localPosition = flushRestPos;
+        }
+
+        elapsed = 0f;
+        const float closeDur = 0.24f;
+        while (elapsed < closeDur)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / closeDur);
+            float s = t * t * (3f - 2f * t);
+            lidHinge.localRotation = Quaternion.Slerp(openRot, lidClosedRot, s);
+            yield return null;
+        }
+
+        lidHinge.localRotation = lidClosedRot;
+        lidRoutine = null;
     }
 }

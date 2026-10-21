@@ -1,0 +1,553 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94f409a11a759234dbfc014000e52d05, type: 3}
+  m_Name: AudioCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::AudioCatalog
+  music:
+  - id: bgm_menu
+    category: BGM
+    clip: {fileID: 8300000, guid: 8eeeb30660a7dcf449bd551c4c43785a, type: 3}
+    volume: 0.5
+  - id: bgm_chill
+    category: BGM
+    clip: {fileID: 8300000, guid: 4e02b7599fc7d104088a6a30607b012d, type: 3}
+    volume: 0.5
+  - id: bgm_peaceful
+    category: BGM
+    clip: {fileID: 8300000, guid: 1bd257066be47d645916c0574a7dbe96, type: 3}
+    volume: 0.45
+  - id: bgm_cyberpunk
+    category: BGM
+    clip: {fileID: 8300000, guid: 52ff730b57c6bb646be040585ae26505, type: 3}
+    volume: 0.55
+  - id: bgm_asmr
+    category: BGM
+    clip: {fileID: 8300000, guid: ea464906ccc7bf247935efe53bdfead1, type: 3}
+    volume: 0.4
+  - id: bgm_downtown
+    category: BGM
+    clip: {fileID: 8300000, guid: ecd7a034275c0084ba7796194ef26993, type: 3}
+    volume: 0.5
+  - id: bgm_nightclub
+    category: BGM
+    clip: {fileID: 8300000, guid: 1ea6fa91ea9f18e48adf02c5e324d8d0, type: 3}
+    volume: 0.6
+  - id: bgm_action
+    category: BGM
+    clip: {fileID: 8300000, guid: b75d7ff8b107abb4e9d2b4471ed127b9, type: 3}
+    volume: 0.55
+  - id: bgm_race
+    category: BGM
+    clip: {fileID: 8300000, guid: 07ab628ace8268e499bb3968d07ae3d6, type: 3}
+    volume: 0.55
+  ambience:
+  - id: amb_room
+    category: Ambience
+    clip: {fileID: 8300000, guid: 53021c84861fb9f4194a358ba3615fc5, type: 3}
+    volume: 0.35
+  - id: amb_pc_fan
+    category: Ambience
+    clip: {fileID: 8300000, guid: 1bf54d9716c249647817a4e741eced9f, type: 3}
+    volume: 0.4
+  - id: amb_street
+    category: Ambience
+    clip: {fileID: 8300000, guid: ca9140c2fc102c14a9f4101333cd1ce8, type: 3}
+    volume: 0.4
+  - id: amb_nature
+    category: Ambience
+    clip: {fileID: 8300000, guid: fcd9eb755e1948648b54c595f8e1229b, type: 3}
+    volume: 0.38
+  - id: amb_rain
+    category: Ambience
+    clip: {fileID: 8300000, guid: 833d6f737521a084ebc6015c78024738, type: 3}
+    volume: 0.45
+  - id: amb_casino
+    category: Ambience
+    clip: {fileID: 8300000, guid: c1509a11a6fcc6c48bf721a3b7121977, type: 3}
+    volume: 0.42
+  sfx:
+  - id: ui_click
+    category: UI
+    clip: {fileID: 8300000, guid: be6924e112a46024f8c2a07718afc132, type: 3}
+    volume: 0.75
+  - id: ui_hover
+    category: UI
+    clip: {fileID: 8300000, guid: 5f1a42618f56cd44f8bd937405a795a6, type: 3}
+    volume: 0.5
+  - id: ui_select
+    category: UI
+    clip: {fileID: 8300000, guid: 1924e85c8cce7a94aa99d766457c29dc, type: 3}
+    volume: 0.8
+  - id: ui_cancel
+    category: UI
+    clip: {fileID: 8300000, guid: 4d3f41f5901890047b3a3eefed8aeb37, type: 3}
+    volume: 0.75
+  - id: ui_tab
+    category: UI
+    clip: {fileID: 8300000, guid: 29af707020a7e5444b727c2ef5165f80, type: 3}
+    volume: 0.65
+  - id: ui_toggle_on
+    category: UI
+    clip: {fileID: 8300000, guid: ca278b605c24e6446818dfad32a350b8, type: 3}
+    volume: 0.7
+  - id: ui_toggle_off
+    category: UI
+    clip: {fileID: 8300000, guid: 5786eee90f52e314d87f6122a96755b5, type: 3}
+    volume: 0.7
+  - id: ui_popup_open
+    category: UI
+    clip: {fileID: 8300000, guid: b714f13e528dbd2409a3d088e667844b, type: 3}
+    volume: 0.75
+  - id: ui_popup_close
+    category: UI
+    clip: {fileID: 8300000, guid: cb2ff6cc12d5a1b46a3d679e9ab17ba7, type: 3}
+    volume: 0.7
+  - id: ui_notification
+    category: UI
+    clip: {fileID: 8300000, guid: 2bbed3e1558699440b07f6e625629fe1, type: 3}
+    volume: 0.8
+  - id: ui_alert
+    category: UI
+    clip: {fileID: 8300000, guid: edfb72febd01564429233ec3fdc00bea, type: 3}
+    volume: 0.85
+  - id: ui_error
+    category: UI
+    clip: {fileID: 8300000, guid: 70e2a8bbc8f4c2d4482f1c94bfe61cc1, type: 3}
+    volume: 0.85
+  - id: ui_bsod
+    category: UI
+    clip: {fileID: 8300000, guid: a051863f89a39c848be0b8a994a9878f, type: 3}
+    volume: 0.9
+  - id: ui_success
+    category: UI
+    clip: {fileID: 8300000, guid: 228ff4c62d253dc46b1eb942d41f374d, type: 3}
+    volume: 0.85
+  - id: cash_beep
+    category: UI
+    clip: {fileID: 8300000, guid: 9ca35585376f6e94ea28bfa6c994b28c, type: 3}
+    volume: 0.85
+  - id: store_bell
+    category: UI
+    clip: {fileID: 8300000, guid: af234157526f8ec418b9f6b5df9cc8b2, type: 3}
+    volume: 0.8
+  - id: phone_tap
+    category: UI
+    clip: {fileID: 8300000, guid: 3e74027ab61746e43813a963518683e5, type: 3}
+    volume: 0.65
+  - id: phone_open
+    category: UI
+    clip: {fileID: 8300000, guid: a0e6e799356f5b34aa7ebb44d74f3a71, type: 3}
+    volume: 0.75
+  - id: phone_close
+    category: UI
+    clip: {fileID: 8300000, guid: 9185a60834a97f547957f7dc3c2b8042, type: 3}
+    volume: 0.75
+  - id: phone_shutter
+    category: UI
+    clip: {fileID: 8300000, guid: abed56034249e6841bdb1b568c6d4c91, type: 3}
+    volume: 0.8
+  - id: stream_start
+    category: Stream
+    clip: {fileID: 8300000, guid: 03c8826bbfe199b4bbcf7aa55a7096cf, type: 3}
+    volume: 0.85
+  - id: stream_stop
+    category: Stream
+    clip: {fileID: 8300000, guid: 18d7cc1cbda96964cbfd7df0bede492d, type: 3}
+    volume: 0.8
+  - id: donate_notify
+    category: Stream
+    clip: {fileID: 8300000, guid: f1dc041a327474042b77e559a30c6710, type: 3}
+    volume: 0.9
+  - id: asmr_completed
+    category: Stream
+    clip: {fileID: 8300000, guid: de01d6ba87a1d0c4c9f7d3f785c746fc, type: 3}
+    volume: 0.75
+  - id: dance_completed
+    category: Stream
+    clip: {fileID: 8300000, guid: 9b8ad8ad62bfdd6409567d3fb4260e12, type: 3}
+    volume: 0.85
+  - id: chat_completed
+    category: Stream
+    clip: {fileID: 8300000, guid: d01e5bbbd1cf6ae4387c0c37347b3f5a, type: 3}
+    volume: 0.8
+  - id: card_select
+    category: Stream
+    clip: {fileID: 8300000, guid: 1fc253e9e86ef154ca45b6414fe99473, type: 3}
+    volume: 0.75
+  - id: donate_usb
+    category: Stream
+    clip: {fileID: 8300000, guid: c586b1fd1e2e32144a07afe08564460f, type: 3}
+    volume: 0.85
+  - id: donate_knock
+    category: Stream
+    clip: {fileID: 8300000, guid: 9ba246506557cda48be9034be41dcc8b, type: 3}
+    volume: 0.9
+  - id: donate_oof
+    category: Stream
+    clip: {fileID: 8300000, guid: f81bbf3d5ac43484abcf36afe280dc31, type: 3}
+    volume: 0.85
+  - id: donate_woof
+    category: Stream
+    clip: {fileID: 8300000, guid: 26d0a1b8e566e634f8a6da739924e6c7, type: 3}
+    volume: 0.85
+  - id: donate_winerror
+    category: Stream
+    clip: {fileID: 8300000, guid: 05df2c7ce3e5bc944bef47712df70475, type: 3}
+    volume: 0.85
+  - id: donate_boink
+    category: Stream
+    clip: {fileID: 8300000, guid: d99c5b90e6392084f95d70b005f069be, type: 3}
+    volume: 0.85
+  - id: donate_sus
+    category: Stream
+    clip: {fileID: 8300000, guid: 83c6f062cbdf0b14b841275902cc00fb, type: 3}
+    volume: 0.85
+  - id: donate_huh
+    category: Stream
+    clip: {fileID: 8300000, guid: 6a1da18faf0960a4dbea4acffa76d41f, type: 3}
+    volume: 0.85
+  - id: donate_laugh
+    category: Stream
+    clip: {fileID: 8300000, guid: 279d462193eb3fb46926122a133c613e, type: 3}
+    volume: 0.85
+  - id: donate_meow
+    category: Stream
+    clip: {fileID: 8300000, guid: 9b92bc5983cbe43489da15ce66258a18, type: 3}
+    volume: 0.85
+  - id: footstep_wood_01
+    category: Movement
+    clip: {fileID: 8300000, guid: f9d150125226d9840a28f5b555d7d66f, type: 3}
+    volume: 0.65
+  - id: footstep_wood_02
+    category: Movement
+    clip: {fileID: 8300000, guid: 3e0064c547594b04ba88df06c9d0cf9e, type: 3}
+    volume: 0.65
+  - id: footstep_wood_03
+    category: Movement
+    clip: {fileID: 8300000, guid: 6da290ef46b0bb247b15c36ebc1d60a2, type: 3}
+    volume: 0.65
+  - id: footstep_wood_04
+    category: Movement
+    clip: {fileID: 8300000, guid: 60a176ab49c3a0d4a88b9108975f085a, type: 3}
+    volume: 0.65
+  - id: footstep_concrete_01
+    category: Movement
+    clip: {fileID: 8300000, guid: 01e6d3ff24a77ef4390f85f53dc8d795, type: 3}
+    volume: 0.65
+  - id: footstep_concrete_02
+    category: Movement
+    clip: {fileID: 8300000, guid: bb6db4b472c7eca4f8fef99fff9211ec, type: 3}
+    volume: 0.65
+  - id: footstep_concrete_03
+    category: Movement
+    clip: {fileID: 8300000, guid: 81ae8e8e271639340984961e2ff97ca9, type: 3}
+    volume: 0.65
+  - id: footstep_concrete_04
+    category: Movement
+    clip: {fileID: 8300000, guid: cac737e8080e5654d8f7bdfe395f52bf, type: 3}
+    volume: 0.65
+  - id: footstep_grass_01
+    category: Movement
+    clip: {fileID: 8300000, guid: 4b284447fe7fedb4ca88be7a7841648d, type: 3}
+    volume: 0.6
+  - id: footstep_grass_02
+    category: Movement
+    clip: {fileID: 8300000, guid: f8ec93a2226c2c042ba8714a11b7dafd, type: 3}
+    volume: 0.6
+  - id: sit_down
+    category: Movement
+    clip: {fileID: 8300000, guid: e22d7d57c0d366b47ba5c8157546465b, type: 3}
+    volume: 0.7
+  - id: get_up
+    category: Movement
+    clip: {fileID: 8300000, guid: c5084a4c0fc8efa4dae2ef3cd4f10777, type: 3}
+    volume: 0.7
+  - id: jump
+    category: Movement
+    clip: {fileID: 8300000, guid: a5f2e56df85e240409fbe0282285a41d, type: 3}
+    volume: 0.75
+  - id: item_pickup
+    category: Home
+    clip: {fileID: 8300000, guid: d48c93df1165ab748b06b6bdbbe23639, type: 3}
+    volume: 0.75
+  - id: item_drop
+    category: Home
+    clip: {fileID: 8300000, guid: 8c6c89a1fe6273f4b969dcac2ae17eb8, type: 3}
+    volume: 0.75
+  - id: door_open
+    category: Home
+    clip: {fileID: 8300000, guid: ec32a5c7d27542243874a5f1437ad912, type: 3}
+    volume: 0.75
+  - id: door_close
+    category: Home
+    clip: {fileID: 8300000, guid: 473056c643335194ea7ea728c5e75c70, type: 3}
+    volume: 0.8
+  - id: door_knock
+    category: Home
+    clip: {fileID: 8300000, guid: c952efc826cf9584f89cbe5203f32551, type: 3}
+    volume: 0.85
+  - id: door_bell
+    category: Home
+    clip: {fileID: 8300000, guid: 27916fe4ac1111742ac687e296614fe2, type: 3}
+    volume: 0.85
+  - id: light_switch
+    category: Home
+    clip: {fileID: 8300000, guid: e21396ffc73ff284f808e0a0fbc4521d, type: 3}
+    volume: 0.75
+  - id: fridge_open
+    category: Home
+    clip: {fileID: 8300000, guid: 2ad9c9e24a8d5ac40a34b281590333fd, type: 3}
+    volume: 0.7
+  - id: fridge_close
+    category: Home
+    clip: {fileID: 8300000, guid: 51b5f3a9061c4c14abfaa46256124f30, type: 3}
+    volume: 0.75
+  - id: eat_chew
+    category: Home
+    clip: {fileID: 8300000, guid: 54a4e8b7980b38e4eb86fa6bbf4ccac0, type: 3}
+    volume: 0.75
+  - id: drink_sip
+    category: Home
+    clip: {fileID: 8300000, guid: cdb2007de50654545afa19c92d8c4c45, type: 3}
+    volume: 0.75
+  - id: shower_water
+    category: Home
+    clip: {fileID: 8300000, guid: 646ab24d0597e8f4a9f1d32ec2ab5e35, type: 3}
+    volume: 0.7
+  - id: toilet_flush
+    category: Home
+    clip: {fileID: 8300000, guid: 856dd94f628cfcb4e8a7d18f91d871ab, type: 3}
+    volume: 0.8
+  - id: pill_bottle
+    category: Home
+    clip: {fileID: 8300000, guid: 34c1642dbbc2c0147a957e33cd478101, type: 3}
+    volume: 0.75
+  - id: sleep_bed
+    category: Home
+    clip: {fileID: 8300000, guid: 906e8ce33ca2d094e940a3e65e67034b, type: 3}
+    volume: 0.7
+  - id: mop_clean
+    category: Home
+    clip: {fileID: 8300000, guid: 98d26a053b2e9034ea4859fb045c6410, type: 3}
+    volume: 0.75
+  - id: clean_shine
+    category: Home
+    clip: {fileID: 8300000, guid: aab1c75ece5f60c4792c0fb07d7e3244, type: 3}
+    volume: 0.8
+  - id: wall_paint
+    category: Home
+    clip: {fileID: 8300000, guid: 8766bc0839033184b84f39a92163f8c4, type: 3}
+    volume: 0.75
+  - id: box_open
+    category: Home
+    clip: {fileID: 8300000, guid: 50abffc7c2a4e7544abc9d5f9b112340, type: 3}
+    volume: 0.8
+  - id: delivery_complete
+    category: Home
+    clip: {fileID: 8300000, guid: 41a5ce6146c3f3f428776cc9393c9124, type: 3}
+    volume: 0.85
+  - id: pc_power_on
+    category: PC
+    clip: {fileID: 8300000, guid: e0dfc32a55804c340a035bb060c85c82, type: 3}
+    volume: 0.8
+  - id: pc_boot
+    category: PC
+    clip: {fileID: 8300000, guid: 0d39ceedf2391864ea0140c07ffce357, type: 3}
+    volume: 0.8
+  - id: pc_shutdown
+    category: PC
+    clip: {fileID: 8300000, guid: 7994b89b0b9e19440b403aa1a2bddef5, type: 3}
+    volume: 0.75
+  - id: pc_cover_open
+    category: PC
+    clip: {fileID: 8300000, guid: 552ce9600a4b9c64b97f983ae420012e, type: 3}
+    volume: 0.75
+  - id: pc_cover_close
+    category: PC
+    clip: {fileID: 8300000, guid: 98e63adc01ac6c9468f484c43f5359be, type: 3}
+    volume: 0.8
+  - id: pc_part_install
+    category: PC
+    clip: {fileID: 8300000, guid: 3d5424a1e8b2fc1459116bd4a8fd3052, type: 3}
+    volume: 0.8
+  - id: pc_part_remove
+    category: PC
+    clip: {fileID: 8300000, guid: 1bef0cb38f7ae78448145ce99804c89d, type: 3}
+    volume: 0.75
+  - id: typing_key
+    category: PC
+    clip: {fileID: 8300000, guid: 8b06c2f8d9c9c384aaeff04d64566529, type: 3}
+    volume: 0.65
+  - id: mouse_click
+    category: PC
+    clip: {fileID: 8300000, guid: b245737a5a7821a458fe81448fccb163, type: 3}
+    volume: 0.68
+  - id: mining_beep
+    category: PC
+    clip: {fileID: 8300000, guid: efe204844dfa4d848bab830598f1b1a1, type: 3}
+    volume: 0.75
+  - id: slot_start
+    category: Casino
+    clip: {fileID: 8300000, guid: cab1ae1b0e0f3ff4f92f43cccdf7e607, type: 3}
+    volume: 0.8
+  - id: slot_roll
+    category: Casino
+    clip: {fileID: 8300000, guid: 168486990ffde824087cf5fd5965c9ec, type: 3}
+    volume: 0.75
+  - id: slot_stop
+    category: Casino
+    clip: {fileID: 8300000, guid: 992c3d563124ce44f87623595f13ec40, type: 3}
+    volume: 0.85
+  - id: slot_win
+    category: Casino
+    clip: {fileID: 8300000, guid: fc74c826556e4694384f0f3e6978bd5e, type: 3}
+    volume: 0.9
+  - id: spin_wheel
+    category: Casino
+    clip: {fileID: 8300000, guid: 6e52d73afb655d64aa0005599c51c257, type: 3}
+    volume: 0.8
+  - id: scratch_card
+    category: Casino
+    clip: {fileID: 8300000, guid: 72b588f81a199d44e92428b2f4bd191f, type: 3}
+    volume: 0.75
+  - id: case_open
+    category: Casino
+    clip: {fileID: 8300000, guid: 04add691b1cf58343ae2aa7920be83c3, type: 3}
+    volume: 0.85
+  - id: case_reveal
+    category: Casino
+    clip: {fileID: 8300000, guid: 94f1dc4f8fe57384cb5045815a177959, type: 3}
+    volume: 0.9
+  - id: card_deal
+    category: Casino
+    clip: {fileID: 8300000, guid: 1e77653fda39a2a46a09d3fb037e2b70, type: 3}
+    volume: 0.75
+  - id: chip_bet
+    category: Casino
+    clip: {fileID: 8300000, guid: a719965e1e32b6141ad9ea2b13dfcc98, type: 3}
+    volume: 0.8
+  - id: drop_gems
+    category: Casino
+    clip: {fileID: 8300000, guid: 6006090088ef47449aea9fd1d912f4ab, type: 3}
+    volume: 0.85
+  - id: car_start
+    category: Vehicles
+    clip: {fileID: 8300000, guid: 44cf9992143257d48bd00043555f1793, type: 3}
+    volume: 0.85
+  - id: car_engine_idle
+    category: Vehicles
+    clip: {fileID: 8300000, guid: e3b4b10e2caba834188676dda0200694, type: 3}
+    volume: 0.7
+  - id: car_door_open
+    category: Vehicles
+    clip: {fileID: 8300000, guid: 102248bfebdf6f64498af0338f99a6d1, type: 3}
+    volume: 0.8
+  - id: car_door_close
+    category: Vehicles
+    clip: {fileID: 8300000, guid: b6bbf57e732d67f4e83c75240e1c8e84, type: 3}
+    volume: 0.85
+  - id: car_brake
+    category: Vehicles
+    clip: {fileID: 8300000, guid: d8937272117030c4a9041f81087674f5, type: 3}
+    volume: 0.8
+  - id: car_horn
+    category: Vehicles
+    clip: {fileID: 8300000, guid: 64dce9504c0af6841a8ad0d94f192414, type: 3}
+    volume: 0.85
+  - id: motorbike_start
+    category: Vehicles
+    clip: {fileID: 8300000, guid: 5088dec4087d4f641baa4d1089bf9c8a, type: 3}
+    volume: 0.85
+  - id: bicycle_bell
+    category: Vehicles
+    clip: {fileID: 8300000, guid: e09a198da58924141bb2bb70134e415a, type: 3}
+    volume: 0.8
+  - id: bicycle_pedal
+    category: Vehicles
+    clip: {fileID: 8300000, guid: 58687f56d55b61742ac51b45e6d64e34, type: 3}
+    volume: 0.65
+  - id: gun_pistol
+    category: Minigames
+    clip: {fileID: 8300000, guid: fd0f834ee563cc8459cc1a206a8da7d8, type: 3}
+    volume: 0.85
+  - id: gun_deagle
+    category: Minigames
+    clip: {fileID: 8300000, guid: 36cdc60724478744999099985272c544, type: 3}
+    volume: 0.9
+  - id: gun_reload
+    category: Minigames
+    clip: {fileID: 8300000, guid: 0a9e5fef22c69cd49b42162ddcfdf9e6, type: 3}
+    volume: 0.8
+  - id: gun_empty
+    category: Minigames
+    clip: {fileID: 8300000, guid: cab896979653bc9478298038d126008d, type: 3}
+    volume: 0.75
+  - id: player_damage
+    category: Minigames
+    clip: {fileID: 8300000, guid: 7bec22131dc573e42a6c41718b8be289, type: 3}
+    volume: 0.85
+  - id: victory_fps
+    category: Minigames
+    clip: {fileID: 8300000, guid: eac21d4af3600204299978854c3137bc, type: 3}
+    volume: 0.85
+  - id: defeat_fps
+    category: Minigames
+    clip: {fileID: 8300000, guid: 06102261868e81348a32514e751b15e0, type: 3}
+    volume: 0.85
+  - id: explosion_toon
+    category: Minigames
+    clip: {fileID: 8300000, guid: a167a244a3a8a9b4396e99d9b55aa40b, type: 3}
+    volume: 0.9
+  - id: pogo_jump
+    category: Minigames
+    clip: {fileID: 8300000, guid: 8abd734a40535544ca0ec741a43466a6, type: 3}
+    volume: 0.8
+  - id: clicker_tap
+    category: Minigames
+    clip: {fileID: 8300000, guid: 1933ce649e5d4834ebaf012b51f76cf3, type: 3}
+    volume: 0.75
+  - id: npc_greet_01
+    category: NPC_Pets
+    clip: {fileID: 8300000, guid: aaadaef5c2a00eb4fa4840b7a468c315, type: 3}
+    volume: 0.8
+  - id: npc_greet_02
+    category: NPC_Pets
+    clip: {fileID: 8300000, guid: 638635debf1e1f44bbd396a22a25e167, type: 3}
+    volume: 0.8
+  - id: npc_agree
+    category: NPC_Pets
+    clip: {fileID: 8300000, guid: 42fa6c8838119854b9f637eba6ccb904, type: 3}
+    volume: 0.8
+  - id: npc_ask
+    category: NPC_Pets
+    clip: {fileID: 8300000, guid: eaad3c42c2c596d4ba116f3389fbf7d2, type: 3}
+    volume: 0.8
+  - id: npc_joy
+    category: NPC_Pets
+    clip: {fileID: 8300000, guid: 01b4b62774d792b4bae71400126c53c6, type: 3}
+    volume: 0.85
+  - id: npc_angry
+    category: NPC_Pets
+    clip: {fileID: 8300000, guid: 506e9d78bf08b374aa26dc2764dc942e, type: 3}
+    volume: 0.85
+  - id: cat_meow
+    category: NPC_Pets
+    clip: {fileID: 8300000, guid: 984789a882aa2e749973987b0c4698bd, type: 3}
+    volume: 0.8
+  - id: dog_bark
+    category: NPC_Pets
+    clip: {fileID: 8300000, guid: 4003703b9da99dc428be46231f9766f4, type: 3}
+    volume: 0.85
+  - id: taming_success
+    category: NPC_Pets
+    clip: {fileID: 8300000, guid: d92b1b340fb486747a77bedba3b2f92b, type: 3}
+    volume: 0.85

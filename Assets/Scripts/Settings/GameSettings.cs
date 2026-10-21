@@ -49,6 +49,8 @@ public class GameSettings
     public void ApplyToRuntime()
     {
         AudioListener.volume = Mathf.Clamp01(masterVolume);
+        if (AudioManager.HasInstance)
+            AudioManager.Instance.SetVolumes(masterVolume, musicVolume, sfxVolume);
         Screen.fullScreen = fullscreen;
 
         int maxQuality = QualitySettings.names != null ? QualitySettings.names.Length - 1 : 0;

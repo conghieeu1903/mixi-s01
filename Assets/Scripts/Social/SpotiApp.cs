@@ -13,6 +13,14 @@ public class SpotiApp : PcApp
         "Relaxing ASMR Ambient"
     };
 
+    static readonly string[] DefaultTrackClipIds =
+    {
+        "bgm_chill",
+        "bgm_peaceful",
+        "bgm_cyberpunk",
+        "bgm_asmr"
+    };
+
     [SerializeField] List<AudioClip> songs = new List<AudioClip>();
 
     public override string AppName => "Spoti";
@@ -21,6 +29,7 @@ public class SpotiApp : PcApp
     public int CurrentTrackIndex { get; private set; } = -1;
     public bool IsPlaying { get; private set; }
 
+    // Khởi tạo nguồn phát nhạc và tự nạp danh sách bài hát từ AudioCatalog nếu chưa gán sẵn
     void Awake()
     {
         if (string.IsNullOrEmpty(AppName))
@@ -36,12 +45,27 @@ public class SpotiApp : PcApp
             audioSource.loop = true;
             audioSource.volume = 0.35f;
         }
+        EnsureDefaultSongsLoaded();
     }
 
+    // Tự nạp 4 bản nhạc mặc định từ kho âm thanh nếu danh sách songs đang trống
+    void EnsureDefaultSongsLoaded()
+    {
+        if (songs != null && songs.Count >= DefaultTrackClipIds.Length && songs[0] != null) return;
+        if (songs == null) songs = new List<AudioClip>();
+        songs.Clear();
+        AudioManager mgr = AudioManager.Instance;
+        for (int i = 0; i < DefaultTrackClipIds.Length; i++)
+            songs.Add(mgr != null ? mgr.GetClip(DefaultTrackClipIds[i]) : null);
+    }
+
+    // Phát bản nhạc theo chỉ mục trong danh sách và cộng điểm tâm trạng
     public void Play(int index)
     {
+        EnsureDefaultSongsLoaded();
         CurrentTrackIndex = Mathf.Clamp(index, 0, DefaultTrackNames.Length - 1);
         IsPlaying = true;
+        AudioManager.Play("ui_click");
         if (songs != null && CurrentTrackIndex < songs.Count && songs[CurrentTrackIndex] != null && audioSource != null)
         {
             audioSource.clip = songs[CurrentTrackIndex];
@@ -51,9 +75,11 @@ public class SpotiApp : PcApp
             GameWorld.Instance.Mood.Change(2f);
     }
 
+    // Dừng bản nhạc đang phát trên ứng dụng Spoti
     public void Stop()
     {
         IsPlaying = false;
+        AudioManager.Play("ui_click");
         if (audioSource != null && audioSource.isPlaying)
             audioSource.Stop();
     }

@@ -81,6 +81,11 @@ public class PlayerLook : MonoBehaviour
             viewCamera = Camera.main;
         if (viewCamera != null)
             defaultFov = viewCamera.fieldOfView;
+    }
+
+    // Lấy độ cao mắt ban đầu sau khi PlayerMotor đã Awake và đặt chiều cao capsule
+    void Start()
+    {
         if (motor != null)
             smoothedEyeY = motor.CurrentHeight - eyeOffsetFromTop;
     }
