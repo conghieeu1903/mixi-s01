@@ -31,6 +31,7 @@ public class MiningRig : MonoBehaviour, IInteractable
     public void Interact(PlayerInteractor interactor)
     {
         SetRunning(!IsRunning);
+        AudioManager.PlayAt(IsRunning ? "mining_beep" : "pc_shutdown", transform.position);
         FindFirstObjectByType<HudView>()?.ShowInfo(
             IsRunning ? "Đã bật Rig đào Bitcoin" : "Đã tắt Rig đào Bitcoin",
             true);

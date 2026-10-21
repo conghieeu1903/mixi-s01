@@ -53,6 +53,7 @@ public class Door : MonoBehaviour, IInteractable
     public void Interact(PlayerInteractor interactor)
     {
         IsOpen = !IsOpen;
+        AudioManager.PlayAt(IsOpen ? "door_open" : "door_close", transform.position);
 
         if (swingRoutine != null)
             StopCoroutine(swingRoutine);

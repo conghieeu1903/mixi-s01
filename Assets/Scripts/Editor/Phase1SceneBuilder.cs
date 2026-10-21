@@ -418,7 +418,13 @@ public static class Phase1SceneBuilder
             "Assets/UI Toolkit/Screens/Phone/Phone.uxml",
             19);
         phoneController.gameObject.AddComponent<FoodDeliveryApp>();
+        phoneController.gameObject.AddComponent<EatJobApp>();
         phoneController.gameObject.AddComponent<PhoneCameraApp>();
+        phoneController.gameObject.AddComponent<PhoneAlbumApp>();
+        phoneController.gameObject.AddComponent<PhonePetApp>();
+        phoneController.gameObject.AddComponent<PhoneCarApp>();
+        phoneController.gameObject.AddComponent<PhoneClothApp>();
+        phoneController.gameObject.AddComponent<PhoneSkillApp>();
         phoneController.gameObject.AddComponent<PhoneMapApp>();
 
         StreamCardView streamCardView = CreateUIDoc<StreamCardView>(
@@ -531,6 +537,8 @@ public static class Phase1SceneBuilder
 
         carrier = playerObj.AddComponent<ItemCarrier>();
         SetPrivateRef(carrier, "holdPoint", holdPointObj.transform);
+        carrier.EnsureItemCamera();
+        carrier.UpdateItemCameraState();
         playerObj.AddComponent<BuildPlacer>();
 
         return interactor;
@@ -545,11 +553,14 @@ public static class Phase1SceneBuilder
         GameObject mopObj = InstantiatePrefab("Assets/Prefabs/Prototype/Items/Proto_Mop.prefab", envRoot, new Vector3(-2.4f, 0.1f, 2.2f), Vector3.zero);
         mopObj.AddComponent<Mop>();
 
-        GameObject dirt1 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        dirt1.name = "DirtSpot_1";
+        GameObject dirt1 = new GameObject("DirtSpot_1");
         dirt1.transform.SetParent(envRoot, false);
         dirt1.transform.localPosition = new Vector3(-0.8f, 0.11f, 0.6f);
         dirt1.transform.localScale = new Vector3(0.6f, 0.02f, 0.6f);
+        dirt1.AddComponent<MeshFilter>();
+        dirt1.AddComponent<MeshRenderer>();
+        BoxCollider dirtBox = dirt1.AddComponent<BoxCollider>();
+        dirtBox.isTrigger = true;
         dirt1.AddComponent<Dirt>();
         dirt1.SetActive(false);
 

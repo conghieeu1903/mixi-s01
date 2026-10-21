@@ -12,9 +12,17 @@ public static class NeedActions
         bool wasHungry = world.Needs.IsHungry;
         world.Clock.AdvanceMinutes(EatMinutes);
         world.Needs.Eat(food.hungerRelief, food.stressDelta);
+        AudioManager.Play(IsDrink(food) ? "drink_sip" : "eat_chew");
         if (!wasHungry) return $"Đã ăn {food.displayName} (-{food.hungerRelief} Đói)";
         world.Mood.Change(4f);
         return $"Đã ăn {food.displayName} (-{food.hungerRelief} Đói, +4 Mood)";
+    }
+
+    // Đồ uống (nước ngọt, cà phê...) phát tiếng uống thay vì tiếng nhai
+    static bool IsDrink(FoodData food)
+    {
+        string id = food.id ?? string.Empty;
+        return id.Contains("soda") || id.Contains("drink") || id.Contains("coffee") || id.Contains("water");
     }
 
     // Uống thuốc, trả về false nếu không bị bệnh để không phí thuốc
@@ -23,6 +31,7 @@ public static class NeedActions
         GameWorld world = GameWorld.Instance;
         if (!world.Needs.IsSick) return false;
         world.Needs.Cure();
+        AudioManager.Play("pill_bottle");
         world.Mood.Change(5f);
         return true;
     }

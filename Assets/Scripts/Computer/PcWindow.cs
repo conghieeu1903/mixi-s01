@@ -13,6 +13,7 @@ public class PcWindow : MonoBehaviour
     public bool IsMinimized { get; private set; }
     public bool IsMaximized { get; private set; }
     public bool IsOpen { get; private set; }
+    public bool IsDragging => isDragging;
     public VisualElement WindowElement { get; set; }
     public VisualElement ContentElement { get; set; }
     public Label TitleLabel { get; set; }
@@ -68,15 +69,15 @@ public class PcWindow : MonoBehaviour
         WindowElement.RegisterCallback<PointerDownEvent>(_ => Focus(), TrickleDown.TrickleDown);
 
         VisualElement titlebar = new VisualElement { name = "titlebar" };
-        titlebar.style.height = 34;
+        titlebar.style.height = 36;
         titlebar.style.flexShrink = 0;
         titlebar.style.flexDirection = FlexDirection.Row;
         titlebar.style.alignItems = Align.Center;
         titlebar.style.paddingLeft = 10;
-        titlebar.style.paddingRight = 4;
-        titlebar.style.backgroundColor = new Color(0.10f, 0.12f, 0.16f, 1f);
-        titlebar.style.borderBottomWidth = 1;
-        titlebar.style.borderBottomColor = new Color(0.22f, 0.26f, 0.32f, 1f);
+        titlebar.style.paddingRight = 6;
+        titlebar.style.backgroundColor = new Color(0.01f, 0.36f, 0.72f, 1f);
+        titlebar.style.borderBottomWidth = 2;
+        titlebar.style.borderBottomColor = new Color(0.75f, 0.78f, 0.82f, 1f);
 
         VisualElement appBadge = new VisualElement();
         appBadge.style.width = 20;
@@ -124,40 +125,68 @@ public class PcWindow : MonoBehaviour
         WindowElement.Add(titlebar);
         WindowElement.Add(ContentElement);
         desktopWorkspace.Add(WindowElement);
+        desktopWorkspace.RegisterCallback<GeometryChangedEvent>(_ => ClampToWorkspace());
 
         IsOpen = true;
         IsMinimized = false;
         IsMaximized = false;
 
         buildBody?.Invoke(ContentElement);
+        ClampToWorkspace();
         Focus();
+    }
+
+    // Giữ kích thước và vị trí cửa sổ luôn nằm gọn bên trong khung màn hình máy tính
+    public void ClampToWorkspace()
+    {
+        if (WindowElement == null || WindowElement.parent == null || IsMaximized) return;
+        float parentW = WindowElement.parent.resolvedStyle.width;
+        float parentH = WindowElement.parent.resolvedStyle.height;
+        if (float.IsNaN(parentW) || float.IsNaN(parentH) || parentW < 320f || parentH < 220f) return;
+
+        float maxW = Mathf.Max(360f, parentW - 204f);
+        float maxH = Mathf.Max(240f, parentH - 20f);
+        float w = Mathf.Min(savedNormalRect.width, maxW);
+        float h = Mathf.Min(savedNormalRect.height, maxH);
+        float x = Mathf.Clamp(savedNormalRect.x, 4f, Mathf.Max(4f, parentW - w - 8f));
+        float y = Mathf.Clamp(savedNormalRect.y, 4f, Mathf.Max(4f, parentH - h - 8f));
+
+        WindowElement.style.left = x;
+        WindowElement.style.top = y;
+        WindowElement.style.width = w;
+        WindowElement.style.height = h;
     }
 
     Button CreateTitlebarButton(string text, Color hoverColor, Action onClick)
     {
         Button btn = new Button(onClick) { text = text };
-        btn.style.width = 30;
-        btn.style.height = 26;
-        btn.style.marginLeft = 2;
+        btn.style.width = 26;
+        btn.style.height = 24;
+        btn.style.marginLeft = 4;
         btn.style.marginRight = 0;
         btn.style.paddingLeft = 0;
         btn.style.paddingRight = 0;
         btn.style.paddingTop = 0;
         btn.style.paddingBottom = 0;
         btn.style.fontSize = 12;
-        btn.style.color = new Color(0.88f, 0.91f, 0.96f, 1f);
-        btn.style.backgroundColor = Color.clear;
-        btn.style.borderTopWidth = 0;
-        btn.style.borderBottomWidth = 0;
-        btn.style.borderLeftWidth = 0;
-        btn.style.borderRightWidth = 0;
-        btn.style.borderTopLeftRadius = 4;
-        btn.style.borderTopRightRadius = 4;
-        btn.style.borderBottomLeftRadius = 4;
-        btn.style.borderBottomRightRadius = 4;
+        btn.style.unityFontStyleAndWeight = FontStyle.Bold;
+        btn.style.color = Color.white;
+        btn.style.backgroundColor = new Color(0.06f, 0.08f, 0.11f, 1f);
+        btn.style.borderTopWidth = 1;
+        btn.style.borderBottomWidth = 1;
+        btn.style.borderLeftWidth = 1;
+        btn.style.borderRightWidth = 1;
+        btn.style.borderTopColor = new Color(0.85f, 0.88f, 0.92f, 0.85f);
+        btn.style.borderBottomColor = new Color(0.85f, 0.88f, 0.92f, 0.85f);
+        btn.style.borderLeftColor = new Color(0.85f, 0.88f, 0.92f, 0.85f);
+        btn.style.borderRightColor = new Color(0.85f, 0.88f, 0.92f, 0.85f);
+        btn.style.borderTopLeftRadius = 3;
+        btn.style.borderTopRightRadius = 3;
+        btn.style.borderBottomLeftRadius = 3;
+        btn.style.borderBottomRightRadius = 3;
 
         btn.RegisterCallback<PointerEnterEvent>(_ => btn.style.backgroundColor = hoverColor);
-        btn.RegisterCallback<PointerLeaveEvent>(_ => btn.style.backgroundColor = Color.clear);
+        btn.RegisterCallback<PointerLeaveEvent>(_ => btn.style.backgroundColor = new Color(0.06f, 0.08f, 0.11f, 1f));
         return btn;
     }
 
@@ -272,6 +301,7 @@ public class PcWindow : MonoBehaviour
     public void Minimize()
     {
         IsMinimized = true;
+        AudioManager.PlayUi("ui_popup_close");
         if (WindowElement != null)
             WindowElement.style.display = DisplayStyle.None;
         StateChanged?.Invoke(this);
@@ -280,26 +310,46 @@ public class PcWindow : MonoBehaviour
     public void ToggleMaximize()
     {
         IsMaximized = !IsMaximized;
+        AudioManager.PlayUi("ui_tab");
         if (WindowElement == null) return;
 
         if (IsMaximized)
         {
-            WindowElement.style.left = 6;
-            WindowElement.style.top = 6;
-            WindowElement.style.right = 6;
-            WindowElement.style.bottom = 52;
-            WindowElement.style.width = StyleKeyword.Auto;
-            WindowElement.style.height = StyleKeyword.Auto;
+            WindowElement.style.left = 0;
+            WindowElement.style.top = 0;
+            WindowElement.style.right = 0;
+            WindowElement.style.bottom = 0;
+            WindowElement.style.width = Length.Percent(100f);
+            WindowElement.style.height = Length.Percent(100f);
+            WindowElement.style.borderTopLeftRadius = 0;
+            WindowElement.style.borderTopRightRadius = 0;
+            WindowElement.style.borderBottomLeftRadius = 0;
+            WindowElement.style.borderBottomRightRadius = 0;
+            WindowElement.style.borderTopWidth = 0;
+            WindowElement.style.borderBottomWidth = 0;
+            WindowElement.style.borderLeftWidth = 0;
+            WindowElement.style.borderRightWidth = 0;
+            WindowElement.BringToFront();
         }
         else
         {
+            WindowElement.style.borderTopLeftRadius = 8;
+            WindowElement.style.borderTopRightRadius = 8;
+            WindowElement.style.borderBottomLeftRadius = 8;
+            WindowElement.style.borderBottomRightRadius = 8;
+            WindowElement.style.borderTopWidth = 1;
+            WindowElement.style.borderBottomWidth = 1;
+            WindowElement.style.borderLeftWidth = 1;
+            WindowElement.style.borderRightWidth = 1;
             ApplyRect(savedNormalRect);
+            ClampToWorkspace();
         }
         StateChanged?.Invoke(this);
     }
 
     public void Close()
     {
+        AudioManager.PlayUi("ui_cancel");
         if (App != null)
         {
             App.OnClose();

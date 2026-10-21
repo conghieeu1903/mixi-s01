@@ -28,6 +28,7 @@ public class DanceGame : StreamMinigame
         if (!IsPlaying) Begin();
         Combo++;
         Score += (perfect ? 250 : 100) * Mathf.Max(1, Combo);
+        AudioManager.Play("ui_select", 1f + Mathf.Min(Combo * 0.04f, 0.4f));
     }
 
     // Hoàn tất bài nhảy và nhận thưởng viewer
@@ -35,6 +36,7 @@ public class DanceGame : StreamMinigame
     {
         if (!IsPlaying) Begin();
         int bonus = Mathf.Clamp(3 + Combo / 2, 3, 8);
+        AudioManager.Play("dance_completed");
         CompleteWithBonus(bonus);
     }
 }

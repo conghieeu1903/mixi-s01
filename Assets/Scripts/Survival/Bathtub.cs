@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Bồn tắm / vòi sen: lia camera bước vào bồn tắm rồi bước ra và reset bộ đếm
+// Bồn tắm / vòi sen: phát âm thanh nước chảy và làm sạch cơ thể khi người chơi bấm E
 public class Bathtub : MonoBehaviour, IInteractable
 {
     public string Prompt => "Tắm";
@@ -12,17 +12,8 @@ public class Bathtub : MonoBehaviour, IInteractable
 
     public void Interact(PlayerInteractor interactor)
     {
+        AudioManager.PlayAt("shower_water", transform.position);
         string message = NeedActions.Shower();
         FindFirstObjectByType<HudView>()?.ShowInfo(message, true);
-
-        PlayerLook look = interactor != null
-            ? interactor.GetComponent<PlayerLook>()
-            : FindFirstObjectByType<PlayerLook>();
-        if (look != null)
-        {
-            Vector3 bathPos = transform.TransformPoint(new Vector3(0f, 1.18f, 0f));
-            Quaternion bathRot = Quaternion.Euler(-12f, transform.eulerAngles.y, 0f);
-            look.PlayPoseTransition(bathPos, bathRot, 0.45f, 0.3f, 0.45f);
-        }
     }
 }

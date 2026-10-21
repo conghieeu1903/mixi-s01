@@ -104,6 +104,7 @@ public class InventoryView : UIPanel
     void Select(ItemData item)
     {
         selectedItem = item;
+        AudioManager.PlayUi("ui_select");
         Rebuild();
     }
 
@@ -216,6 +217,7 @@ public class InventoryView : UIPanel
     void DropSelected()
     {
         if (selectedItem == null) return;
+        AudioManager.Play("item_drop");
         HoldOrDropInWorld(selectedItem, false);
     }
 

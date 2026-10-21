@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// Quản lý panel đang mở, thứ tự xử lý ESC và khóa nhân vật khi có panel mở
+// Quản lý panel đang mở, thứ tự xử lý ESC và điều phối mở các ứng dụng trong màn hình máy tính 3D
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
@@ -17,9 +17,10 @@ public class UIManager : MonoBehaviour
 
     readonly List<UIPanel> openPanels = new List<UIPanel>();
 
-    // Có panel nào đang mở không
+    // Kiểm tra có panel nào đang mở không
     public bool HasOpenPanel => openPanels.Count > 0;
 
+    // Khởi tạo Singleton và tự động tìm các tham chiếu UI trong cảnh
     void Awake()
     {
         Instance = this;
@@ -39,11 +40,13 @@ public class UIManager : MonoBehaviour
             phoneController = FindFirstObjectByType<PhoneController>();
     }
 
+    // Áp dụng cài đặt đã lưu khi khởi động
     void Start()
     {
         GameSettings.Load().ApplyToRuntime();
     }
 
+    // Lắng nghe phím tắt đóng/mở các giao diện
     void Update()
     {
         Keyboard kb = Keyboard.current;
@@ -55,9 +58,12 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        if (kb.bKey.wasPressedThisFrame && billPanel != null)
+        if (kb.bKey.wasPressedThisFrame && desktopOS != null)
         {
-            TogglePanel(billPanel);
+            if (!desktopOS.IsOpen && !HasOpenPanel)
+                desktopOS.Open();
+            if (desktopOS.IsOpen)
+                desktopOS.OpenBillsWindow();
             return;
         }
 
@@ -73,19 +79,26 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        if (kb.kKey.wasPressedThisFrame && skillTreeView != null)
+        if (kb.kKey.wasPressedThisFrame && desktopOS != null)
         {
-            TogglePanel(skillTreeView);
+            if (!desktopOS.IsOpen && !HasOpenPanel)
+                desktopOS.Open();
+            if (desktopOS.IsOpen)
+                desktopOS.OpenSkillsWindow();
             return;
         }
 
-        if ((kb.pKey.wasPressedThisFrame || kb.mKey.wasPressedThisFrame) && phoneController != null)
+        if ((kb.pKey.wasPressedThisFrame || kb.xKey.wasPressedThisFrame || kb.mKey.wasPressedThisFrame) && phoneController != null)
         {
-            TogglePanel(phoneController);
+            if (phoneController.IsOpen)
+                phoneController.Close();
+            else if (!HasOpenPanel)
+                phoneController.Open();
             return;
         }
     }
 
+    // Bật hoặc tắt một panel
     void TogglePanel(UIPanel panel)
     {
         if (panel == null) return;
@@ -115,7 +128,7 @@ public class UIManager : MonoBehaviour
         panel.Show();
     }
 
-    // Đóng một panel
+    // Đóng một panel và mở khóa điều khiển nhân vật nếu cần
     public void Close(UIPanel panel)
     {
         if (panel == null) return;
@@ -132,7 +145,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // ESC: đóng panel trên cùng, không còn panel nào thì mở Pause
+    // Nhấn ESC đóng panel trên cùng hoặc mở menu tạm dừng
     public void HandleEscape()
     {
         if (openPanels.Count > 0)

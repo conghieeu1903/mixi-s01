@@ -22,9 +22,14 @@ public class PropertyMarket : MonoBehaviour
 
         float price = HousePrices.TryGetValue(houseId, out float p) ? p : 500f;
         if (!GameWorld.HasInstance || !GameWorld.Instance.Economy.TrySpend(price))
+        {
+            AudioManager.PlayUi("purchase_fail");
             return false;
+        }
 
         OwnedHouses.Add(houseId);
+        AudioManager.Play("purchase");
+        AudioManager.PlayUi("ui_success");
         FindFirstObjectByType<HudView>()?.ShowInfo($"Đã sở hữu bất động sản [{houseId}] (-$ {price:0.##})", true);
         return true;
     }

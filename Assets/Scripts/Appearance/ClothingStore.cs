@@ -16,10 +16,13 @@ public class ClothingStore : MonoBehaviour, IInteractable
     {
         if (!GameWorld.HasInstance || !GameWorld.Instance.Economy.TrySpend(price))
         {
+            AudioManager.PlayUi("purchase_fail");
             FindFirstObjectByType<HudView>()?.ShowInfo($"Không đủ $ {price:0} để mua trang phục mới", false);
             return;
         }
 
+        AudioManager.PlayAt("store_bell", transform.position);
+        AudioManager.Play("purchase");
         AppearanceSystem app = FindFirstObjectByType<AppearanceSystem>();
         if (app != null)
         {

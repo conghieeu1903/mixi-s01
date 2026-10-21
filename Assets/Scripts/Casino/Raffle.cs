@@ -10,8 +10,12 @@ public class Raffle
     public bool BuyTicket(float price)
     {
         if (!GameWorld.HasInstance || !GameWorld.Instance.Economy.TrySpend(price))
+        {
+            AudioManager.PlayUi("purchase_fail");
             return false;
+        }
 
+        AudioManager.Play("purchase");
         Ticket.Clear();
         while (Ticket.Count < 4)
         {
@@ -31,7 +35,10 @@ public class Raffle
         int matches = Random.Range(1, 3);
         LastPrize = matches * 15f;
         if (GameWorld.HasInstance && LastPrize > 0f)
+        {
             GameWorld.Instance.Economy.Earn(LastPrize);
+            AudioManager.Play("slot_win");
+        }
         Ticket.Clear();
     }
 }

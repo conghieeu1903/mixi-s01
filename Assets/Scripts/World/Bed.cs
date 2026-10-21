@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Giường: hiệu ứng lia camera nằm xuống gối, làm tối màn hình, tua tới sáng hôm sau rồi ngồi dậy
+// Giường: làm tối màn hình và tua tới sáng hôm sau khi người chơi bấm E đi ngủ
 public class Bed : MonoBehaviour, IInteractable
 {
     [Tooltip("Giờ thức dậy")]
@@ -19,10 +19,11 @@ public class Bed : MonoBehaviour, IInteractable
         return !isSleeping;
     }
 
-    // Thực hiện đi ngủ: lia camera nằm xuống giường, làm tối màn hình, tua đồng hồ tới sáng rồi ngồi dậy
+    // Thực hiện đi ngủ: làm tối màn hình, tua đồng hồ tới sáng rồi mở lại màn hình
     public void Interact(PlayerInteractor interactor)
     {
         if (isSleeping) return;
+        AudioManager.PlayAt("sleep_bed", transform.position);
 
         if (fader == null)
             fader = FindFirstObjectByType<ScreenFader>();
@@ -30,42 +31,9 @@ public class Bed : MonoBehaviour, IInteractable
         PlayerInputReader input = interactor != null
             ? interactor.GetComponent<PlayerInputReader>()
             : FindFirstObjectByType<PlayerInputReader>();
-        PlayerLook look = interactor != null
-            ? interactor.GetComponent<PlayerLook>()
-            : FindFirstObjectByType<PlayerLook>();
         HudView hud = FindFirstObjectByType<HudView>();
 
-        Vector3 pillowWorldPos = transform.TransformPoint(new Vector3(0f, 0.72f, -0.35f));
-        Quaternion lieWorldRot = Quaternion.Euler(-45f, transform.eulerAngles.y - 90f, -8f);
-
-        if (fader != null && look != null)
-        {
-            isSleeping = true;
-            if (input != null) input.Freeze();
-
-            look.PlayPoseTransition(
-                pillowWorldPos,
-                lieWorldRot,
-                0.55f,
-                0.45f,
-                0.55f,
-                () =>
-                {
-                    fader.FadeOut(() =>
-                    {
-                        GameWorld.Instance.SleepUntilMorning(wakeUpHour);
-                        if (hud != null)
-                            hud.ShowInfo($"Đã thức dậy — Ngày {GameWorld.Instance.Clock.Day}", true);
-
-                        fader.FadeIn(() =>
-                        {
-                            if (input != null) input.Unfreeze();
-                            isSleeping = false;
-                        });
-                    });
-                });
-        }
-        else if (fader != null)
+        if (fader != null)
         {
             isSleeping = true;
             if (input != null) input.Freeze();

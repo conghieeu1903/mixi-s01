@@ -20,10 +20,13 @@ public class VehicleDealer : MonoBehaviour, IInteractable
     {
         if (BuyVehicle("car_sedan", defaultVehiclePrice))
         {
+            AudioManager.PlayAt("store_bell", transform.position);
+            AudioManager.Play("purchase");
             FindFirstObjectByType<HudView>()?.ShowInfo($"Đã mua xe tại Showroom! Lại gần xe bấm [E] để lái.", true);
         }
         else
         {
+            AudioManager.PlayUi("purchase_fail");
             FindFirstObjectByType<HudView>()?.ShowInfo($"Không đủ $ {defaultVehiclePrice:0.##} để mua xe mới", false);
         }
     }

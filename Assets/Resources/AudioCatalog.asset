@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94f409a11a759234dbfc014000e52d05, type: 3}
   m_Name: AudioCatalog
   m_EditorClassIdentifier: Assembly-CSharp::AudioCatalog
+  mixer: {fileID: 24100000, guid: d09a2142d1ecf8a48add33d0c424b422, type: 2}
   music:
   - id: bgm_menu
     category: BGM
@@ -49,6 +50,18 @@ MonoBehaviour:
     category: BGM
     clip: {fileID: 8300000, guid: 07ab628ace8268e499bb3968d07ae3d6, type: 3}
     volume: 0.55
+  - id: bgm_menu_theme
+    category: BGM
+    clip: {fileID: 8300000, guid: 72de7b41eeecbf44984c5bd716942533, type: 3}
+    volume: 0.35
+  - id: bgm_home_theme
+    category: BGM
+    clip: {fileID: 8300000, guid: b1404b313bccd674dba9d9f5043716f0, type: 3}
+    volume: 0.3
+  - id: bgm_casino
+    category: BGM
+    clip: {fileID: 8300000, guid: a09d75c530b53244c92c49a16fe518f5, type: 3}
+    volume: 0.4
   ambience:
   - id: amb_room
     category: Ambience
@@ -551,3 +564,23 @@ MonoBehaviour:
     category: NPC_Pets
     clip: {fileID: 8300000, guid: d92b1b340fb486747a77bedba3b2f92b, type: 3}
     volume: 0.85
+  - id: level_up
+    category: UI
+    clip: {fileID: 8300000, guid: f6dc464b22d1c2e4480b2c71492702c9, type: 3}
+    volume: 0.8
+  - id: skill_unlock
+    category: UI
+    clip: {fileID: 8300000, guid: c2eb5e864def79a4f8a465b54298b91f, type: 3}
+    volume: 0.8
+  - id: purchase
+    category: UI
+    clip: {fileID: 8300000, guid: 3b3fe85ab0b3a8e4dba58053e196e519, type: 3}
+    volume: 0.8
+  - id: purchase_fail
+    category: UI
+    clip: {fileID: 8300000, guid: b80b964255ed8264c96b9100ea2c3b75, type: 3}
+    volume: 0.8
+  - id: coin_gain
+    category: UI
+    clip: {fileID: 8300000, guid: c159729b7ad371947b35e419a45a7223, type: 3}
+    volume: 0.75

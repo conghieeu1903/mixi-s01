@@ -10,11 +10,14 @@ public class PogoGame : MonoBehaviour
     {
         CheckpointsReached = 0;
         LastCheckpointPosition = Vector3.zero;
+        AudioManager.Play("pogo_jump");
     }
 
     public void ReachCheckpoint(Transform checkpoint)
     {
         CheckpointsReached++;
+        AudioManager.Play("pogo_jump");
+        AudioManager.PlayUi("ui_success");
         if (checkpoint != null)
             LastCheckpointPosition = checkpoint.position;
         if (GameWorld.HasInstance)

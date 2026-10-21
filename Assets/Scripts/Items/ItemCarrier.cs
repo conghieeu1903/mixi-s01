@@ -2,20 +2,36 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.UIElements;
 
-// Cầm vật phẩm trên tay: nhặt mượt lên tay, đung đưa theo bước chân và đưa lên miệng khi ăn/uống
+// Cầm vật phẩm trên tay: nhặt mượt lên tay, đung đưa theo bước chân và dùng camera thứ 2 (PlayerItems) chống xuyên tường
 public class ItemCarrier : MonoBehaviour
 {
+    public const string PlayerItemsLayerName = "PlayerItems";
+    public const int FallbackPlayerItemsLayer = 8;
+
     [Tooltip("Điểm giữ vật trước camera")]
     [SerializeField] Transform holdPoint;
 
+    [Tooltip("Camera thứ 2 chuyên vẽ vật phẩm cầm trên tay (Overlay) để không xuyên tường")]
+    [SerializeField] Camera itemCamera;
+
     public WorldItem Held { get; private set; }
+    public Camera ItemCamera => itemCamera;
 
     public event Action<WorldItem> HeldChanged;
 
     PlayerInputReader input;
     PlayerMotor motor;
     BuildPlacer placer;
+    Camera mainCamera;
+    Mop heldMop;
+    bool caseBuildActive;
+    int activeHandAnimationCount;
+
+    VisualElement carrierControlsBox;
+    int lastControlsState = -1;
 
     Vector3 pickupStartLocalPos;
     Quaternion pickupStartLocalRot;
@@ -26,20 +42,137 @@ public class ItemCarrier : MonoBehaviour
     Vector3 currentSwayEuler;
     float holdBobTimer;
 
+    public static int GetPlayerItemsLayer()
+    {
+        int layer = LayerMask.NameToLayer(PlayerItemsLayerName);
+        return layer >= 0 ? layer : FallbackPlayerItemsLayer;
+    }
+
+    // Đổi layer đệ quy cho toàn bộ cây object của vật phẩm khi nhặt lên tay hoặc thả xuống
+    public static void SetLayerRecursively(GameObject root, int layer)
+    {
+        if (root == null) return;
+        Transform[] children = root.GetComponentsInChildren<Transform>(true);
+        for (int i = 0; i < children.Length; i++)
+        {
+            if (children[i] != null)
+                children[i].gameObject.layer = layer;
+        }
+    }
+
     void Awake()
     {
         input = GetComponent<PlayerInputReader>();
         motor = GetComponent<PlayerMotor>();
         placer = GetComponent<BuildPlacer>();
+        EnsureItemCamera();
+        UpdateItemCameraState();
+    }
+
+    // Thiết lập cơ chế 2 camera giống SLS2: Main Camera bỏ qua layer PlayerItems, ItemCamera (Overlay) xóa Depth và chỉ vẽ PlayerItems
+    public void EnsureItemCamera()
+    {
+        if (mainCamera == null)
+        {
+            PlayerLook look = GetComponent<PlayerLook>();
+            if (look != null && look.CameraPivot != null)
+                mainCamera = look.CameraPivot.GetComponent<Camera>();
+            if (mainCamera == null)
+                mainCamera = Camera.main;
+        }
+        if (mainCamera == null) return;
+
+        int itemLayer = GetPlayerItemsLayer();
+        int itemMask = 1 << itemLayer;
+
+        // Main Camera không vẽ layer PlayerItems để tránh vẽ trùng
+        mainCamera.cullingMask &= ~itemMask;
+
+        if (itemCamera == null)
+        {
+            Transform existing = mainCamera.transform.Find("ItemCamera");
+            if (existing != null)
+                itemCamera = existing.GetComponent<Camera>();
+        }
+
+        if (itemCamera == null)
+        {
+            GameObject camObj = new GameObject("ItemCamera");
+            camObj.transform.SetParent(mainCamera.transform, false);
+            camObj.transform.localPosition = Vector3.zero;
+            camObj.transform.localRotation = Quaternion.identity;
+            camObj.transform.localScale = Vector3.one;
+            itemCamera = camObj.AddComponent<Camera>();
+        }
+
+        itemCamera.cullingMask = itemMask;
+        itemCamera.clearFlags = CameraClearFlags.Depth;
+        itemCamera.nearClipPlane = 0.01f;
+        itemCamera.farClipPlane = 4.0f;
+        itemCamera.fieldOfView = 60f;
+        itemCamera.depth = mainCamera.depth + 1f;
+        itemCamera.useOcclusionCulling = false;
+        itemCamera.allowHDR = mainCamera.allowHDR;
+        itemCamera.allowMSAA = mainCamera.allowMSAA;
+
+        UniversalAdditionalCameraData baseData = mainCamera.GetUniversalAdditionalCameraData();
+        if (baseData != null)
+            baseData.renderType = CameraRenderType.Base;
+
+        UniversalAdditionalCameraData overlayData = itemCamera.GetUniversalAdditionalCameraData();
+        if (overlayData != null)
+        {
+            overlayData.renderType = CameraRenderType.Overlay;
+            overlayData.renderPostProcessing = false;
+            overlayData.renderShadows = false;
+        }
+
+        if (baseData != null && baseData.cameraStack != null && !baseData.cameraStack.Contains(itemCamera))
+            baseData.cameraStack.Add(itemCamera);
+    }
+
+    // Đăng ký cây lau nhà đang cầm trên tay để bật/tắt ItemCamera tương ứng
+    public void SetHeldMop(Mop mop)
+    {
+        heldMop = mop;
+        EnsureItemCamera();
+        UpdateItemCameraState();
+    }
+
+    // Bật/tắt chế độ lắp ráp thùng PC trước camera giống SLS2
+    public void SetCaseBuildActive(bool active)
+    {
+        caseBuildActive = active;
+        EnsureItemCamera();
+        UpdateItemCameraState();
+    }
+
+    // Chỉ bật ItemCamera khi đang cầm đồ trên tay, cầm cây lau nhà hoặc đang lắp ráp thùng PC giống SLS2
+    public void UpdateItemCameraState()
+    {
+        if (itemCamera == null)
+            EnsureItemCamera();
+        if (itemCamera == null) return;
+
+        bool holdingWorldItemOnHand = Held != null && (placer == null || !placer.IsPlacing);
+        bool holdingMop = heldMop != null && heldMop.IsHeld;
+        bool shouldActive = holdingWorldItemOnHand || holdingMop || caseBuildActive || activeHandAnimationCount > 0;
+
+        if (itemCamera.gameObject.activeSelf != shouldActive)
+            itemCamera.gameObject.SetActive(shouldActive);
+
+        UpdateCarrierControlsHud();
     }
 
     void Update()
     {
+        UpdateItemCameraState();
+
         if (Held == null || (input != null && input.IsFrozen)) return;
         Keyboard kb = Keyboard.current;
         if (kb == null) return;
 
-        if (kb.gKey.wasPressedThisFrame)
+        if (kb.qKey.wasPressedThisFrame || kb.gKey.wasPressedThisFrame)
         {
             if (placer != null && placer.IsPlacing)
                 placer.Cancel();
@@ -110,7 +243,7 @@ public class ItemCarrier : MonoBehaviour
         }
     }
 
-    // Cầm một vật và chạy hiệu ứng bay từ vị trí nhặt lên tay
+    // Cầm một vật, đổi sang layer PlayerItems và chạy hiệu ứng bay từ vị trí nhặt lên tay
     public void Hold(WorldItem item)
     {
         if (item == null) return;
@@ -120,6 +253,7 @@ public class ItemCarrier : MonoBehaviour
         Held.IsHeld = true;
 
         SetCollidersEnabled(Held.gameObject, false);
+        SetLayerRecursively(Held.gameObject, GetPlayerItemsLayer());
 
         Transform anchor = GetAnchorTransform();
         Vector3 worldPosBefore = item.transform.position;
@@ -133,17 +267,21 @@ public class ItemCarrier : MonoBehaviour
         Held.transform.localPosition = holdPoint != null ? Vector3.zero : new Vector3(0.28f, -0.22f, 0.65f);
         Held.transform.localRotation = Quaternion.identity;
 
+        EnsureItemCamera();
+        UpdateItemCameraState();
+        AudioManager.Play("item_pickup");
         HeldChanged?.Invoke(Held);
     }
 
     Transform GetAnchorTransform()
     {
         if (holdPoint != null) return holdPoint;
+        if (mainCamera != null) return mainCamera.transform;
         Camera cam = GetComponentInChildren<Camera>() ?? Camera.main;
         return cam != null ? cam.transform : transform;
     }
 
-    // Thả vật đang cầm xuống đất trước mặt người chơi
+    // Thả vật đang cầm xuống đất trước mặt người chơi và trả về layer Default
     public void Drop()
     {
         if (Held == null) return;
@@ -152,6 +290,7 @@ public class ItemCarrier : MonoBehaviour
         Held = null;
         item.IsHeld = false;
         item.transform.SetParent(null, true);
+        SetLayerRecursively(item.gameObject, 0);
 
         Vector3 dropPos = transform.position + transform.forward * 0.85f + Vector3.up * 0.1f;
         if (Physics.Raycast(transform.position + Vector3.up * 1.2f + transform.forward * 0.85f, Vector3.down, out RaycastHit hit, 3f))
@@ -161,17 +300,21 @@ public class ItemCarrier : MonoBehaviour
         item.transform.rotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
         SetCollidersEnabled(item.gameObject, true);
 
+        UpdateItemCameraState();
+        AudioManager.PlayAt("item_drop", dropPos);
         HeldChanged?.Invoke(null);
     }
 
-    // Giải phóng tham chiếu vật đang cầm sau khi BuildPlacer đặt xong
+    // Giải phóng tham chiếu vật đang cầm sau khi BuildPlacer đặt xong và trả về layer Default
     public void ReleasePlaced()
     {
         if (Held == null) return;
         WorldItem item = Held;
         Held = null;
         item.IsHeld = false;
+        SetLayerRecursively(item.gameObject, 0);
         SetCollidersEnabled(item.gameObject, true);
+        UpdateItemCameraState();
         HeldChanged?.Invoke(null);
     }
 
@@ -226,13 +369,19 @@ public class ItemCarrier : MonoBehaviour
         else if (!bringToMouth && isActiveAndEnabled)
             StartCoroutine(PocketAnimationRoutine(obj));
         else
+        {
             Destroy(obj);
+            UpdateItemCameraState();
+        }
     }
 
     // Hiệu ứng đưa đồ ăn/nước uống/thuốc từ tay lên miệng rồi thu nhỏ biến mất
     IEnumerator ConsumeAnimationRoutine(GameObject obj)
     {
         if (obj == null) yield break;
+        activeHandAnimationCount++;
+        UpdateItemCameraState();
+
         Transform t = obj.transform;
         Vector3 startPos = t.localPosition;
         Quaternion startRot = t.localRotation;
@@ -260,12 +409,17 @@ public class ItemCarrier : MonoBehaviour
 
         if (obj != null)
             Destroy(obj);
+        activeHandAnimationCount = Mathf.Max(0, activeHandAnimationCount - 1);
+        UpdateItemCameraState();
     }
 
     // Hiệu ứng hạ vật phẩm xuống túi đồ khi bấm F cất kho
     IEnumerator PocketAnimationRoutine(GameObject obj)
     {
         if (obj == null) yield break;
+        activeHandAnimationCount++;
+        UpdateItemCameraState();
+
         Transform t = obj.transform;
         Vector3 startPos = t.localPosition;
         Vector3 startScale = t.localScale;
@@ -284,6 +438,8 @@ public class ItemCarrier : MonoBehaviour
 
         if (obj != null)
             Destroy(obj);
+        activeHandAnimationCount = Mathf.Max(0, activeHandAnimationCount - 1);
+        UpdateItemCameraState();
     }
 
     static void SetCollidersEnabled(GameObject root, bool enabled)
@@ -292,5 +448,109 @@ public class ItemCarrier : MonoBehaviour
         Collider[] cols = root.GetComponentsInChildren<Collider>(true);
         for (int i = 0; i < cols.Length; i++)
             cols[i].enabled = enabled;
+    }
+
+    // Hiển thị bảng gợi ý nút bấm ở góc phải dưới khi cầm đồ hoặc đang trong chế độ đặt đồ (Build Mode) giống SLS2
+    void UpdateCarrierControlsHud()
+    {
+        int state = 0;
+        if (Held != null)
+        {
+            if (placer != null && placer.IsPlacing)
+                state = 2;
+            else
+                state = 1;
+        }
+
+        if (state == lastControlsState && (state == 0 || carrierControlsBox != null))
+            return;
+
+        if (carrierControlsBox == null)
+        {
+            HudView hud = FindFirstObjectByType<HudView>();
+            if (hud == null) return;
+            UIDocument doc = hud.GetComponent<UIDocument>();
+            if (doc == null || doc.rootVisualElement == null) return;
+
+            carrierControlsBox = new VisualElement { name = "carrierControlsBox" };
+            carrierControlsBox.pickingMode = PickingMode.Ignore;
+            carrierControlsBox.style.position = Position.Absolute;
+            carrierControlsBox.style.right = 22;
+            carrierControlsBox.style.bottom = 76;
+            carrierControlsBox.style.flexDirection = FlexDirection.Column;
+            carrierControlsBox.style.alignItems = Align.FlexEnd;
+            carrierControlsBox.style.display = DisplayStyle.None;
+            doc.rootVisualElement.Add(carrierControlsBox);
+        }
+
+        lastControlsState = state;
+        carrierControlsBox.Clear();
+
+        if (state == 0)
+        {
+            carrierControlsBox.style.display = DisplayStyle.None;
+            return;
+        }
+
+        carrierControlsBox.style.display = DisplayStyle.Flex;
+        if (state == 1)
+        {
+            carrierControlsBox.Add(CreateHintRow("Chuột trái", "Build", new Color(0.18f, 0.58f, 0.28f, 0.95f)));
+            string useText = (Held != null && Held.Data is FoodData) ? "Ăn / Uống"
+                : (Held != null && Held.Data is MedicineData) ? "Uống thuốc"
+                : "Cất kho";
+            carrierControlsBox.Add(CreateHintRow("F", useText, new Color(0.18f, 0.44f, 0.78f, 0.95f)));
+            carrierControlsBox.Add(CreateHintRow("Q", "Drop", new Color(0.20f, 0.24f, 0.30f, 0.95f)));
+        }
+        else if (state == 2)
+        {
+            carrierControlsBox.Add(CreateHintRow("Chuột trái", "Đặt xuống", new Color(0.18f, 0.58f, 0.28f, 0.95f)));
+            carrierControlsBox.Add(CreateHintRow("Chuột phải", "Cancel", new Color(0.85f, 0.22f, 0.20f, 0.95f)));
+            carrierControlsBox.Add(CreateHintRow("Lăn chuột / R", "Rotate", new Color(0.20f, 0.24f, 0.30f, 0.95f)));
+        }
+    }
+
+    static VisualElement CreateHintRow(string keyText, string actionText, Color badgeBg)
+    {
+        VisualElement row = new VisualElement();
+        row.pickingMode = PickingMode.Ignore;
+        row.style.flexDirection = FlexDirection.Row;
+        row.style.alignItems = Align.Center;
+        row.style.marginTop = 4;
+        row.style.paddingLeft = 8;
+        row.style.paddingRight = 10;
+        row.style.paddingTop = 3;
+        row.style.paddingBottom = 3;
+        row.style.backgroundColor = new Color(0.05f, 0.07f, 0.10f, 0.72f);
+        row.style.borderTopLeftRadius = 5;
+        row.style.borderTopRightRadius = 5;
+        row.style.borderBottomLeftRadius = 5;
+        row.style.borderBottomRightRadius = 5;
+
+        Label keyBadge = new Label(keyText);
+        keyBadge.pickingMode = PickingMode.Ignore;
+        keyBadge.style.fontSize = 12;
+        keyBadge.style.unityFontStyleAndWeight = FontStyle.Bold;
+        keyBadge.style.color = Color.white;
+        keyBadge.style.backgroundColor = badgeBg;
+        keyBadge.style.paddingLeft = 6;
+        keyBadge.style.paddingRight = 6;
+        keyBadge.style.paddingTop = 2;
+        keyBadge.style.paddingBottom = 2;
+        keyBadge.style.marginRight = 8;
+        keyBadge.style.borderTopLeftRadius = 4;
+        keyBadge.style.borderTopRightRadius = 4;
+        keyBadge.style.borderBottomLeftRadius = 4;
+        keyBadge.style.borderBottomRightRadius = 4;
+
+        Label actLbl = new Label(actionText);
+        actLbl.pickingMode = PickingMode.Ignore;
+        actLbl.style.fontSize = 14;
+        actLbl.style.unityFontStyleAndWeight = FontStyle.Bold;
+        actLbl.style.color = Color.white;
+
+        row.Add(keyBadge);
+        row.Add(actLbl);
+        return row;
     }
 }

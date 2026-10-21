@@ -47,6 +47,9 @@ public class Courier : MonoBehaviour
 
         box.Setup(order);
         if (announce)
+        {
+            AudioManager.PlayAt("delivery_complete", pos);
             FindFirstObjectByType<HudView>()?.ShowInfo("Đơn hàng Zamazor đã giao tới trước cửa!", true);
+        }
     }
 }

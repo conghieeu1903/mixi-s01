@@ -68,12 +68,14 @@ public class PauseMenu : UIPanel
         BindButtons();
         base.Show();
         Time.timeScale = 0f;
+        AudioManager.Instance.SetGameplayPaused(true);
     }
 
     public override void Hide()
     {
         base.Hide();
         Time.timeScale = 1f;
+        AudioManager.Instance.SetGameplayPaused(false);
     }
 
     // Lưu game rồi về Main Menu

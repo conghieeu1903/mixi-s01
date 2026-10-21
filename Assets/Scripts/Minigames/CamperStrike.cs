@@ -12,6 +12,8 @@ public class CamperStrike : MonoBehaviour
     public void StartMatch()
     {
         IsMatchActive = true;
+        AudioManager.Play("gun_reload");
+        AudioManager.Play("gun_pistol");
         Kills = Random.Range(5, 15) * Mathf.Max(1, roundCount);
         RoundsPlayed = roundCount;
     }
@@ -20,6 +22,9 @@ public class CamperStrike : MonoBehaviour
     {
         if (!IsMatchActive) StartMatch();
         IsMatchActive = false;
+        AudioManager.Play("gun_deagle");
+        AudioManager.Play("explosion_toon");
+        AudioManager.Play("victory_fps");
         if (GameWorld.HasInstance)
         {
             GameWorld.Instance.Mood.Change(4f);

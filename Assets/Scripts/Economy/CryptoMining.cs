@@ -36,7 +36,10 @@ public class CryptoMining
         Bitcoin -= actual;
         float usd = Mathf.Round((float)(actual * UsdPerBitcoin) * 100f) / 100f;
         if (GameWorld.HasInstance && usd > 0f)
+        {
             GameWorld.Instance.Economy.Earn(usd);
+            AudioManager.Play("coin_gain");
+        }
         BitcoinChanged?.Invoke(Bitcoin);
         return usd;
     }

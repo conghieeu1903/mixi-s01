@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-// Màn lắp ráp PC: danh sách slot, lắp và tháo linh kiện
+// Màn lắp ráp PC kiểu SLS2: đưa thùng case 3D mở nắp sang bên trái camera (layer PlayerItems) và bảng lắp linh kiện ở bên phải
 public class PcBuildView : UIPanel
 {
     PcCase currentCase;
@@ -11,10 +12,23 @@ public class PcBuildView : UIPanel
     Label statusLabel;
     bool initialized;
 
+    Transform savedCaseParent;
+    Vector3 savedCaseWorldPos;
+    Quaternion savedCaseWorldRot;
+    bool hasSavedCasePose;
+
     void OnEnable()
     {
         initialized = false;
         SetupPanel();
+    }
+
+    void Update()
+    {
+        if (!IsOpen) return;
+        Keyboard kb = Keyboard.current;
+        if (kb != null && kb.qKey.wasPressedThisFrame)
+            CloseSelf();
     }
 
     void SetupPanel()
@@ -26,10 +40,10 @@ public class PcBuildView : UIPanel
         buildPanel = Root.Q<VisualElement>("buildCasePanel");
         if (board != null && buildPanel != null)
         {
-            board.style.backgroundColor = new Color(0f, 0f, 0f, 0.35f);
-            board.style.alignItems = Align.Center;
+            board.style.backgroundColor = new Color(0f, 0f, 0f, 0.25f);
+            board.style.alignItems = Align.FlexEnd;
             board.style.justifyContent = Justify.Center;
-            board.style.paddingRight = 0;
+            board.style.paddingRight = 48;
 
             foreach (VisualElement child in board.Children())
             {
@@ -41,7 +55,7 @@ public class PcBuildView : UIPanel
         }
 
         if (buildPanel == null) return;
-        buildPanel.style.width = 560;
+        buildPanel.style.width = 540;
         buildPanel.style.minHeight = 460;
 
         Button closeBtn = buildPanel.Q<Button>("closeButton");
@@ -83,7 +97,10 @@ public class PcBuildView : UIPanel
             currentCase = FindFirstObjectByType<PcCase>();
 
         if (currentCase != null)
+        {
+            AttachCaseToCameraView();
             currentCase.SetSidePanelOpen(true);
+        }
 
         Rebuild();
         base.Show();
@@ -92,8 +109,48 @@ public class PcBuildView : UIPanel
     public override void Hide()
     {
         if (currentCase != null)
+        {
             currentCase.SetSidePanelOpen(false);
+            RestoreCaseToWorld();
+        }
         base.Hide();
+    }
+
+    void AttachCaseToCameraView()
+    {
+        if (currentCase == null) return;
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        if (!hasSavedCasePose)
+        {
+            savedCaseParent = currentCase.transform.parent;
+            savedCaseWorldPos = currentCase.transform.position;
+            savedCaseWorldRot = currentCase.transform.rotation;
+            hasSavedCasePose = true;
+        }
+
+        ItemCarrier carrier = FindFirstObjectByType<ItemCarrier>();
+        if (carrier != null)
+            carrier.SetCaseBuildActive(true);
+
+        ItemCarrier.SetLayerRecursively(currentCase.gameObject, ItemCarrier.GetPlayerItemsLayer());
+        currentCase.transform.SetParent(cam.transform, false);
+        currentCase.transform.localPosition = new Vector3(-0.24f, -0.22f, 0.72f);
+        currentCase.transform.localRotation = Quaternion.Euler(8f, -112f, 0f);
+    }
+
+    void RestoreCaseToWorld()
+    {
+        ItemCarrier carrier = FindFirstObjectByType<ItemCarrier>();
+        if (carrier != null)
+            carrier.SetCaseBuildActive(false);
+
+        if (currentCase == null || !hasSavedCasePose) return;
+        currentCase.transform.SetParent(savedCaseParent, true);
+        currentCase.transform.SetPositionAndRotation(savedCaseWorldPos, savedCaseWorldRot);
+        ItemCarrier.SetLayerRecursively(currentCase.gameObject, 0);
+        hasSavedCasePose = false;
     }
 
     // Dựng lại danh sách slot

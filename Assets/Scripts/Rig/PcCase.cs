@@ -51,6 +51,7 @@ public class PcCase : MonoBehaviour, IInteractable
     {
         CacheSidePanel();
         RefreshInteriorVisuals();
+        AudioManager.PlayAt(open ? "pc_cover_open" : "pc_cover_close", transform.position);
         if (sidePanel == null || !isActiveAndEnabled) return;
 
         if (panelRoutine != null)
@@ -179,10 +180,14 @@ public class PcCase : MonoBehaviour, IInteractable
             }
         }
 
+        interiorRoot.gameObject.layer = gameObject.layer;
         for (int i = 0; i < slots.Count && i < visualSlotMeshes.Count; i++)
         {
             if (visualSlotMeshes[i] != null)
+            {
+                visualSlotMeshes[i].layer = gameObject.layer;
                 visualSlotMeshes[i].SetActive(!slots[i].IsEmpty);
+            }
         }
     }
 
@@ -268,6 +273,7 @@ public class PcCase : MonoBehaviour, IInteractable
             if (slots[i].type == part.partType && slots[i].IsEmpty)
             {
                 slots[i].installed = part;
+                AudioManager.PlayAt("pc_part_install", transform.position);
                 RefreshInteriorVisuals();
                 Changed?.Invoke();
                 FindFirstObjectByType<StreamSetup>()?.RefreshComponents();
@@ -283,6 +289,7 @@ public class PcCase : MonoBehaviour, IInteractable
         if (slot == null || slot.IsEmpty) return null;
         PcPartData removed = slot.installed;
         slot.installed = null;
+        AudioManager.PlayAt("pc_part_remove", transform.position);
         RefreshInteriorVisuals();
         Changed?.Invoke();
         FindFirstObjectByType<StreamSetup>()?.RefreshComponents();

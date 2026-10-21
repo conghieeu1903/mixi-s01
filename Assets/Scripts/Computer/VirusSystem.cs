@@ -15,6 +15,7 @@ public class VirusSystem
         if (UnityEngine.Random.value <= chance)
         {
             IsInfected = true;
+            AudioManager.PlayUi("ui_bsod");
             if (GameWorld.HasInstance)
                 GameWorld.Instance.Stream.HasProblem = true;
             BlueScreen?.Invoke();
@@ -25,6 +26,7 @@ public class VirusSystem
     public void Scan()
     {
         IsInfected = false;
+        AudioManager.PlayUi("ui_success");
         if (GameWorld.HasInstance)
             GameWorld.Instance.Stream.HasProblem = false;
     }

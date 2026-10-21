@@ -150,11 +150,53 @@ public static class PrototypeAudioBuilder
             }
         }
 
+        AddExistingClips(catalog);
         EditorUtility.SetDirty(catalog);
         EnsureSceneAudioManager(catalog);
         AssetDatabase.SaveAssets();
 
         Debug.Log($"[PrototypeAudioBuilder] Đã tạo kho âm thanh gồm {catalog.music.Count} BGM, {catalog.ambience.Count} Ambience và {catalog.sfx.Count} SFX tại {CatalogPath}");
+    }
+
+    // Các file âm thanh có sẵn trong dự án (nhạc mp3 thật, SFX từ bộ cũ) được đưa vào kho bên cạnh âm tự tổng hợp
+    static readonly (string id, string group, string category, string path, float volume)[] ExistingClips =
+    {
+        ("bgm_menu_theme", "music", "BGM", "Assets/Audio/BGM/viacheslavstarostin-funny-cartoon-music-412765.mp3", 0.35f),
+        ("bgm_home_theme", "music", "BGM", "Assets/Audio/BGM/maksymmalko-funny-cartoon-421644.mp3", 0.3f),
+        ("bgm_casino", "music", "BGM", "Assets/Audio/BGM/bgm_synth_shop.wav", 0.4f),
+        ("level_up", "sfx", "UI", "Assets/Audio/SFX/sfx_level_up.wav", 0.8f),
+        ("skill_unlock", "sfx", "UI", "Assets/Audio/SFX/sfx_item_unlock.wav", 0.8f),
+        ("purchase", "sfx", "UI", "Assets/Audio/SFX/sfx_purchase.wav", 0.8f),
+        ("purchase_fail", "sfx", "UI", "Assets/Audio/SFX/sfx_purchase_fail.wav", 0.8f),
+        ("coin_gain", "sfx", "UI", "Assets/Audio/SFX/sfx_coin_gain.wav", 0.75f)
+    };
+
+    // Gán mixer và thêm các file âm thanh có sẵn vào kho mà không tổng hợp lại toàn bộ
+    [MenuItem("Tools/Audio/Sync Existing Clips To Catalog")]
+    public static void SyncExistingClips()
+    {
+        AudioCatalog catalog = LoadOrCreateCatalog();
+        AddExistingClips(catalog);
+        EditorUtility.SetDirty(catalog);
+        AssetDatabase.SaveAssets();
+        Debug.Log($"[PrototypeAudioBuilder] Kho âm thanh: {catalog.music.Count} BGM, {catalog.ambience.Count} Ambience, {catalog.sfx.Count} SFX");
+    }
+
+    static void AddExistingClips(AudioCatalog catalog)
+    {
+        catalog.mixer = AssetDatabase.LoadAssetAtPath<AudioMixer>("Assets/Audio/AudioMixer.mixer");
+        foreach (var (id, group, category, path, volume) in ExistingClips)
+        {
+            AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
+            if (clip == null)
+            {
+                Debug.LogWarning($"[PrototypeAudioBuilder] Không tìm thấy {path}");
+                continue;
+            }
+            List<AudioCatalogEntry> list = group == "music" ? catalog.music : group == "ambience" ? catalog.ambience : catalog.sfx;
+            list.RemoveAll(e => e.id == id);
+            list.Add(new AudioCatalogEntry { id = id, category = category, clip = clip, volume = volume });
+        }
     }
 
     // Xóa các file âm thanh mẫu của SlotGame cũ không còn thuộc dự án
@@ -232,12 +274,16 @@ public static class PrototypeAudioBuilder
         {
             AudioMixerGroup[] sfxGroups = mixer.FindMatchingGroups("SFX");
             AudioMixerGroup[] bgmGroups = mixer.FindMatchingGroups("BGM");
+            AudioMixerGroup[] uiGroups = mixer.FindMatchingGroups("UI");
             SerializedProperty sfxProp = so.FindProperty("sfxGroup");
             SerializedProperty musicProp = so.FindProperty("musicGroup");
+            SerializedProperty uiProp = so.FindProperty("uiGroup");
             if (sfxProp != null && sfxGroups != null && sfxGroups.Length > 0)
                 sfxProp.objectReferenceValue = sfxGroups[0];
             if (musicProp != null && bgmGroups != null && bgmGroups.Length > 0)
                 musicProp.objectReferenceValue = bgmGroups[0];
+            if (uiProp != null && uiGroups != null && uiGroups.Length > 0)
+                uiProp.objectReferenceValue = uiGroups[0];
         }
 
         so.ApplyModifiedPropertiesWithoutUndo();

@@ -57,10 +57,12 @@ public class CasinoSlotMachine : MonoBehaviour, IInteractable
     {
         if (!GameWorld.HasInstance || !GameWorld.Instance.Economy.TrySpend(bet))
         {
+            AudioManager.PlayUi("purchase_fail");
             FindFirstObjectByType<HudView>()?.ShowInfo("Không đủ tiền quay Slot", false);
             return;
         }
 
+        AudioManager.PlayAt("slot_start", transform.position);
         for (int i = 0; i < Reels.Length; i++)
             Reels[i] = Symbols[Random.Range(0, Symbols.Length)];
 
@@ -80,6 +82,8 @@ public class CasinoSlotMachine : MonoBehaviour, IInteractable
         if (LastWin > 0f)
         {
             GameWorld.Instance.Economy.Earn(LastWin);
+            AudioManager.PlayAt("slot_win", transform.position);
+            AudioManager.Play("drop_gems");
             FindFirstObjectByType<HudView>()?.ShowInfo($"Slot [{Reels[0]}|{Reels[1]}|{Reels[2]}] trúng $ {LastWin:0.##}!", true);
         }
         else
@@ -93,10 +97,17 @@ public class CasinoSlotMachine : MonoBehaviour, IInteractable
         float elapsed = 0f;
         const float duration = 0.85f;
         Vector3 pivotPoint = new Vector3(0.4f, 1.0f, 0f);
+        float rollSoundTimer = 0f;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
+            rollSoundTimer -= Time.deltaTime;
+            if (rollSoundTimer <= 0f)
+            {
+                rollSoundTimer = 0.28f;
+                AudioManager.PlayAt("slot_roll", transform.position);
+            }
             float t = Mathf.Clamp01(elapsed / duration);
 
             // Gạt cần xuống trong 0.3s đầu rồi bật ngược trở lại
@@ -143,6 +154,7 @@ public class CasinoSlotMachine : MonoBehaviour, IInteractable
         if (spinnerPivot != null)
             spinnerPivot.localRotation = Quaternion.identity;
 
+        AudioManager.PlayAt("slot_stop", transform.position);
         spinRoutine = null;
     }
 }

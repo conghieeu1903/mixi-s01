@@ -104,6 +104,7 @@ public class TutorialSystem : MonoBehaviour
     public void Complete(string stepId)
     {
         if (Current == null || Current.stepId != stepId) return;
+        AudioManager.PlayUi("ui_success");
         SetStep(CurrentIndex + 1);
     }
 

@@ -47,10 +47,12 @@ public class LuckySpin : MonoBehaviour, IInteractable
         }
         else if (!GameWorld.Instance.Economy.TrySpend(15f))
         {
+            AudioManager.PlayUi("purchase_fail");
             FindFirstObjectByType<HudView>()?.ShowInfo("Không đủ $ 15 để quay Vòng quay may mắn", false);
             return 0f;
         }
 
+        AudioManager.PlayAt("spin_wheel", transform.position);
         int prizeIdx = Random.Range(0, Prizes.Length);
         LastReward = Prizes[prizeIdx];
         GameWorld.Instance.Economy.Earn(LastReward);
@@ -61,6 +63,10 @@ public class LuckySpin : MonoBehaviour, IInteractable
             if (spinRoutine != null)
                 StopCoroutine(spinRoutine);
             spinRoutine = StartCoroutine(WheelSpinRoutine(prizeIdx));
+        }
+        else
+        {
+            AudioManager.PlayAt("slot_win", transform.position);
         }
 
         FindFirstObjectByType<HudView>()?.ShowInfo($"Vòng quay may mắn trúng thưởng +$ {LastReward:0}!", true);
@@ -100,6 +106,8 @@ public class LuckySpin : MonoBehaviour, IInteractable
         wheelSpinner.localRotation = Quaternion.Euler(0f, 0f, currentWheelAngle);
         if (pointerMesh != null)
             pointerMesh.localRotation = pointerBaseRot;
+        AudioManager.PlayAt("slot_win", transform.position);
+        AudioManager.Play("coin_gain");
         spinRoutine = null;
     }
 

@@ -71,7 +71,7 @@ public class HudView : MonoBehaviour
 
         Label shortcutNote = root.Q<Label>("shortcutNote");
         if (shortcutNote != null)
-            shortcutNote.text = "ESC: Pause · I/Tab: Kho · C: PC · B: Hóa đơn";
+            shortcutNote.text = "ESC: Pause · P/X: Điện thoại · I/Tab: Kho · C: PC · B: Hóa đơn";
 
         if (mailBadge != null)
             mailBadge.style.display = DisplayStyle.None;
@@ -212,6 +212,8 @@ public class HudView : MonoBehaviour
     // Hiện một dòng thông báo ở cuối màn hình (Bottom Info)
     public void ShowInfo(string message, bool positive)
     {
+        if (!positive)
+            AudioManager.PlayUi("ui_error");
         if (bottomInfo == null) return;
 
         Label line = new Label(message);

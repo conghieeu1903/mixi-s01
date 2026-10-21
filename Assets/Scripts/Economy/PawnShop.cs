@@ -24,6 +24,8 @@ public class PawnShop : MonoBehaviour, IInteractable
             Destroy(held.gameObject);
             if (GameWorld.HasInstance)
                 GameWorld.Instance.Economy.Earn(earned);
+            AudioManager.PlayAt("store_bell", transform.position);
+            AudioManager.Play("coin_gain");
             FindFirstObjectByType<HudView>()?.ShowInfo($"Đã bán {data.displayName} tại tiệm cầm đồ (+$ {earned:0.##})", true);
             return;
         }
@@ -35,6 +37,7 @@ public class PawnShop : MonoBehaviour, IInteractable
             return;
         }
 
+        AudioManager.PlayUi("ui_error");
         FindFirstObjectByType<HudView>()?.ShowInfo("Không có vật phẩm trên tay hoặc trong túi đồ để cầm cố", false);
     }
 
@@ -46,6 +49,8 @@ public class PawnShop : MonoBehaviour, IInteractable
 
         float earned = SellPrice(item);
         GameWorld.Instance.Economy.Earn(earned);
+        AudioManager.PlayAt("store_bell", transform.position);
+        AudioManager.Play("coin_gain");
         FindFirstObjectByType<HudView>()?.ShowInfo($"Đã bán {item.displayName} (+$ {earned:0.##})", true);
         return true;
     }

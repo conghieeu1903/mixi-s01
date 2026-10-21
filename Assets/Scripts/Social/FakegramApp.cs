@@ -37,6 +37,8 @@ public class FakegramApp : PcApp
     {
         string text = string.IsNullOrEmpty(caption) ? "Chuẩn bị lên sóng tối nay nhé anh em!" : caption;
         posts.Insert(0, $"@ban_streamer: {text} (❤️ Vừa xong)");
+        AudioManager.Play("phone_shutter");
+        AudioManager.PlayUi("ui_success");
         if (GameWorld.HasInstance)
         {
             GameWorld.Instance.Mood.Change(3f);

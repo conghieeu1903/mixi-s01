@@ -47,6 +47,7 @@ public class DiscatApp : PcApp
     public void DailyCheck()
     {
         EnsureDefaultContacts();
+        AudioManager.PlayUi("ui_notification");
         lastOutcome = "Có tin nhắn mới trong hộp thư Discat hôm nay!";
     }
 
@@ -55,6 +56,7 @@ public class DiscatApp : PcApp
     {
         if (!GameWorld.HasInstance) return;
         GameWorld gw = GameWorld.Instance;
+        AudioManager.Play("typing_key");
 
         switch (type)
         {

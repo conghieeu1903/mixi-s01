@@ -13,6 +13,8 @@ public class GtuLottery
         LastPrize = Random.Range(20, 80);
         if (GameWorld.HasInstance)
             GameWorld.Instance.Economy.Earn(LastPrize);
+        AudioManager.Play("drop_gems");
+        AudioManager.Play("coin_gain");
         return LastPrize;
     }
 

@@ -36,21 +36,26 @@ public class BlackjackGame : MonoBehaviour, IInteractable
     public void IncreaseBet(float step = 50f)
     {
         Bet = Mathf.Clamp(Bet + step, MinBet, MaxBet);
+        AudioManager.PlayAt("chip_bet", transform.position);
     }
 
     public void DecreaseBet(float step = 50f)
     {
         Bet = Mathf.Clamp(Bet - step, MinBet, MaxBet);
+        AudioManager.PlayAt("chip_bet", transform.position);
     }
 
     public void Deal()
     {
         if (!GameWorld.HasInstance || !GameWorld.Instance.Economy.TrySpend(Bet))
         {
+            AudioManager.PlayUi("purchase_fail");
             FindFirstObjectByType<HudView>()?.ShowInfo("Không đủ tiền đặt cược Blackjack", false);
             return;
         }
 
+        AudioManager.PlayAt("chip_bet", transform.position);
+        AudioManager.PlayAt("card_deal", transform.position);
         activeBet = Bet;
         LastPayout = 0f;
         PlayerTotal = Random.Range(12, 21);
@@ -64,11 +69,13 @@ public class BlackjackGame : MonoBehaviour, IInteractable
     public void Hit()
     {
         if (!InRound) return;
+        AudioManager.PlayAt("card_deal", transform.position);
         int card = Random.Range(2, 11);
         PlayerTotal += card;
         if (PlayerTotal > 21)
         {
             InRound = false;
+            AudioManager.PlayUi("ui_error");
             FindFirstObjectByType<HudView>()?.ShowInfo($"Blackjack: Quắc ({PlayerTotal} điểm)! Thua $ {activeBet:0}", false);
         }
     }
@@ -86,6 +93,8 @@ public class BlackjackGame : MonoBehaviour, IInteractable
             LastPayout = activeBet * 2f;
             if (GameWorld.HasInstance)
                 GameWorld.Instance.Economy.Earn(LastPayout);
+            AudioManager.PlayAt("slot_win", transform.position);
+            AudioManager.Play("coin_gain");
             FindFirstObjectByType<HudView>()?.ShowInfo($"Blackjack thắng! ({PlayerTotal} vs {DealerTotal}) +$ {LastPayout:0}", true);
         }
         else if (PlayerTotal == DealerTotal)
@@ -93,10 +102,12 @@ public class BlackjackGame : MonoBehaviour, IInteractable
             LastPayout = activeBet;
             if (GameWorld.HasInstance)
                 GameWorld.Instance.Economy.Earn(LastPayout);
+            AudioManager.PlayUi("ui_notification");
             FindFirstObjectByType<HudView>()?.ShowInfo($"Blackjack hòa! ({PlayerTotal} vs {DealerTotal}) Hoàn cược $ {LastPayout:0}", true);
         }
         else
         {
+            AudioManager.PlayUi("ui_error");
             FindFirstObjectByType<HudView>()?.ShowInfo($"Blackjack thua ({PlayerTotal} vs {DealerTotal})", false);
         }
     }
@@ -105,7 +116,10 @@ public class BlackjackGame : MonoBehaviour, IInteractable
     {
         if (!InRound) return;
         if (GameWorld.HasInstance && GameWorld.Instance.Economy.TrySpend(activeBet))
+        {
             activeBet *= 2f;
+            AudioManager.PlayAt("chip_bet", transform.position);
+        }
         Hit();
         if (InRound)
             Stand();

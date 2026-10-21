@@ -15,8 +15,12 @@ public class ScratchCard : MonoBehaviour
     public void Buy()
     {
         if (!GameWorld.HasInstance || !GameWorld.Instance.Economy.TrySpend(price))
+        {
+            AudioManager.PlayUi("purchase_fail");
             return;
+        }
 
+        AudioManager.Play("purchase");
         HasActiveCard = true;
         LastPrize = 0f;
         for (int i = 0; i < Cells.Length; i++)
@@ -31,6 +35,7 @@ public class ScratchCard : MonoBehaviour
         if (!HasActiveCard) Buy();
         if (!HasActiveCard || cellIndex < 0 || cellIndex >= Cells.Length) return;
 
+        AudioManager.Play("scratch_card");
         Revealed[cellIndex] = true;
 
         bool allRevealed = true;
@@ -50,6 +55,7 @@ public class ScratchCard : MonoBehaviour
     public float RevealAll()
     {
         if (!HasActiveCard) Buy();
+        AudioManager.Play("scratch_card");
         for (int i = 0; i < Cells.Length; i++)
             Revealed[i] = true;
         EvaluateCard();
@@ -74,6 +80,14 @@ public class ScratchCard : MonoBehaviour
         }
 
         if (LastPrize > 0f && GameWorld.HasInstance)
+        {
             GameWorld.Instance.Economy.Earn(LastPrize);
+            AudioManager.Play("slot_win");
+            AudioManager.Play("drop_gems");
+        }
+        else
+        {
+            AudioManager.PlayUi("ui_cancel");
+        }
     }
 }

@@ -1,70 +1,51 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-// Overlay khi đang stream: viewer, follower, thời lượng, thu nhập, popup donate, thẻ và minigame
+// Bộ điều phối phiên stream ngầm: cập nhật viewer, follower, thời lượng, thu nhập, chat, donate và chuyển toàn bộ hiển thị vào màn hình Monitor 3D (DesktopOS)
 [RequireComponent(typeof(UIDocument))]
 public class StreamOverlayView : MonoBehaviour
 {
-    static readonly string[] DonateMessages = { "Chúc anh stream vui vẻ!", "Mời anh ly cà phê!", "Tiếp tục phát huy nhé!", "Fan cứng ủng hộ kênh!" };
+    static readonly string[] DonateMessages =
+    {
+        "Chúc anh stream vui vẻ!",
+        "Mời anh ly cà phê!",
+        "Tiếp tục phát huy nhé!",
+        "Fan cứng ủng hộ kênh!"
+    };
 
     UIDocument document;
-    ChatView chatView;
     VisualElement rootOverlay;
-    Label viewersLabel;
-    Label followersLabel;
-    Label durationLabel;
-    Label incomeLabel;
-    Label infoLabel;
-    VisualElement donatePopup;
-    Label donateTitle;
-    Label donateMessage;
+    DesktopOS cachedDesktop;
 
     float sessionIncome;
     int startFollowers;
     float chatTimer;
-    Coroutine donateRoutine;
-    ComputerDesk cachedDesk;
 
+    public float SessionIncome => sessionIncome;
+    public int StartFollowers => startFollowers;
+
+    // Khởi tạo tham chiếu UIDocument
     void Awake()
     {
         document = GetComponent<UIDocument>();
-        chatView = GetComponent<ChatView>();
-        if (chatView == null)
-            chatView = gameObject.AddComponent<ChatView>();
     }
 
-    // Đăng ký sự kiện của StreamSystem
+    // Đăng ký sự kiện của StreamSystem và ẩn hoàn toàn lớp overlay 2D rời bên ngoài màn hình
     void OnEnable()
     {
-        if (document == null) document = GetComponent<UIDocument>();
-        if (chatView == null) chatView = GetComponent<ChatView>() ?? gameObject.AddComponent<ChatView>();
-        VisualElement root = document.rootVisualElement;
-        if (root == null) return;
+        if (document == null)
+            document = GetComponent<UIDocument>();
 
-        rootOverlay = root.Q<VisualElement>("streamOverlay") ?? root;
-        rootOverlay.style.backgroundColor = Color.clear;
-        SetPickingIgnoreRecursive(rootOverlay);
+        VisualElement root = document != null ? document.rootVisualElement : null;
+        if (root != null)
+        {
+            rootOverlay = root.Q<VisualElement>("streamOverlay") ?? root;
+            rootOverlay.style.display = DisplayStyle.None;
+            root.style.display = DisplayStyle.None;
+        }
 
-        VisualElement streamView = root.Q<VisualElement>("streamView");
-        if (streamView != null)
-            streamView.style.display = DisplayStyle.None;
-
-        viewersLabel = root.Q<Label>("viewersLabel");
-        followersLabel = root.Q<Label>("followersLabel");
-        durationLabel = root.Q<Label>("durationLabel");
-        incomeLabel = root.Q<Label>("incomeLabel");
-        infoLabel = root.Q<Label>("infoLabel");
-        donatePopup = root.Q<VisualElement>("donatePopup");
-        donateTitle = root.Q<Label>("donateTitle");
-        donateMessage = root.Q<Label>("donateMessage");
-
-        if (donatePopup != null)
-            donatePopup.style.display = DisplayStyle.None;
-
-        EnsureActionToolbar(rootOverlay);
-
+        if (!GameWorld.HasInstance) return;
         StreamSystem stream = GameWorld.Instance.Stream;
         stream.Opened += OnStreamOpened;
         stream.Closed += OnStreamClosed;
@@ -73,11 +54,9 @@ public class StreamOverlayView : MonoBehaviour
 
         if (stream.IsOpen)
             OnStreamOpened();
-        else
-            rootOverlay.style.display = DisplayStyle.None;
     }
 
-    // Hủy đăng ký sự kiện
+    // Hủy đăng ký sự kiện khi tắt đối tượng
     void OnDisable()
     {
         if (GameWorld.HasInstance)
@@ -90,54 +69,14 @@ public class StreamOverlayView : MonoBehaviour
         }
     }
 
-    void EnsureActionToolbar(VisualElement host)
-    {
-        if (host == null || host.Q<VisualElement>("streamActionBar") != null) return;
-
-        VisualElement bar = new VisualElement { name = "streamActionBar" };
-        bar.style.position = Position.Absolute;
-        bar.style.left = 24;
-        bar.style.bottom = 24;
-        bar.style.flexDirection = FlexDirection.Row;
-        bar.pickingMode = PickingMode.Position;
-
-        Button cardBtn = new Button(OpenCards) { text = "Rút thẻ (F1)" };
-        cardBtn.AddToClassList("wf-button");
-        cardBtn.AddToClassList("wf-button--primary");
-        cardBtn.AddToClassList("wf-button--small");
-        cardBtn.style.marginRight = 8;
-        cardBtn.pickingMode = PickingMode.Position;
-
-        Button mgBtn = new Button(StartCategoryMinigame) { text = "Minigame (F2)" };
-        mgBtn.AddToClassList("wf-button");
-        mgBtn.AddToClassList("wf-button--small");
-        mgBtn.pickingMode = PickingMode.Position;
-
-        bar.Add(cardBtn);
-        bar.Add(mgBtn);
-        host.Add(bar);
-    }
-
+    // Đảm bảo lớp UI 2D cũ luôn ẩn để toàn bộ giao diện nằm gọn trong màn hình máy tính 3D
     void LateUpdate()
     {
-        if (rootOverlay == null || !GameWorld.HasInstance || !GameWorld.Instance.Stream.IsOpen) return;
-        if (cachedDesk == null)
-            cachedDesk = FindFirstObjectByType<ComputerDesk>();
-
-        if (cachedDesk != null && cachedDesk.IsOccupied)
-        {
-            cachedDesk.FitElementToMonitorScreen(rootOverlay);
-        }
-        else
-        {
-            rootOverlay.style.position = Position.Absolute;
-            rootOverlay.style.left = Length.Percent(0f);
-            rootOverlay.style.top = Length.Percent(0f);
-            rootOverlay.style.width = Length.Percent(100f);
-            rootOverlay.style.height = Length.Percent(100f);
-        }
+        if (rootOverlay != null && rootOverlay.style.display != DisplayStyle.None)
+            rootOverlay.style.display = DisplayStyle.None;
     }
 
+    // Xử lý phím tắt F1/F2 và sinh tin nhắn chat định kỳ đẩy vào cửa sổ OBS Studio trên màn hình máy tính
     void Update()
     {
         if (!GameWorld.HasInstance || !GameWorld.Instance.Stream.IsOpen) return;
@@ -157,18 +96,28 @@ public class StreamOverlayView : MonoBehaviour
             chatTimer = 0f;
             ChatMessage msg = GameWorld.Instance.Chat.PostRandomMessage(GameWorld.Instance.Stream.Category);
             GameWorld.Instance.Moderation.Track(msg);
-            chatView?.Append(msg);
+            EnsureDesktop()?.AppendStreamChat(msg);
         }
     }
 
+    // Tìm và lưu tham chiếu DesktopOS
+    DesktopOS EnsureDesktop()
+    {
+        if (cachedDesktop == null)
+            cachedDesktop = FindFirstObjectByType<DesktopOS>();
+        return cachedDesktop;
+    }
+
+    // Mở bảng chọn thẻ hành động ngay bên trong cửa sổ OBS Studio trên màn hình máy tính
     public void OpenCards()
     {
         if (!GameWorld.HasInstance || !GameWorld.Instance.Stream.IsOpen) return;
-        StreamCardView cardView = FindFirstObjectByType<StreamCardView>();
-        if (cardView != null)
-            cardView.ShowCards(GameWorld.Instance.Cards.Draw(3));
+        DesktopOS desktop = EnsureDesktop();
+        if (desktop != null)
+            desktop.ShowStreamCardsInMonitor(GameWorld.Instance.Cards.Draw(3));
     }
 
+    // Mở minigame tương ứng với chủ đề đang stream ngay bên trong cửa sổ OBS Studio trên màn hình máy tính
     public void StartCategoryMinigame()
     {
         if (!GameWorld.HasInstance || !GameWorld.Instance.Stream.IsOpen) return;
@@ -181,84 +130,57 @@ public class StreamOverlayView : MonoBehaviour
         if (mg == null)
             mg = FindFirstObjectByType<JustChattingGame>();
 
-        StreamCardView cardView = FindFirstObjectByType<StreamCardView>();
-        if (cardView != null && mg != null)
-            cardView.ShowMinigame(mg);
+        DesktopOS desktop = EnsureDesktop();
+        if (desktop != null && mg != null)
+            desktop.ShowStreamMinigameInMonitor(mg);
     }
 
-    void SetPickingIgnoreRecursive(VisualElement element)
-    {
-        if (element == null) return;
-        element.pickingMode = PickingMode.Ignore;
-        foreach (VisualElement child in element.Children())
-            SetPickingIgnoreRecursive(child);
-    }
-
+    // Khởi tạo phiên stream mới và thông báo lên kênh chat trong OBS Studio
     void OnStreamOpened()
     {
+        if (!GameWorld.HasInstance) return;
         StreamSystem stream = GameWorld.Instance.Stream;
         sessionIncome = 0f;
         startFollowers = stream.Followers;
         chatTimer = 0f;
 
-        chatView?.Clear();
-        if (donatePopup != null)
-            donatePopup.style.display = DisplayStyle.None;
         if (rootOverlay != null)
-            rootOverlay.style.display = DisplayStyle.Flex;
+            rootOverlay.style.display = DisplayStyle.None;
 
-        chatView?.Append(new ChatMessage
+        DesktopOS desktop = EnsureDesktop();
+        if (desktop != null)
         {
-            user = "Hệ thống",
-            text = "Buổi stream đã bắt đầu! Nhấn F1 rút thẻ, F2 chơi minigame.",
-            isToxic = false
-        });
+            desktop.OnStreamSessionOpened();
+            desktop.AppendStreamChat(new ChatMessage
+            {
+                user = "Hệ thống",
+                text = "Buổi stream đã bắt đầu! Nhấn F1 rút thẻ, F2 chơi minigame.",
+                isToxic = false
+            });
+        }
         RefreshStats();
     }
 
+    // Kết thúc phiên stream và ẩn các cảnh báo trên OBS Studio
     void OnStreamClosed(StreamRecord record)
     {
-        if (donateRoutine != null)
-        {
-            StopCoroutine(donateRoutine);
-            donateRoutine = null;
-        }
-        if (donatePopup != null)
-            donatePopup.style.display = DisplayStyle.None;
         if (rootOverlay != null)
             rootOverlay.style.display = DisplayStyle.None;
+
+        DesktopOS desktop = EnsureDesktop();
+        if (desktop != null)
+            desktop.OnStreamSessionClosed();
     }
 
-    // Cập nhật các chỉ số stream
+    // Đồng bộ thống kê buổi stream sang cửa sổ OBS Studio trên màn hình máy tính
     void RefreshStats()
     {
-        if (!GameWorld.HasInstance) return;
-        StreamSystem stream = GameWorld.Instance.Stream;
-
-        if (viewersLabel != null)
-            viewersLabel.text = stream.Viewers.ToString("N0");
-
-        if (followersLabel != null)
-        {
-            int gained = Mathf.Max(0, stream.Followers - startFollowers);
-            followersLabel.text = gained > 0 ? $"{stream.Followers:N0} (+{gained})" : stream.Followers.ToString("N0");
-        }
-
-        if (durationLabel != null)
-        {
-            int hours = stream.StreamMinutes / 60;
-            int mins = stream.StreamMinutes % 60;
-            durationLabel.text = $"{hours:00}:{mins:00}:00";
-        }
-
-        if (incomeLabel != null)
-            incomeLabel.text = $"$ {sessionIncome:0.##}";
-
-        if (infoLabel != null)
-            infoLabel.text = $"Chủ đề: {stream.Category} · Sub: {stream.Subs:N0} · Giới hạn viewer: {stream.ViewerLimit:N0}";
+        DesktopOS desktop = EnsureDesktop();
+        if (desktop != null)
+            desktop.RefreshObsStreamStats(sessionIncome, startFollowers);
     }
 
-    // Hiện popup donate
+    // Xử lý khi có khán giả donate và hiển thị banner donate ngay trong màn hình máy tính
     void ShowDonate(float amount)
     {
         sessionIncome += amount;
@@ -267,32 +189,17 @@ public class StreamOverlayView : MonoBehaviour
         string donor = "fan_mixi";
         string message = DonateMessages[Random.Range(0, DonateMessages.Length)];
 
-        chatView?.Append(new ChatMessage
+        DesktopOS desktop = EnsureDesktop();
+        if (desktop != null)
         {
-            user = donor,
-            text = $"donate $ {amount:0.##} — {message}",
-            donate = amount,
-            isToxic = false
-        });
-
-        if (donateTitle != null)
-            donateTitle.text = $"{donor} donate ${amount:0.##}";
-        if (donateMessage != null)
-            donateMessage.text = $"\"{message}\"";
-
-        if (donatePopup != null)
-        {
-            if (donateRoutine != null)
-                StopCoroutine(donateRoutine);
-            donateRoutine = StartCoroutine(ShowDonateRoutine());
+            desktop.AppendStreamChat(new ChatMessage
+            {
+                user = donor,
+                text = $"donate $ {amount:0.##} — {message}",
+                donate = amount,
+                isToxic = false
+            });
+            desktop.ShowInMonitorDonateAlert(donor, amount, message);
         }
-    }
-
-    IEnumerator ShowDonateRoutine()
-    {
-        donatePopup.style.display = DisplayStyle.Flex;
-        yield return new WaitForSeconds(3.5f);
-        donatePopup.style.display = DisplayStyle.None;
-        donateRoutine = null;
     }
 }

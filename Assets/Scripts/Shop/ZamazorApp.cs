@@ -289,6 +289,7 @@ public class ZamazorApp : PcApp
     {
         if (item == null) return;
         Cart.Add(item);
+        AudioManager.PlayUi("ui_select");
         if (statusLabel != null)
             statusLabel.text = $"✓ Đã thêm [{item.displayName}] vào giỏ hàng.";
         RefreshHeaderAndCart();
@@ -297,6 +298,7 @@ public class ZamazorApp : PcApp
     public void ClearCart()
     {
         Cart.Clear();
+        AudioManager.PlayUi("ui_cancel");
         RefreshHeaderAndCart();
     }
 
@@ -309,12 +311,14 @@ public class ZamazorApp : PcApp
         {
             int count = Cart.Count;
             Cart.Clear();
+            AudioManager.Play("purchase");
             if (statusLabel != null)
                 statusLabel.text = $"✓ Đã đặt {count} món! Shipper đang giao thùng hàng tới trước cửa phòng.";
             FindFirstObjectByType<HudView>()?.ShowInfo($"Đã đặt {count} món trên Zamazor", true);
         }
         else
         {
+            AudioManager.PlayUi("purchase_fail");
             if (statusLabel != null)
                 statusLabel.text = "⚠ Không đủ số dư trong ví để thanh toán giỏ hàng!";
             FindFirstObjectByType<HudView>()?.ShowInfo("Không đủ tiền đặt hàng!", false);

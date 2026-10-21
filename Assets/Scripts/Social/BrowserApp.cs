@@ -24,6 +24,7 @@ public class BrowserApp : PcApp
     public void Navigate(string url)
     {
         if (string.IsNullOrEmpty(url)) return;
+        AudioManager.PlayUi("ui_tab");
         if (historyIndex < history.Count - 1)
             history.RemoveRange(historyIndex + 1, history.Count - historyIndex - 1);
         history.Add(url);
@@ -37,6 +38,7 @@ public class BrowserApp : PcApp
         if (historyIndex > 0)
         {
             historyIndex--;
+            AudioManager.PlayUi("ui_tab");
             if (activeContent != null)
                 BuildWindowContent(activeContent);
         }
@@ -47,6 +49,7 @@ public class BrowserApp : PcApp
         if (historyIndex < history.Count - 1)
         {
             historyIndex++;
+            AudioManager.PlayUi("ui_tab");
             if (activeContent != null)
                 BuildWindowContent(activeContent);
         }

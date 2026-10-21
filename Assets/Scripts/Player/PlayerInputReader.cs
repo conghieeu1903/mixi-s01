@@ -90,11 +90,13 @@ public class PlayerInputReader : MonoBehaviour
         ApplyCursor();
     }
 
-    // Khóa chuột khi chơi, hiện chuột khi có UI
+    // Khóa chuột khi chơi, hiện chuột khi có UI (riêng màn hình PC dùng con trỏ ảo riêng nên ẩn chuột hệ thống)
     void ApplyCursor()
     {
         if (!lockCursor) return;
+        DesktopOS desktop = FindFirstObjectByType<DesktopOS>();
+        bool pcActive = desktop != null && desktop.IsOpen;
         Cursor.lockState = IsFrozen ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = IsFrozen;
+        Cursor.visible = IsFrozen && !pcActive;
     }
 }

@@ -50,11 +50,13 @@ public class DialogueSystem : MonoBehaviour
         if (next >= 0 && CurrentDialogue != null && next < CurrentDialogue.lines.Count)
         {
             CurrentLineIndex = next;
+            AudioManager.Play("npc_agree");
             FindFirstObjectByType<DialogueView>()?.ShowLine(CurrentLine);
             LineShown?.Invoke(CurrentLine);
         }
         else
         {
+            AudioManager.Play("npc_joy");
             End();
         }
     }

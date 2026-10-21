@@ -48,6 +48,7 @@ public class JustChattingGame : StreamMinigame
         if (!IsPlaying) Begin();
         bool correct = CurrentQuestion != null && index == CurrentQuestion.correctIndex;
         int bonus = correct ? 6 : 2;
+        AudioManager.Play(correct ? "chat_completed" : "ui_error");
         if (GameWorld.HasInstance)
             GameWorld.Instance.Mood.Change(correct ? 3f : 0.5f);
         CompleteWithBonus(bonus);

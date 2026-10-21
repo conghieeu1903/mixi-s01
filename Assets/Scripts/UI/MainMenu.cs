@@ -61,7 +61,16 @@ public class MainMenu : MonoBehaviour
         if (exitButton != null)
             exitButton.clicked += Quit;
 
+        root.RegisterCallback<ClickEvent>(OnMenuClick, TrickleDown.TrickleDown);
+
         RefreshSaveState();
+    }
+
+    // Âm click cho mọi nút ở Main Menu
+    static void OnMenuClick(ClickEvent evt)
+    {
+        if (evt.target is VisualElement element && (element is Button || element.GetFirstAncestorOfType<Button>() != null))
+            AudioManager.PlayUi("ui_click");
     }
 
     // Cập nhật trạng thái nút Continue và thông tin bản lưu

@@ -34,6 +34,8 @@ public class VehicleController : MonoBehaviour, IInteractable
     Transform handlebar;
     Quaternion handlebarBaseRot;
     bool isTwoWheeler;
+    bool isBicycle;
+    bool isMotorbike;
 
     float currentSpeed;
     float smoothedSteer;
@@ -44,6 +46,8 @@ public class VehicleController : MonoBehaviour, IInteractable
     float smoothedAccel;
     Vector3 cameraInertiaOffset;
     float roadRumbleTimer;
+    float engineAudioTimer;
+    float brakeAudioCooldown;
     float baseFov = 70f;
 
     void Awake()
@@ -76,7 +80,9 @@ public class VehicleController : MonoBehaviour, IInteractable
             }
         }
 
-        isTwoWheeler = wheels.Count <= 2 || name.Contains("Motorbike") || name.Contains("Bicycle");
+        isBicycle = name.IndexOf("Bicycle", System.StringComparison.OrdinalIgnoreCase) >= 0;
+        isMotorbike = name.IndexOf("Motor", System.StringComparison.OrdinalIgnoreCase) >= 0;
+        isTwoWheeler = wheels.Count <= 2 || isMotorbike || isBicycle;
     }
 
     public bool CanInteract(PlayerInteractor interactor)
@@ -114,6 +120,21 @@ public class VehicleController : MonoBehaviour, IInteractable
         currentYaw = transform.eulerAngles.y;
         IsDriven = true;
         SnapDriverToSeat();
+        if (isBicycle)
+        {
+            AudioManager.PlayAt("bicycle_bell", transform.position);
+        }
+        else if (isMotorbike)
+        {
+            AudioManager.PlayAt("motorbike_start", transform.position);
+        }
+        else
+        {
+            AudioManager.PlayAt("car_door_open", transform.position);
+            AudioManager.PlayAt("car_start", transform.position);
+        }
+        AudioManager.Instance.PlayMusic(isBicycle ? "bgm_downtown" : "bgm_race");
+
         if (driverLook != null)
         {
             driverLook.SetRotation(currentYaw, 4f);
@@ -124,7 +145,7 @@ public class VehicleController : MonoBehaviour, IInteractable
             driverMotor.transform.rotation = Quaternion.Euler(0f, currentYaw, 0f);
         }
 
-        FindFirstObjectByType<HudView>()?.ShowInfo("Đang lái xe (WASD lái, Space phanh tay, F xuống xe)", true);
+        FindFirstObjectByType<HudView>()?.ShowInfo("Đang lái xe (WASD lái, Space phanh tay, H còi, F xuống xe)", true);
     }
 
     void Update()
@@ -150,12 +171,50 @@ public class VehicleController : MonoBehaviour, IInteractable
             if (kb.dKey.isPressed || kb.rightArrowKey.isPressed) steerInput += 1f;
             if (kb.aKey.isPressed || kb.leftArrowKey.isPressed) steerInput -= 1f;
             handbrake = kb.spaceKey.isPressed;
+
+            if (kb.hKey.wasPressedThisFrame)
+                AudioManager.PlayAt(isBicycle ? "bicycle_bell" : "car_horn", transform.position);
         }
 
         SimulateVehiclePhysics(dt, throttleInput, steerInput, handbrake);
+        UpdateDrivingAudio(dt, handbrake);
 
         if (IsDriven)
             SnapDriverToSeat();
+    }
+
+    // Phát tiếng động cơ hoặc bàn đạp xe và tiếng phanh theo tốc độ thực tế
+    void UpdateDrivingAudio(float dt, bool handbrake)
+    {
+        if (!IsDriven) return;
+
+        if (brakeAudioCooldown > 0f)
+            brakeAudioCooldown -= dt;
+
+        float absSpeed = Mathf.Abs(currentSpeed);
+        if (handbrake && absSpeed > 2.2f && brakeAudioCooldown <= 0f)
+        {
+            brakeAudioCooldown = 0.45f;
+            AudioManager.PlayAt(isBicycle ? "bicycle_pedal" : "car_brake", transform.position);
+        }
+
+        if (absSpeed < 0.35f) return;
+
+        engineAudioTimer -= dt;
+        if (engineAudioTimer <= 0f)
+        {
+            float speedRatio = Mathf.Clamp01(absSpeed / Mathf.Max(1f, maxSpeed));
+            if (isBicycle)
+            {
+                engineAudioTimer = Mathf.Lerp(0.48f, 0.24f, speedRatio);
+                AudioManager.PlayAt("bicycle_pedal", transform.position, Mathf.Lerp(0.9f, 1.25f, speedRatio));
+            }
+            else
+            {
+                engineAudioTimer = Mathf.Lerp(0.52f, 0.28f, speedRatio);
+                AudioManager.PlayAt("car_engine_idle", transform.position, Mathf.Lerp(0.85f, 1.45f, speedRatio));
+            }
+        }
     }
 
     void SimulateVehiclePhysics(float dt, float throttleInput, float steerInput, bool handbrake)
@@ -341,6 +400,9 @@ public class VehicleController : MonoBehaviour, IInteractable
         driverLook = null;
         driverCamera = null;
         driverCc = null;
+        if (!isTwoWheeler)
+            AudioManager.PlayAt("car_door_close", transform.position);
+        AudioManager.Instance.PlayMusic("bgm_downtown");
         FindFirstObjectByType<HudView>()?.ShowInfo("Đã xuống xe", true);
     }
 }

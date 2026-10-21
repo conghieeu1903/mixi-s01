@@ -14,12 +14,15 @@ public class BarberShop : MonoBehaviour, IInteractable
 
     public void Interact(PlayerInteractor interactor)
     {
-        if (!GameWorld.HasInstance || !GameWorld.HasInstance || !GameWorld.Instance.Economy.TrySpend(price))
+        if (!GameWorld.HasInstance || !GameWorld.Instance.Economy.TrySpend(price))
         {
+            AudioManager.PlayUi("purchase_fail");
             FindFirstObjectByType<HudView>()?.ShowInfo($"Không đủ $ {price:0} để cắt tóc", false);
             return;
         }
 
+        AudioManager.PlayAt("store_bell", transform.position);
+        AudioManager.Play("clean_shine");
         AppearanceSystem app = FindFirstObjectByType<AppearanceSystem>();
         if (app != null)
         {

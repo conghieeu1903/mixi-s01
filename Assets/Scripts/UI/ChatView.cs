@@ -63,6 +63,7 @@ public class ChatView : MonoBehaviour
         {
             Button banBtn = new Button(() =>
             {
+                AudioManager.PlayUi("ui_cancel");
                 if (GameWorld.HasInstance)
                     GameWorld.Instance.Moderation.Ban(message.user);
                 line.RemoveFromHierarchy();

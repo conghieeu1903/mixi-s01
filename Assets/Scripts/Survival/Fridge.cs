@@ -32,6 +32,7 @@ public class Fridge : MonoBehaviour, IInteractable
 
     public void Interact(PlayerInteractor interactor)
     {
+        AudioManager.PlayAt("fridge_open", transform.position);
         PlayDoorSwing();
 
         ItemCarrier carrier = interactor != null ? interactor.GetComponent<ItemCarrier>() : null;
@@ -83,6 +84,7 @@ public class Fridge : MonoBehaviour, IInteractable
 
         doorHinge.localRotation = openRot;
         yield return new WaitForSeconds(0.32f);
+        AudioManager.PlayAt("fridge_close", transform.position);
 
         elapsed = 0f;
         const float closeDur = 0.24f;

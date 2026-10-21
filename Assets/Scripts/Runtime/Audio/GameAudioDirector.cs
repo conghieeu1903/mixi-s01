@@ -19,19 +19,18 @@ public class GameAudioDirector : MonoBehaviour
         "donate_oof", "donate_sus", "donate_usb", "donate_winerror", "donate_woof"
     };
 
-    static bool outdoors;
+    const float AreaCheckSeconds = 0.5f; // Chu kỳ kiểm tra người chơi ở trong nhà hay ngoài phố
+
+    bool outdoors;
+    bool inCasinoArea;
+    float areaTimer;
+    Transform door;
+    Transform player;
+    Transform casinoAnchor;
 
     GameWorld subscribedWorld;
     float lastMoney;
     int lastSkillPoints;
-
-    // Người chơi ra khỏi nhà hoặc vào nhà, đổi nhạc và âm môi trường tương ứng
-    public static void SetOutdoors(bool isOutdoors)
-    {
-        outdoors = isOutdoors;
-        if (AudioManager.HasInstance)
-            AudioManager.Instance.GetComponent<GameAudioDirector>()?.ApplyGameplayAudio();
-    }
 
     void OnEnable()
     {
@@ -54,6 +53,23 @@ public class GameAudioDirector : MonoBehaviour
     {
         if (subscribedWorld == null && GameWorld.HasInstance)
             Subscribe(GameWorld.Instance);
+
+        areaTimer += Time.unscaledDeltaTime;
+        if (areaTimer < AreaCheckSeconds) return;
+        areaTimer = 0f;
+        CheckArea();
+    }
+
+    // Người chơi đi qua cửa nhà (phía +Z của cửa) là ra ngoài phố, hoặc vào khu Casino thì đổi nhạc và âm môi trường
+    void CheckArea()
+    {
+        if (door == null || player == null) return;
+        bool isOutdoors = player.position.z > door.position.z + 0.3f;
+        bool nearCasino = isOutdoors && casinoAnchor != null && (player.position - casinoAnchor.position).sqrMagnitude < 18f * 18f;
+        if (isOutdoors == outdoors && nearCasino == inCasinoArea) return;
+        outdoors = isOutdoors;
+        inCasinoArea = nearCasino;
+        ApplyGameplayAudio();
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -74,6 +90,15 @@ public class GameAudioDirector : MonoBehaviour
         }
         if (scene.name.Contains("Loading")) return;
 
+        door = FindFirstObjectByType<Door>()?.transform;
+        CasinoSlotMachine slot = FindFirstObjectByType<CasinoSlotMachine>();
+        casinoAnchor = slot != null ? slot.transform : null;
+        PlayerMotor motor = FindFirstObjectByType<PlayerMotor>();
+        player = motor != null ? motor.transform : null;
+        outdoors = false;
+        inCasinoArea = false;
+        CheckArea();
+
         AddFootsteps();
         ApplyGameplayAudio();
     }
@@ -86,8 +111,8 @@ public class GameAudioDirector : MonoBehaviour
 
         if (outdoors)
         {
-            audio.PlayMusic(StreetMusic);
-            audio.PlayAmbience(StreetAmbience);
+            audio.PlayMusic(inCasinoArea ? "bgm_casino" : StreetMusic);
+            audio.PlayAmbience(inCasinoArea ? "amb_casino" : StreetAmbience);
             return;
         }
 

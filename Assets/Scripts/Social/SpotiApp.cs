@@ -25,7 +25,6 @@ public class SpotiApp : PcApp
 
     public override string AppName => "Spoti";
 
-    AudioSource audioSource;
     public int CurrentTrackIndex { get; private set; } = -1;
     public bool IsPlaying { get; private set; }
 
@@ -36,14 +35,6 @@ public class SpotiApp : PcApp
         {
             var field = typeof(PcApp).GetField("appName", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             field?.SetValue(this, "Spoti");
-        }
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-        {
-            audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.playOnAwake = false;
-            audioSource.loop = true;
-            audioSource.volume = 0.35f;
         }
         EnsureDefaultSongsLoaded();
     }
@@ -65,12 +56,8 @@ public class SpotiApp : PcApp
         EnsureDefaultSongsLoaded();
         CurrentTrackIndex = Mathf.Clamp(index, 0, DefaultTrackNames.Length - 1);
         IsPlaying = true;
-        AudioManager.Play("ui_click");
-        if (songs != null && CurrentTrackIndex < songs.Count && songs[CurrentTrackIndex] != null && audioSource != null)
-        {
-            audioSource.clip = songs[CurrentTrackIndex];
-            audioSource.Play();
-        }
+        // Phát qua AudioManager để nhạc đi qua mixer BGM và thay chỗ nhạc nền thay vì phát chồng
+        AudioManager.Instance.PlayPlayerMusic(DefaultTrackClipIds[CurrentTrackIndex]);
         if (GameWorld.HasInstance)
             GameWorld.Instance.Mood.Change(2f);
     }
@@ -79,9 +66,7 @@ public class SpotiApp : PcApp
     public void Stop()
     {
         IsPlaying = false;
-        AudioManager.Play("ui_click");
-        if (audioSource != null && audioSource.isPlaying)
-            audioSource.Stop();
+        AudioManager.Instance.StopPlayerMusic();
     }
 
     public override void BuildWindowContent(VisualElement content)

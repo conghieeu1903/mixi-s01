@@ -34,6 +34,7 @@ public class AsmrGame : StreamMinigame
     {
         if (index < 0 || index >= Values.Count) return;
         Values[index] = Mathf.Clamp(value, 0f, 100f);
+        AudioManager.PlayUi("ui_hover");
     }
 
     // Khớp toàn bộ slider tới mục tiêu và tính thưởng viewer
@@ -46,6 +47,7 @@ public class AsmrGame : StreamMinigame
 
         float avgError = Targets.Count > 0 ? totalError / Targets.Count : 0f;
         int bonus = avgError <= 10f ? 6 : avgError <= 25f ? 4 : 3;
+        AudioManager.Play("asmr_completed");
         CompleteWithBonus(bonus);
     }
 }

@@ -134,6 +134,7 @@ public class Pet : MonoBehaviour, IInteractable
         if (GameWorld.HasInstance)
             GameWorld.Instance.Mood.Change(4f);
 
+        PlayPetVoice();
         PlayHappyJump();
         FindFirstObjectByType<HudView>()?.ShowInfo($"Đã vuốt ve {petName}! (+4 Mood, +Viewer khi stream)", true);
     }
@@ -144,7 +145,17 @@ public class Pet : MonoBehaviour, IInteractable
         Happiness = 100f;
         if (GameWorld.HasInstance)
             GameWorld.Instance.Mood.Change(3f);
+        PlayPetVoice();
+        AudioManager.Play("taming_success");
         PlayHappyJump();
+    }
+
+    // Phát tiếng kêu theo loài thú cưng (chó hoặc mèo) tại vị trí đứng
+    void PlayPetVoice()
+    {
+        bool isDog = petName.IndexOf("Chó", System.StringComparison.OrdinalIgnoreCase) >= 0
+                  || name.IndexOf("Dog", System.StringComparison.OrdinalIgnoreCase) >= 0;
+        AudioManager.PlayAt(isDog ? "dog_bark" : "cat_meow", transform.position);
     }
 
     void PlayHappyJump()

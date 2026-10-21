@@ -35,6 +35,12 @@ public class SettingsMenu : UIPanel
         fullscreenToggle = Root.Q<Toggle>("fullscreenToggle");
         qualityField = Root.Q<DropdownField>("qualityField");
 
+        masterSlider?.RegisterValueChangedCallback(_ => PreviewVolumes());
+        musicSlider?.RegisterValueChangedCallback(_ => PreviewVolumes());
+        sfxSlider?.RegisterValueChangedCallback(_ => PreviewVolumes());
+        invertYToggle?.RegisterValueChangedCallback(evt => AudioManager.PlayUi(evt.newValue ? "ui_toggle_on" : "ui_toggle_off"));
+        fullscreenToggle?.RegisterValueChangedCallback(evt => AudioManager.PlayUi(evt.newValue ? "ui_toggle_on" : "ui_toggle_off"));
+
         Button defaultBtn = Root.Q<Button>("defaultButton");
         if (defaultBtn != null)
             defaultBtn.clicked += ResetToDefault;
@@ -86,6 +92,16 @@ public class SettingsMenu : UIPanel
         if (invertYToggle != null) invertYToggle.SetValueWithoutNotify(current.invertY);
         if (fullscreenToggle != null) fullscreenToggle.SetValueWithoutNotify(current.fullscreen);
         if (qualityField != null) qualityField.index = Mathf.Clamp(current.qualityLevel, 0, 3);
+    }
+
+    // Áp dụng nhanh âm lượng ngay khi kéo thanh trượt trong màn Settings
+    void PreviewVolumes()
+    {
+        if (!AudioManager.HasInstance) return;
+        float master = masterSlider != null ? masterSlider.value / 100f : 0.8f;
+        float music = musicSlider != null ? musicSlider.value / 100f : 0.6f;
+        float sfx = sfxSlider != null ? sfxSlider.value / 100f : 0.7f;
+        AudioManager.Instance.SetVolumes(master, music, sfx);
     }
 
     // Áp dụng và lưu cài đặt

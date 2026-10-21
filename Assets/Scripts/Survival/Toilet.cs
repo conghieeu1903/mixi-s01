@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-// Toilet: mở nắp bồn cầu, lia camera xuống ngồi vệ sinh, nhấn nút xả nước rồi đóng nắp
+// Toilet: mở nắp bồn cầu, nhấn nút xả nước rồi đóng nắp khi người chơi bấm E
 public class Toilet : MonoBehaviour, IInteractable
 {
     public string Prompt => "Đi vệ sinh";
@@ -42,16 +42,6 @@ public class Toilet : MonoBehaviour, IInteractable
                 StopCoroutine(lidRoutine);
             lidRoutine = StartCoroutine(ToiletLidAndFlushRoutine());
         }
-
-        PlayerLook look = interactor != null
-            ? interactor.GetComponent<PlayerLook>()
-            : FindFirstObjectByType<PlayerLook>();
-        if (look != null)
-        {
-            Vector3 sitPos = transform.TransformPoint(new Vector3(0f, 1.05f, 0.12f));
-            Quaternion sitRot = Quaternion.Euler(6f, transform.eulerAngles.y, 0f);
-            look.PlayPoseTransition(sitPos, sitRot, 0.4f, 0.25f, 0.4f);
-        }
     }
 
     IEnumerator ToiletLidAndFlushRoutine()
@@ -77,6 +67,7 @@ public class Toilet : MonoBehaviour, IInteractable
         yield return new WaitForSeconds(0.42f);
 
         // Nhấn nút xả nước trên két bồn cầu trước khi đóng nắp
+        AudioManager.PlayAt("toilet_flush", transform.position);
         if (flushButton != null)
         {
             flushButton.localPosition = flushRestPos + new Vector3(0f, -0.008f, 0f);

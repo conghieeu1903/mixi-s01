@@ -51,6 +51,7 @@ public class NpcTalker : MonoBehaviour, IInteractable
     public void Interact(PlayerInteractor interactor)
     {
         EnsureDefaultDialogue();
+        AudioManager.PlayAt(Random.value < 0.5f ? "npc_greet_01" : "npc_greet_02", transform.position);
         if (GameWorld.HasInstance)
             GameWorld.Instance.Mood.Change(3f);
 

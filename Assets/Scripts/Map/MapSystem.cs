@@ -44,6 +44,7 @@ public class MapSystem : MonoBehaviour
         player.transform.position = marker.transform.position + new Vector3(0f, 0.15f, 0f);
         if (cc != null) cc.enabled = true;
 
+        AudioManager.Play("door_open");
         FindFirstObjectByType<HudView>()?.ShowInfo($"Đã di chuyển tới: {marker.Label}", true);
         return true;
     }

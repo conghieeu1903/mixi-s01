@@ -55,8 +55,11 @@ public class PlayerInteractor : MonoBehaviour
     {
         string prompt = target != null ? target.Prompt : null;
         if (ReferenceEquals(Current, target) && lastPrompt == prompt) return;
+        bool isNewTarget = target != null && !ReferenceEquals(Current, target);
         Current = target;
         lastPrompt = prompt;
+        if (isNewTarget)
+            AudioManager.PlayUi("ui_hover");
         TargetChanged?.Invoke(Current);
     }
 

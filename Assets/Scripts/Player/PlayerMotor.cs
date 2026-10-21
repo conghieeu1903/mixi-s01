@@ -153,9 +153,10 @@ public class PlayerMotor : MonoBehaviour
     // Dịch chuyển tức thời (về nhà, cửa hàng...), tắt CharacterController tạm để không bị ghi đè vị trí
     public void Teleport(Vector3 position, float yaw)
     {
-        controller.enabled = false;
+        if (controller == null) controller = GetComponent<CharacterController>();
+        if (controller != null) controller.enabled = false;
         transform.SetPositionAndRotation(position, Quaternion.Euler(0f, yaw, 0f));
-        controller.enabled = true;
+        if (controller != null) controller.enabled = true;
         planarVelocity = Vector3.zero;
         verticalVelocity = 0f;
     }

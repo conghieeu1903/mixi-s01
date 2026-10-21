@@ -18,8 +18,13 @@ public class SkinCase : MonoBehaviour
     public void Open()
     {
         if (GameWorld.HasInstance && !GameWorld.Instance.Economy.TrySpend(10f))
+        {
+            AudioManager.PlayUi("purchase_fail");
             return;
+        }
 
+        AudioManager.Play("case_open");
+        AudioManager.Play("case_reveal");
         LastSkin = SkinPool[Random.Range(0, SkinPool.Length)];
         UnlockedSkins.Add(LastSkin);
         if (GameWorld.HasInstance)

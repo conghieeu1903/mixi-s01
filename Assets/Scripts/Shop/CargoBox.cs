@@ -70,6 +70,7 @@ public class CargoBox : MonoBehaviour, IInteractable
     {
         if (isOpened) return;
         isOpened = true;
+        AudioManager.PlayAt("box_open", transform.position);
 
         Collider[] cols = GetComponentsInChildren<Collider>(true);
         for (int i = 0; i < cols.Length; i++)
