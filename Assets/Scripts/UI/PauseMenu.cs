@@ -40,11 +40,11 @@ public class PauseMenu : UIPanel
 
         Button settingsBtn = Root.Q<Button>("settingsButton");
         if (settingsBtn != null)
-            settingsBtn.clicked += OpenSettings;
+            settingsBtn.clicked += () => OpenSettingsAtTab(0);
 
         Button controlsBtn = Root.Q<Button>("controlsButton");
         if (controlsBtn != null)
-            controlsBtn.clicked += OpenSettings;
+            controlsBtn.clicked += () => OpenSettingsAtTab(2);
 
         Button mainMenuBtn = Root.Q<Button>("mainMenuButton");
         if (mainMenuBtn != null)
@@ -55,12 +55,12 @@ public class PauseMenu : UIPanel
             quitBtn.clicked += Application.Quit;
     }
 
-    void OpenSettings()
+    void OpenSettingsAtTab(int tabIndex)
     {
         if (settingsMenu == null)
             settingsMenu = FindFirstObjectByType<SettingsMenu>();
-        if (settingsMenu != null && UIManager.Instance != null)
-            UIManager.Instance.Open(settingsMenu);
+        if (settingsMenu != null)
+            settingsMenu.OpenAtTab(tabIndex);
     }
 
     public override void Show()

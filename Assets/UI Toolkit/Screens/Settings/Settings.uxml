@@ -4,30 +4,164 @@
     <ui:VisualElement name="settings" class="wf-screen settings">
         <ui:VisualElement name="settingsPanel" class="wf-panel settings__panel">
             <ui:VisualElement class="wf-panel__header">
-                <ui:Label text="Settings" class="wf-heading wf-grow" />
-                <ui:Label text="SettingsMenu" class="wf-note" />
+                <ui:Label name="settingsTitleLabel" text="Cài đặt (Settings)" class="wf-heading wf-grow" />
+                <ui:Label name="settingsTabNote" text="SettingsMenu · Đồ họa" class="wf-note" />
             </ui:VisualElement>
+
             <ui:VisualElement name="tabs" class="settings__tabs">
                 <ui:Button name="graphicsTab" text="Đồ họa" class="wf-tab wf-tab--active" />
                 <ui:Button name="audioTab" text="Âm thanh" class="wf-tab" />
-                <ui:Button name="controlsTab" text="Điều khiển" class="wf-tab" />
+                <ui:Button name="controlsTab" text="Điều khiển &amp; Phím" class="wf-tab" />
                 <ui:Button name="languageTab" text="Ngôn ngữ" class="wf-tab" />
             </ui:VisualElement>
+
             <ui:ScrollView name="settingsList" class="settings__list">
-                <ui:Label text="Hiển thị" class="wf-subheading settings__group" />
-                <ui:DropdownField name="resolutionField" label="Độ phân giải" choices="1920 x 1080,1600 x 900,1280 x 720" index="0" class="settings__row" />
-                <ui:Toggle name="fullscreenToggle" label="Toàn màn hình" value="true" class="settings__row" />
-                <ui:Toggle name="vsyncToggle" label="VSync" class="settings__row" />
-                <ui:DropdownField name="qualityField" label="Chất lượng" choices="Thấp,Trung bình,Cao,Rất cao" index="2" class="settings__row" />
-                <ui:Slider name="fovSlider" label="FOV" low-value="60" high-value="110" value="80" show-input-field="true" class="settings__row" />
-                <ui:Label text="Âm thanh" class="wf-subheading settings__group" />
-                <ui:Slider name="masterSlider" label="Master" low-value="0" high-value="100" value="80" show-input-field="true" class="settings__row" />
-                <ui:Slider name="musicSlider" label="Nhạc" low-value="0" high-value="100" value="60" show-input-field="true" class="settings__row" />
-                <ui:Slider name="sfxSlider" label="Hiệu ứng" low-value="0" high-value="100" value="70" show-input-field="true" class="settings__row" />
-                <ui:Label text="Điều khiển" class="wf-subheading settings__group" />
-                <ui:Slider name="sensitivitySlider" label="Độ nhạy chuột" low-value="0.1" high-value="5" value="1.5" show-input-field="true" class="settings__row" />
-                <ui:Toggle name="invertYToggle" label="Đảo trục Y" class="settings__row" />
+                <ui:VisualElement name="graphicsPage" class="settings__page">
+                    <ui:Label text="Hiển thị màn hình" class="wf-subheading settings__group" />
+                    <ui:DropdownField name="resolutionField" label="Độ phân giải" choices="1920 x 1080,1600 x 900,1366 x 768,1280 x 720" index="0" class="settings__row" />
+                    <ui:Toggle name="fullscreenToggle" label="Toàn màn hình" value="true" class="settings__row" />
+                    <ui:Toggle name="vsyncToggle" label="Đồng bộ dọc (VSync)" value="true" class="settings__row" />
+                    <ui:DropdownField name="fpsLimitField" label="Giới hạn FPS" choices="30 FPS,60 FPS,120 FPS,144 FPS,Không giới hạn" index="1" class="settings__row" />
+
+                    <ui:Label text="Chất lượng &amp; Camera" class="wf-subheading settings__group" />
+                    <ui:DropdownField name="qualityField" label="Chất lượng đồ họa" choices="Thấp,Trung bình,Cao,Rất cao" index="2" class="settings__row" />
+                    <ui:Slider name="fovSlider" label="Góc nhìn (FOV)" low-value="60" high-value="110" value="70" show-input-field="true" class="settings__row" />
+                    <ui:Toggle name="shadowToggle" label="Đổ bóng thời gian thực" value="true" class="settings__row" />
+                    <ui:Toggle name="headBobToggle" label="Hiệu ứng nhún camera khi bước đi" value="true" class="settings__row" />
+                </ui:VisualElement>
+
+                <ui:VisualElement name="audioPage" class="settings__page settings__page--hidden">
+                    <ui:Label text="Âm lượng các kênh (%)" class="wf-subheading settings__group" />
+                    <ui:Slider name="masterSlider" label="Âm lượng tổng (Master)" low-value="0" high-value="100" value="80" show-input-field="true" class="settings__row" />
+                    <ui:Slider name="musicSlider" label="Nhạc nền (BGM / Spoti)" low-value="0" high-value="100" value="60" show-input-field="true" class="settings__row" />
+                    <ui:Slider name="sfxSlider" label="Hiệu ứng thế giới (SFX)" low-value="0" high-value="100" value="70" show-input-field="true" class="settings__row" />
+                    <ui:Slider name="uiVolumeSlider" label="Âm thanh giao diện (UI)" low-value="0" high-value="100" value="80" show-input-field="true" class="settings__row" />
+                    <ui:Slider name="ambienceSlider" label="Âm thanh môi trường (Ambience)" low-value="0" high-value="100" value="65" show-input-field="true" class="settings__row" />
+
+                    <ui:Label text="Tùy chọn phát &amp; Kiểm tra âm" class="wf-subheading settings__group" />
+                    <ui:Toggle name="muteAllToggle" label="Tắt toàn bộ âm thanh (Mute All)" value="false" class="settings__row" />
+                    <ui:Toggle name="audioBgToggle" label="Phát âm thanh khi chạy nền" value="true" class="settings__row" />
+                    <ui:Toggle name="donateSoundToggle" label="Chuông thông báo Donate &amp; Sub" value="true" class="settings__row" />
+                    <ui:VisualElement class="settings__row settings__inline-row">
+                        <ui:Label text="Nghe thử âm thanh" class="settings__inline-label" />
+                        <ui:VisualElement class="wf-row settings__inline-actions">
+                            <ui:Button name="testUiSoundButton" text="Thử âm UI" class="wf-button wf-button--small settings__inline-btn" />
+                            <ui:Button name="testSfxSoundButton" text="Thử hiệu ứng" class="wf-button wf-button--small settings__inline-btn" />
+                            <ui:Button name="testMusicSoundButton" text="Thử chuông" class="wf-button wf-button--small settings__inline-btn" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement name="controlsPage" class="settings__page settings__page--hidden">
+                    <ui:Label text="Chuột &amp; Góc nhìn" class="wf-subheading settings__group" />
+                    <ui:Slider name="sensitivitySlider" label="Độ nhạy chuột" low-value="0.1" high-value="5" value="1.5" show-input-field="true" class="settings__row" />
+                    <ui:Toggle name="invertYToggle" label="Đảo trục Y chuột" value="false" class="settings__row" />
+                    <ui:Toggle name="holdCrouchToggle" label="Giữ phím để cúi người" value="true" class="settings__row" />
+
+                    <ui:VisualElement class="settings__group-header">
+                        <ui:Label text="Thiết lập phím điều khiển" class="wf-subheading wf-grow" />
+                        <ui:Label name="rebindStatusLabel" text="Bấm vào ô phím để đổi · ESC để hủy" class="wf-caption settings__rebind-status" />
+                        <ui:Button name="resetKeysButton" text="Đặt lại phím" class="wf-button wf-button--small" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="settings__key-grid">
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Tiến lên" class="settings__key-name" />
+                            <ui:Label text="Di chuyển về phía trước" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindMoveUpButton" text="W" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Lùi lại" class="settings__key-name" />
+                            <ui:Label text="Di chuyển lùi về sau" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindMoveDownButton" text="S" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Sang trái" class="settings__key-name" />
+                            <ui:Label text="Bước ngang sang trái" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindMoveLeftButton" text="A" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Sang phải" class="settings__key-name" />
+                            <ui:Label text="Bước ngang sang phải" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindMoveRightButton" text="D" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Nhảy" class="settings__key-name" />
+                            <ui:Label text="Nhảy vượt chướng ngại" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindJumpButton" text="Space" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Chạy nhanh" class="settings__key-name" />
+                            <ui:Label text="Giữ để chạy nước rút" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindSprintButton" text="LeftShift" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Cúi người" class="settings__key-name" />
+                            <ui:Label text="Hạ thấp tầm mắt" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindCrouchButton" text="C" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Tương tác / Nhặt đồ" class="settings__key-name" />
+                            <ui:Label text="Mở cửa, dùng đồ, ngồi máy tính" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindInteractButton" text="E" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Kho đồ (Inventory)" class="settings__key-name" />
+                            <ui:Label text="Mở túi đồ cá nhân (hoặc Tab)" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindInventoryButton" text="I" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Điện thoại" class="settings__key-name" />
+                            <ui:Label text="Bật/tắt smartphone (hoặc X)" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindPhoneButton" text="P" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Bản đồ khu phố" class="settings__key-name" />
+                            <ui:Label text="Xem vị trí các cửa hàng" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindMapButton" text="M" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Hóa đơn (trên PC)" class="settings__key-name" />
+                            <ui:Label text="Mở nhanh cửa sổ Hóa đơn" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindBillsButton" text="B" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings__key-row">
+                            <ui:Label text="Cây kỹ năng (trên PC)" class="settings__key-name" />
+                            <ui:Label text="Mở nhanh cửa sổ Kỹ năng" class="wf-caption settings__key-desc" />
+                            <ui:Button name="bindSkillsButton" text="K" class="wf-key settings__key-btn" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement name="languagePage" class="settings__page settings__page--hidden">
+                    <ui:Label text="Ngôn ngữ hiển thị" class="wf-subheading settings__group" />
+                    <ui:DropdownField name="languageField" label="Ngôn ngữ giao diện" choices="Tiếng Việt,English,日本語 (Japanese),한국어 (Korean),中文 (Chinese)" index="0" class="settings__row" />
+
+                    <ui:VisualElement class="settings__row settings__inline-row">
+                        <ui:Label text="Chọn nhanh ngôn ngữ" class="settings__inline-label" />
+                        <ui:VisualElement class="wf-row settings__lang-buttons">
+                            <ui:Button name="langViButton" text="VN · Tiếng Việt" class="wf-button wf-button--small wf-button--primary settings__lang-btn" />
+                            <ui:Button name="langEnButton" text="EN · English" class="wf-button wf-button--small settings__lang-btn" />
+                            <ui:Button name="langJaButton" text="JP · 日本語" class="wf-button wf-button--small settings__lang-btn" />
+                            <ui:Button name="langKoButton" text="KR · 한국어" class="wf-button wf-button--small settings__lang-btn" />
+                            <ui:Button name="langZhButton" text="CN · 中文" class="wf-button wf-button--small settings__lang-btn" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <ui:Label text="Phụ đề &amp; Định dạng khu vực" class="wf-subheading settings__group" />
+                    <ui:Toggle name="subtitleToggle" label="Hiển thị phụ đề hội thoại NPC" value="true" class="settings__row" />
+                    <ui:DropdownField name="subtitleSizeField" label="Cỡ chữ phụ đề" choices="Nhỏ,Vừa,Lớn" index="1" class="settings__row" />
+                    <ui:Toggle name="autoTranslateChatToggle" label="Tự động dịch bình luận kênh Chat Stream" value="true" class="settings__row" />
+                    <ui:DropdownField name="clockFormatField" label="Định dạng đồng hồ" choices="24 giờ (14:20),12 giờ (02:20 PM)" index="0" class="settings__row" />
+
+                    <ui:Label text="Xem trước bản dịch" class="wf-subheading settings__group" />
+                    <ui:VisualElement name="langPreviewBox" class="wf-placeholder settings__lang-preview">
+                        <ui:Label name="langPreviewTitle" text="Chào mừng đến với Streamer Simulator" class="wf-subheading settings__lang-preview-title" />
+                        <ui:Label name="langPreviewBody" text="Kiểm tra thiết bị PC, bật OBS và bắt đầu buổi phát sóng trực tiếp đầu tiên của bạn." class="wf-text wf-wrap settings__lang-preview-body" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
             </ui:ScrollView>
+
             <ui:VisualElement class="settings__footer">
                 <ui:Button name="defaultButton" text="Mặc định" class="wf-button" />
                 <ui:VisualElement class="wf-grow" />

@@ -56,6 +56,8 @@ public class ComputerDesk : MonoBehaviour, IInteractable
     RenderTexture monitorRenderTexture;
     Mesh monitorQuadMesh;
     Material runtimeScreenMat;
+    Material speakerMat;
+    bool monitorSetupDone;
     Texture2D hudBgTex;
     Texture2D hudKeyTex;
 
@@ -98,6 +100,8 @@ public class ComputerDesk : MonoBehaviour, IInteractable
             Destroy(monitorQuadMesh);
         if (runtimeScreenMat != null)
             Destroy(runtimeScreenMat);
+        if (speakerMat != null)
+            Destroy(speakerMat);
         if (hudBgTex != null)
             Destroy(hudBgTex);
         if (hudKeyTex != null)
@@ -124,6 +128,9 @@ public class ComputerDesk : MonoBehaviour, IInteractable
     // Đảm bảo kích thước chuẩn cho Monitor 3D (thấy rõ viền màn hình dày, loa cam hai bên đáy và chân đế trên bàn)
     Transform EnsureMonitorScreen()
     {
+        if (monitorScreen != null && monitorSetupDone)
+            return monitorScreen;
+
         Transform monitor = transform.Find("Proto_Monitor");
         if (monitor != null)
         {
@@ -145,6 +152,7 @@ public class ComputerDesk : MonoBehaviour, IInteractable
                 EnsureMonitorQuadMesh(monitorScreen);
             }
             EnsureMonitorBezelDetails(monitor);
+            monitorSetupDone = monitorScreen != null;
         }
         return monitorScreen;
     }
@@ -189,8 +197,11 @@ public class ComputerDesk : MonoBehaviour, IInteractable
     void EnsureMonitorBezelDetails(Transform monitor)
     {
         if (monitor == null) return;
-        Shader lit = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
-        Material speakerMat = new Material(lit) { color = new Color(0.72f, 0.34f, 0.08f, 1f) };
+        if (speakerMat == null)
+        {
+            Shader lit = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+            speakerMat = new Material(lit) { color = new Color(0.72f, 0.34f, 0.08f, 1f) };
+        }
 
         Transform existingL = monitor.Find("Mesh_SpeakerLeft");
         Transform existingR = monitor.Find("Mesh_SpeakerRight");
@@ -292,7 +303,7 @@ public class ComputerDesk : MonoBehaviour, IInteractable
         }
 
         Keyboard kb = Keyboard.current;
-        if (kb != null)
+        if (kb != null && !DesktopOS.IsTypingInInput)
         {
             // Phím F chuyển đổi chế độ Focus vừa khít viền monitor giống PcRayControl.FocusToMonitor của SLS2
             if (kb.fKey.wasPressedThisFrame && Time.unscaledTime - lastFocusToggleTime > 0.35f)
@@ -604,48 +615,9 @@ public class ComputerDesk : MonoBehaviour, IInteractable
             doc.rootVisualElement.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
-    // Hiển thị bảng phím tắt F Focus / Q Exit ở góc dưới bên phải màn hình 3D khi đang ngồi trước máy tính
+    // Không vẽ lại hộp F Focus / Q Exit bằng OnGUI để tránh đè lên thanh Taskbar ở góc dưới phải màn hình
     void OnGUI()
     {
-        if (!IsOccupied) return;
-
-        if (hudBgTex == null)
-        {
-            hudBgTex = new Texture2D(1, 1);
-            hudBgTex.SetPixel(0, 0, new Color(0.05f, 0.06f, 0.08f, 0.82f));
-            hudBgTex.Apply();
-        }
-        if (hudKeyTex == null)
-        {
-            hudKeyTex = new Texture2D(1, 1);
-            hudKeyTex.SetPixel(0, 0, new Color(0.95f, 0.96f, 0.98f, 1f));
-            hudKeyTex.Apply();
-        }
-
-        GUIStyle keyStyle = new GUIStyle(GUI.skin.label)
-        {
-            alignment = TextAnchor.MiddleCenter,
-            fontStyle = FontStyle.Bold,
-            fontSize = 13
-        };
-        keyStyle.normal.textColor = new Color(0.08f, 0.10f, 0.14f, 1f);
-
-        GUIStyle labelStyle = new GUIStyle(GUI.skin.label)
-        {
-            alignment = TextAnchor.MiddleLeft,
-            fontStyle = FontStyle.Bold,
-            fontSize = 15
-        };
-        labelStyle.normal.textColor = Color.white;
-
-        GUIStyle focusLabelStyle = new GUIStyle(labelStyle);
-        focusLabelStyle.normal.textColor = new Color(0.22f, 0.71f, 1.0f, 1f);
-
-        float rightX = Screen.width - 118f;
-        float bottomY = Screen.height - 78f;
-
-        DrawKeyRow(new Rect(rightX, bottomY, 98f, 28f), "F", "Focus", keyStyle, focusLabelStyle);
-        DrawKeyRow(new Rect(rightX, bottomY + 34f, 98f, 28f), "Q", "Exit", keyStyle, labelStyle);
     }
 
     void DrawKeyRow(Rect rowRect, string key, string text, GUIStyle keyStyle, GUIStyle labelStyle)

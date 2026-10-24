@@ -29,6 +29,7 @@ public class YouhubeApp : PcApp
         contentRoot.style.backgroundColor = new Color(0.10f, 0.11f, 0.14f, 1f);
 
         Label header = new Label("▶ YOUHUBE STUDIO — Phân tích Kênh & Lưu trữ VOD");
+        header.style.flexShrink = 0;
         header.style.fontSize = 14;
         header.style.unityFontStyleAndWeight = FontStyle.Bold;
         header.style.color = new Color(0.98f, 0.34f, 0.36f, 1f);
@@ -36,6 +37,7 @@ public class YouhubeApp : PcApp
         contentRoot.Add(header);
 
         VisualElement kpiRow = new VisualElement();
+        kpiRow.style.flexShrink = 0;
         kpiRow.style.flexDirection = FlexDirection.Row;
         kpiRow.style.marginBottom = 12;
 
@@ -50,6 +52,8 @@ public class YouhubeApp : PcApp
 
         ScrollView scroll = new ScrollView();
         scroll.style.flexGrow = 1;
+        scroll.style.flexBasis = 0;
+        scroll.style.minHeight = 0;
         listRoot = scroll;
         contentRoot.Add(scroll);
 

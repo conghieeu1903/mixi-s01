@@ -627,6 +627,10 @@ public static class Phase1SceneBuilder
         ComicBook comicComp = comicBookObj.AddComponent<ComicBook>();
         comicComp.EnsureBookMeshAndCollider();
 
+        BuildStep63RoomObjects(envRoot);
+        BuildStep64DoorObjects(envRoot);
+        BuildStep65SwatObjects(envRoot);
+
         GameObject talkerObj = InstantiatePrefab("Assets/Prefabs/Prototype/Characters/Proto_NpcCivil.prefab", cityRoot.transform, new Vector3(2.2f, 0.1f, 5.2f), new Vector3(0f, 180f, 0f));
         talkerObj.name = "NpcTalker_River";
         talkerObj.AddComponent<NpcTalker>();
@@ -645,10 +649,10 @@ public static class Phase1SceneBuilder
         npcRoot.transform.SetParent(cityRoot.transform, false);
         Vector3[] pts =
         {
-            new Vector3(-10f, 0.1f, 6.2f),
-            new Vector3(0f, 0.1f, 6.2f),
-            new Vector3(10f, 0.1f, 6.2f),
-            new Vector3(0f, 0.1f, 10.2f)
+            new Vector3(-10f, 0.1f, 7.5f),
+            new Vector3(-4f, 0.1f, 7.5f),
+            new Vector3(10f, 0.1f, 7.5f),
+            new Vector3(4f, 0.1f, 10.2f)
         };
         for (int i = 0; i < pts.Length; i++)
         {
@@ -665,6 +669,176 @@ public static class Phase1SceneBuilder
             foreach (Transform t in npcRoot.transform) wps.Add(t);
             civ.SetWaypoints(wps);
         }
+    }
+
+    // Dựng các vật thể tương tác Bước 6.3 trong phòng: Công tắc đèn RGB (LightSwitch), Rương Hòm CS (ChestInventory) và Hộp quà Cúp Vinh Danh (GiftBox)
+    public static void BuildStep63RoomObjects(Transform envRoot)
+    {
+        if (envRoot == null) return;
+        Shader sh = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+
+        // 1. Công tắc đèn thông minh RGB gắn tường cạnh cửa ra vào
+        Transform existingSwitch = envRoot.Find("RoomLightSwitch");
+        if (existingSwitch != null) Object.DestroyImmediate(existingSwitch.gameObject);
+
+        GameObject swObj = new GameObject("RoomLightSwitch");
+        swObj.transform.SetParent(envRoot, false);
+        swObj.transform.localPosition = new Vector3(0.75f, 1.35f, 2.86f);
+        swObj.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+
+        GameObject plate = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        plate.name = "SwitchPlate";
+        plate.transform.SetParent(swObj.transform, false);
+        plate.transform.localScale = new Vector3(0.12f, 0.16f, 0.025f);
+        if (plate.TryGetComponent<Collider>(out Collider pc)) Object.DestroyImmediate(pc);
+        plate.GetComponent<MeshRenderer>().sharedMaterial = new Material(sh) { color = new Color(0.92f, 0.92f, 0.94f, 1f) };
+
+        GameObject knob = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        knob.name = "SwitchKnob";
+        knob.transform.SetParent(swObj.transform, false);
+        knob.transform.localPosition = new Vector3(0f, 0f, 0.015f);
+        knob.transform.localScale = new Vector3(0.05f, 0.08f, 0.02f);
+        if (knob.TryGetComponent<Collider>(out Collider kc)) Object.DestroyImmediate(kc);
+        knob.GetComponent<MeshRenderer>().sharedMaterial = new Material(sh) { color = new Color(1f, 0.92f, 0.78f, 1f) };
+
+        BoxCollider swCol = swObj.AddComponent<BoxCollider>();
+        swCol.size = new Vector3(0.16f, 0.20f, 0.06f);
+        swObj.AddComponent<LightSwitch>();
+
+        // 2. Rương chứa đồ & Hòm CS (ChestInventory)
+        Transform existingChest = envRoot.Find("RoomChestInventory");
+        if (existingChest != null) Object.DestroyImmediate(existingChest.gameObject);
+
+        GameObject chestObj = new GameObject("RoomChestInventory");
+        chestObj.transform.SetParent(envRoot, false);
+        chestObj.transform.localPosition = new Vector3(-2.35f, 0.1f, -0.45f);
+        chestObj.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
+
+        GameObject chestBase = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        chestBase.name = "Mesh_ChestBody";
+        chestBase.transform.SetParent(chestObj.transform, false);
+        chestBase.transform.localPosition = new Vector3(0f, 0.22f, 0f);
+        chestBase.transform.localScale = new Vector3(0.65f, 0.42f, 0.42f);
+        if (chestBase.TryGetComponent<Collider>(out Collider cc1)) Object.DestroyImmediate(cc1);
+        chestBase.GetComponent<MeshRenderer>().sharedMaterial = new Material(sh) { color = new Color(0.28f, 0.20f, 0.12f, 1f) };
+
+        GameObject chestLid = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        chestLid.name = "Mesh_ChestTrim";
+        chestLid.transform.SetParent(chestObj.transform, false);
+        chestLid.transform.localPosition = new Vector3(0f, 0.44f, 0f);
+        chestLid.transform.localScale = new Vector3(0.67f, 0.06f, 0.44f);
+        if (chestLid.TryGetComponent<Collider>(out Collider cc2)) Object.DestroyImmediate(cc2);
+        chestLid.GetComponent<MeshRenderer>().sharedMaterial = new Material(sh) { color = new Color(0.84f, 0.66f, 0.20f, 1f) };
+
+        BoxCollider chestCol = chestObj.AddComponent<BoxCollider>();
+        chestCol.center = new Vector3(0f, 0.24f, 0f);
+        chestCol.size = new Vector3(0.68f, 0.48f, 0.46f);
+        chestObj.AddComponent<ChestInventory>();
+
+        // Gương soi đã bỏ: dọn bản cũ nếu còn sót trong scene
+        Transform existingMirror = envRoot.Find("RoomMirror");
+        if (existingMirror != null) Object.DestroyImmediate(existingMirror.gameObject);
+
+        // 4. Hộp quà sự kiện mở ra Cúp Vinh Danh Streamer (GiftBox & CreatorAward)
+        Transform existingGift = envRoot.Find("MilestoneGiftBox");
+        if (existingGift != null) Object.DestroyImmediate(existingGift.gameObject);
+
+        GameObject giftObj = new GameObject("MilestoneGiftBox");
+        giftObj.transform.SetParent(envRoot, false);
+        giftObj.transform.localPosition = new Vector3(0.95f, 0.1f, -2.25f);
+
+        GameObject gBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        gBox.name = "Mesh_GiftBody";
+        gBox.transform.SetParent(giftObj.transform, false);
+        gBox.transform.localPosition = new Vector3(0f, 0.18f, 0f);
+        gBox.transform.localScale = new Vector3(0.34f, 0.34f, 0.34f);
+        if (gBox.TryGetComponent<Collider>(out Collider gc1)) Object.DestroyImmediate(gc1);
+        gBox.GetComponent<MeshRenderer>().sharedMaterial = new Material(sh) { color = new Color(0.86f, 0.18f, 0.22f, 1f) };
+
+        GameObject gRibbon = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        gRibbon.name = "Mesh_GiftRibbon";
+        gRibbon.transform.SetParent(giftObj.transform, false);
+        gRibbon.transform.localPosition = new Vector3(0f, 0.35f, 0f);
+        gRibbon.transform.localScale = new Vector3(0.36f, 0.04f, 0.10f);
+        if (gRibbon.TryGetComponent<Collider>(out Collider gc2)) Object.DestroyImmediate(gc2);
+        gRibbon.GetComponent<MeshRenderer>().sharedMaterial = new Material(sh) { color = new Color(0.98f, 0.82f, 0.20f, 1f) };
+
+        BoxCollider giftCol = giftObj.AddComponent<BoxCollider>();
+        giftCol.center = new Vector3(0f, 0.19f, 0f);
+        giftCol.size = new Vector3(0.38f, 0.38f, 0.38f);
+        giftObj.AddComponent<GiftBox>();
+    }
+
+    // Dựng Bước 6.4: Chuông cửa có màn hình Camera (DoorIntercom) và Khách gõ cửa theo cốt truyện (DoorCharactersManager)
+    public static void BuildStep64DoorObjects(Transform envRoot)
+    {
+        if (envRoot == null) return;
+        Shader sh = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+
+        // 1. Màn hình Chuông cửa Camera (DoorIntercomUnit) gắn tường bên trái cửa chính
+        Transform existingIntercom = envRoot.Find("DoorIntercomUnit");
+        if (existingIntercom != null) Object.DestroyImmediate(existingIntercom.gameObject);
+
+        GameObject icObj = new GameObject("DoorIntercomUnit");
+        icObj.transform.SetParent(envRoot, false);
+        icObj.transform.localPosition = new Vector3(-0.75f, 1.38f, 2.86f);
+        icObj.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+
+        GameObject icBody = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        icBody.name = "IntercomBody";
+        icBody.transform.SetParent(icObj.transform, false);
+        icBody.transform.localScale = new Vector3(0.22f, 0.16f, 0.03f);
+        if (icBody.TryGetComponent<Collider>(out Collider ic1)) Object.DestroyImmediate(ic1);
+        icBody.GetComponent<MeshRenderer>().sharedMaterial = new Material(sh) { color = new Color(0.16f, 0.18f, 0.22f, 1f) };
+
+        GameObject icScreen = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        icScreen.name = "IntercomScreen";
+        icScreen.transform.SetParent(icObj.transform, false);
+        icScreen.transform.localPosition = new Vector3(0f, 0.015f, 0.016f);
+        icScreen.transform.localScale = new Vector3(0.16f, 0.10f, 0.01f);
+        if (icScreen.TryGetComponent<Collider>(out Collider ic2)) Object.DestroyImmediate(ic2);
+        icScreen.GetComponent<MeshRenderer>().sharedMaterial = new Material(sh) { color = new Color(0.10f, 0.14f, 0.18f, 1f) };
+
+        GameObject icBtn = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        icBtn.name = "IntercomBuzzButton";
+        icBtn.transform.SetParent(icObj.transform, false);
+        icBtn.transform.localPosition = new Vector3(0f, -0.052f, 0.016f);
+        icBtn.transform.localScale = new Vector3(0.06f, 0.022f, 0.012f);
+        if (icBtn.TryGetComponent<Collider>(out Collider ic3)) Object.DestroyImmediate(ic3);
+        icBtn.GetComponent<MeshRenderer>().sharedMaterial = new Material(sh) { color = new Color(0.18f, 0.78f, 0.42f, 1f) };
+
+        BoxCollider icCol = icObj.AddComponent<BoxCollider>();
+        icCol.size = new Vector3(0.24f, 0.18f, 0.06f);
+        icObj.AddComponent<DoorIntercom>();
+
+        // 2. Khách gõ cửa theo chuỗi sự kiện ngẫu nhiên (DoorStoryVisitor): mặc định ẩn và đặt ngoài phố, không bao giờ chặn cửa
+        Transform existingVisitor = envRoot.Find("DoorStoryVisitor");
+        if (existingVisitor != null) Object.DestroyImmediate(existingVisitor.gameObject);
+
+        GameObject visitorObj = InstantiatePrefab("Assets/Prefabs/Prototype/Characters/Proto_NpcCivil.prefab", envRoot, new Vector3(-4.8f, 0.1f, 5.2f), new Vector3(0f, 180f, 0f));
+        visitorObj.name = "DoorStoryVisitor";
+        if (visitorObj.TryGetComponent<CapsuleCollider>(out CapsuleCollider vCap))
+        {
+            vCap.isTrigger = true;
+            vCap.enabled = false;
+        }
+        foreach (MeshRenderer mr in visitorObj.GetComponentsInChildren<MeshRenderer>(true))
+            mr.enabled = false;
+        visitorObj.AddComponent<DoorCharactersManager>();
+    }
+
+    // Dựng Bước 6.5: Hệ thống đội đặc nhiệm SWAT phá cửa & ném lựu đạn choáng (SwatManager)
+    public static void BuildStep65SwatObjects(Transform envRoot)
+    {
+        if (envRoot == null) return;
+        Transform existingSwat = envRoot.Find("SwatRaidSystem");
+        if (existingSwat != null) Object.DestroyImmediate(existingSwat.gameObject);
+
+        GameObject swatRoot = new GameObject("SwatRaidSystem");
+        swatRoot.transform.SetParent(envRoot, false);
+        swatRoot.transform.localPosition = Vector3.zero;
+        swatRoot.transform.localRotation = Quaternion.identity;
+        swatRoot.AddComponent<SwatManager>();
     }
 
     // Dựng model 3D riêng biệt của người chơi (playerMesh), mặc định tắt khi đi bộ FPS và chỉ bật khi ngồi ghế/stream giống SLS2

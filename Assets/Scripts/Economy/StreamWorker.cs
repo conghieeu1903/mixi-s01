@@ -1,11 +1,13 @@
 using System;
 
-// Một nhân viên stream thuê: lương, năng lượng, đói, follower riêng
+// Một nhân viên thuê qua LinkWorkerWeb: lương định kỳ 4 ngày, năng lượng, đói, follower riêng
 [Serializable]
 public class StreamWorker
 {
     public string name;
+    public string role = "Streamer";
     public float salary;
+    public int workDay;
     public float motivation = 100f;
     public float energy = 100f;
     public float hunger;

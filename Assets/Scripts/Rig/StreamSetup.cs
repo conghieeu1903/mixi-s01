@@ -37,8 +37,12 @@ public class StreamSetup : MonoBehaviour
             desk = GetComponent<ComputerDesk>() ?? FindFirstObjectByType<ComputerDesk>();
         if (pcCase == null)
             pcCase = FindFirstObjectByType<PcCase>();
+        if (pcCase != null && !pcCase.IsBootable)
+            pcCase.EnsureDefaultStarterParts();
         if (router == null || !router.gameObject.activeInHierarchy)
             router = FindFirstObjectByType<Router>();
+        if (router == null && Application.isPlaying)
+            router = gameObject.GetComponent<Router>() ?? gameObject.AddComponent<Router>();
 
         if (GameWorld.HasInstance)
             GameWorld.Instance.Stream.RigViewerBonus = ViewerBonus();

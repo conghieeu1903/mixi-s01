@@ -31,6 +31,11 @@ public class LoadingView : MonoBehaviour
         BindElements();
         if (rootContainer != null)
             rootContainer.style.display = DisplayStyle.None;
+        if (document != null && document.rootVisualElement != null)
+        {
+            document.rootVisualElement.pickingMode = PickingMode.Ignore;
+            document.rootVisualElement.style.display = DisplayStyle.None;
+        }
     }
 
     // Tìm các element trong UXML hoặc dựng khung dự phòng
@@ -75,6 +80,8 @@ public class LoadingView : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         BindElements();
+        if (document != null && document.rootVisualElement != null)
+            document.rootVisualElement.style.display = DisplayStyle.Flex;
         if (rootContainer != null)
             rootContainer.style.display = DisplayStyle.Flex;
 

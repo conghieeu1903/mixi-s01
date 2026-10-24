@@ -21,6 +21,7 @@ public class StreamOverlayView : MonoBehaviour
     float sessionIncome;
     int startFollowers;
     float chatTimer;
+    bool isSubscribed;
 
     public float SessionIncome => sessionIncome;
     public int StartFollowers => startFollowers;
@@ -40,12 +41,25 @@ public class StreamOverlayView : MonoBehaviour
         VisualElement root = document != null ? document.rootVisualElement : null;
         if (root != null)
         {
+            root.pickingMode = PickingMode.Ignore;
             rootOverlay = root.Q<VisualElement>("streamOverlay") ?? root;
             rootOverlay.style.display = DisplayStyle.None;
             root.style.display = DisplayStyle.None;
         }
 
-        if (!GameWorld.HasInstance) return;
+        EnsureSubscribed();
+    }
+
+    void Start()
+    {
+        EnsureSubscribed();
+    }
+
+    // Đảm bảo đã đăng ký các sự kiện từ StreamSystem ngay cả khi GameWorld khởi tạo sau OnEnable
+    void EnsureSubscribed()
+    {
+        if (isSubscribed || !GameWorld.HasInstance) return;
+        isSubscribed = true;
         StreamSystem stream = GameWorld.Instance.Stream;
         stream.Opened += OnStreamOpened;
         stream.Closed += OnStreamClosed;
@@ -59,7 +73,7 @@ public class StreamOverlayView : MonoBehaviour
     // Hủy đăng ký sự kiện khi tắt đối tượng
     void OnDisable()
     {
-        if (GameWorld.HasInstance)
+        if (isSubscribed && GameWorld.HasInstance)
         {
             StreamSystem stream = GameWorld.Instance.Stream;
             stream.Opened -= OnStreamOpened;
@@ -67,6 +81,7 @@ public class StreamOverlayView : MonoBehaviour
             stream.StatsChanged -= RefreshStats;
             stream.Donated -= ShowDonate;
         }
+        isSubscribed = false;
     }
 
     // Đảm bảo lớp UI 2D cũ luôn ẩn để toàn bộ giao diện nằm gọn trong màn hình máy tính 3D
@@ -79,6 +94,7 @@ public class StreamOverlayView : MonoBehaviour
     // Xử lý phím tắt F1/F2 và sinh tin nhắn chat định kỳ đẩy vào cửa sổ OBS Studio trên màn hình máy tính
     void Update()
     {
+        EnsureSubscribed();
         if (!GameWorld.HasInstance || !GameWorld.Instance.Stream.IsOpen) return;
 
         Keyboard kb = Keyboard.current;
@@ -148,16 +164,8 @@ public class StreamOverlayView : MonoBehaviour
             rootOverlay.style.display = DisplayStyle.None;
 
         DesktopOS desktop = EnsureDesktop();
-        if (desktop != null)
-        {
+        if (desktop != null && desktop.StreamChatCount == 0)
             desktop.OnStreamSessionOpened();
-            desktop.AppendStreamChat(new ChatMessage
-            {
-                user = "Hệ thống",
-                text = "Buổi stream đã bắt đầu! Nhấn F1 rút thẻ, F2 chơi minigame.",
-                isToxic = false
-            });
-        }
         RefreshStats();
     }
 

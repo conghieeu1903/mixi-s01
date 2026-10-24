@@ -25,7 +25,7 @@ public class WallPainter : MonoBehaviour, IInteractable
     void Awake()
     {
         // Nếu component đang gắn trên object Room gốc thì tách riêng ra một thùng sơn 3D ở góc phòng để tránh nhìn vào tường nào cũng hiện nút E
-        if (gameObject.name == "Room" || transform.Find("Floor") != null || transform.Find("Wall_North") != null)
+        if (gameObject.name.Contains("Room") || transform.Find("Floor") != null || transform.Find("Mesh_Floor") != null || transform.Find("Wall_North") != null || transform.Find("Mesh_WallBack") != null)
         {
             SetupPaintBucketChild();
             return;

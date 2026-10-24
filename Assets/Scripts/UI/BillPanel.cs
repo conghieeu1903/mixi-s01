@@ -18,10 +18,8 @@ public class BillPanel : UIPanel
             Root.style.display = DisplayStyle.None;
 
         DesktopOS desktop = FindFirstObjectByType<DesktopOS>();
-        if (desktop != null)
+        if (desktop != null && desktop.IsOpen)
         {
-            if (!desktop.IsOpen)
-                desktop.Open();
             desktop.OpenBillsWindow();
         }
     }

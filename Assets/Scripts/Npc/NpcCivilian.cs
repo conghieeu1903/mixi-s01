@@ -5,8 +5,8 @@ using UnityEngine;
 public class NpcCivilian : MonoBehaviour
 {
     [SerializeField] float walkSpeed = 1.4f;
+    [SerializeField] List<Transform> waypoints = new List<Transform>();
 
-    List<Transform> waypoints = new List<Transform>();
     int currentPointIndex;
     Animator animator;
     Transform hips;
@@ -25,6 +25,19 @@ public class NpcCivilian : MonoBehaviour
         shoulderL = transform.Find("Rig/Hips/Spine/ShoulderL");
         shoulderR = transform.Find("Rig/Hips/Spine/ShoulderR");
         walkPhase = Random.Range(0f, Mathf.PI * 2f);
+
+        if (waypoints == null || waypoints.Count == 0)
+        {
+            GameObject wpRoot = GameObject.Find("NpcWalkPoints");
+            if (wpRoot != null)
+            {
+                waypoints = new List<Transform>();
+                foreach (Transform t in wpRoot.transform)
+                    waypoints.Add(t);
+            }
+        }
+        if (waypoints != null && waypoints.Count > 0)
+            currentPointIndex = Random.Range(0, waypoints.Count);
     }
 
     public void SetWaypoints(List<Transform> points)

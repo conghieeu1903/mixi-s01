@@ -31,6 +31,7 @@ public class PcCase : MonoBehaviour, IInteractable
     void Awake()
     {
         EnsureSlots();
+        EnsureDefaultStarterParts();
         CacheSidePanel();
         RefreshInteriorVisuals();
     }
@@ -224,6 +225,39 @@ public class PcCase : MonoBehaviour, IInteractable
                 && HasPart(PcPartType.GraphicsCard)
                 && HasPart(PcPartType.Psu)
                 && HasPart(PcPartType.Storage);
+        }
+    }
+
+    // Tự lắp bộ linh kiện khởi đầu cho các khe bắt buộc còn trống để máy luôn khởi động được
+    public void EnsureDefaultStarterParts()
+    {
+        EnsureSlots();
+        (PcPartType type, string id, string fallbackName)[] required =
+        {
+            (PcPartType.Motherboard, "mb_basic", "Mainboard Cơ bản"),
+            (PcPartType.Cpu, "cpu_i3", "CPU Core i3"),
+            (PcPartType.CpuCooler, "cooler_air", "Tản nhiệt Khí"),
+            (PcPartType.Ram, "ram_8gb", "RAM 8GB"),
+            (PcPartType.GraphicsCard, "gpu_1050", "GTX 1050"),
+            (PcPartType.Psu, "psu_550w", "Nguồn 550W"),
+            (PcPartType.Storage, "hdd_1tb", "Ổ cứng 1TB")
+        };
+
+        for (int i = 0; i < required.Length; i++)
+        {
+            var req = required[i];
+            if (HasPart(req.type)) continue;
+
+            PcPartData part = ItemData.FindById(req.id) as PcPartData;
+            if (part == null)
+            {
+                part = ScriptableObject.CreateInstance<PcPartData>();
+                part.id = req.id;
+                part.displayName = req.fallbackName;
+                part.partType = req.type;
+                part.quality = 20f;
+            }
+            Install(part);
         }
     }
 

@@ -11,6 +11,7 @@ Game được làm qua 5 giai đoạn. Mỗi giai đoạn kết thúc bằng m�
 | 3. Chiều sâu stream | Mỗi buổi stream có lựa chọn, minigame và kỹ năng | [Phase3_StreamDepth.md](Phase3_StreamDepth.md) |
 | 4. Mở rộng hệ thống | Nguồn thu phụ, app máy tính, thế giới bên ngoài | [Phase4_Expansion.md](Phase4_Expansion.md) |
 | 5. Nội dung và hoàn thiện | Casino, minigame ngoài stream, thay asset thật | [Phase5_ContentPolish.md](Phase5_ContentPolish.md) |
+| 6. Đồng bộ đầy đủ tính năng SLS2 | Bổ sung toàn bộ tính năng, trang web, sự kiện SWAT, chuông cửa Intercom và tương tác nhà còn thiếu so với bản gốc SLS2 | [Phase6_SLS2FullParity.md](Phase6_SLS2FullParity.md) |
 
 Giai đoạn 1–3 là bộ tối thiểu để game chơi được trọn vòng. Giai đoạn 4–5 là nội dung mở rộng, có thể cắt bớt hoặc đổi thứ tự.
 

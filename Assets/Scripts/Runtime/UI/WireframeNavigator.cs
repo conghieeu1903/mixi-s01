@@ -131,13 +131,22 @@ public class WireframeNavigator : MonoBehaviour
             case WireframeScreen.Pause:
                 On(root, "resumeButton", () => Show(WireframeScreen.HUD));
                 On(root, "settingsButton", OpenSettings);
-                On(root, "controlsButton", OpenSettings);
+                On(root, "controlsButton", () =>
+                {
+                    OpenSettings();
+                    SwitchSettingsTab(document.rootVisualElement, 2);
+                });
                 On(root, "mainMenuButton", () => ShowLoading(WireframeScreen.MainMenu));
                 On(root, "quitButton", Application.Quit);
                 break;
             case WireframeScreen.Settings:
+                On(root, "graphicsTab", () => SwitchSettingsTab(root, 0));
+                On(root, "audioTab", () => SwitchSettingsTab(root, 1));
+                On(root, "controlsTab", () => SwitchSettingsTab(root, 2));
+                On(root, "languageTab", () => SwitchSettingsTab(root, 3));
                 On(root, "backButton", () => Show(settingsReturn));
                 On(root, "applyButton", () => Show(settingsReturn));
+                SwitchSettingsTab(root, 0);
                 break;
             case WireframeScreen.Inventory:
             case WireframeScreen.Map:
@@ -162,6 +171,27 @@ public class WireframeNavigator : MonoBehaviour
         var button = root.Q<Button>(buttonName);
         if (button != null)
             button.clicked += action;
+    }
+
+    // Chuyển tab trong màn Settings của Wireframe
+    private static void SwitchSettingsTab(VisualElement root, int tabIndex)
+    {
+        if (root == null) return;
+        SetTab(root, "graphicsTab", "graphicsPage", tabIndex == 0);
+        SetTab(root, "audioTab", "audioPage", tabIndex == 1);
+        SetTab(root, "controlsTab", "controlsPage", tabIndex == 2);
+        SetTab(root, "languageTab", "languagePage", tabIndex == 3);
+    }
+
+    private static void SetTab(VisualElement root, string tabName, string pageName, bool active)
+    {
+        root.Q<Button>(tabName)?.EnableInClassList("wf-tab--active", active);
+        var page = root.Q<VisualElement>(pageName);
+        if (page != null)
+        {
+            page.EnableInClassList("settings__page--hidden", !active);
+            page.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+        }
     }
 
     private void Update()

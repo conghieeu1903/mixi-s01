@@ -12,7 +12,10 @@ public class ScreenFader : MonoBehaviour
 
     UIDocument document;
     VisualElement overlay;
+    VisualElement flashbangOverlay;
     float currentAlpha;
+    float currentFlashAlpha;
+    Coroutine flashRoutine;
 
     void Awake()
     {
@@ -45,6 +48,53 @@ public class ScreenFader : MonoBehaviour
             overlay.pickingMode = PickingMode.Ignore;
             root.Add(overlay);
         }
+
+        flashbangOverlay = root.Q<VisualElement>("flashbangOverlay");
+        if (flashbangOverlay == null)
+        {
+            flashbangOverlay = new VisualElement { name = "flashbangOverlay" };
+            flashbangOverlay.style.position = Position.Absolute;
+            flashbangOverlay.style.left = 0;
+            flashbangOverlay.style.top = 0;
+            flashbangOverlay.style.right = 0;
+            flashbangOverlay.style.bottom = 0;
+            flashbangOverlay.style.backgroundColor = new Color(1f, 1f, 1f, 0f);
+            flashbangOverlay.pickingMode = PickingMode.Ignore;
+            root.Add(flashbangOverlay);
+        }
+    }
+
+    // Làm chói trắng toàn màn hình khi trúng lựu đạn choáng Flashbang của SWAT giống GameManager.FlashbangOn của SLS2
+    public void FlashbangOn(float fadeDuration = 0.25f)
+    {
+        EnsureOverlay();
+        if (flashRoutine != null) StopCoroutine(flashRoutine);
+        flashRoutine = StartCoroutine(FlashbangRoutine(1f, fadeDuration));
+    }
+
+    // Giảm dần độ chói trắng của Flashbang giống GameManager.FlashbangOff của SLS2
+    public void FlashbangOff(float fadeDuration = 0.65f)
+    {
+        EnsureOverlay();
+        if (flashRoutine != null) StopCoroutine(flashRoutine);
+        flashRoutine = StartCoroutine(FlashbangRoutine(0f, fadeDuration));
+    }
+
+    IEnumerator FlashbangRoutine(float targetAlpha, float fadeDuration)
+    {
+        if (flashbangOverlay == null) yield break;
+        float startAlpha = currentFlashAlpha;
+        float elapsed = 0f;
+        float dur = Mathf.Max(0.01f, fadeDuration);
+        while (elapsed < dur)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            currentFlashAlpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / dur);
+            flashbangOverlay.style.backgroundColor = new Color(1f, 1f, 1f, currentFlashAlpha);
+            yield return null;
+        }
+        currentFlashAlpha = targetAlpha;
+        flashbangOverlay.style.backgroundColor = new Color(1f, 1f, 1f, currentFlashAlpha);
     }
 
     // Làm tối màn hình, xong thì gọi onDone

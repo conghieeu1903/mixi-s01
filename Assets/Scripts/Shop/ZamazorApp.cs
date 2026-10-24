@@ -51,6 +51,7 @@ public class ZamazorApp : PcApp
         topBar.style.flexDirection = FlexDirection.Row;
         topBar.style.alignItems = Align.Center;
         topBar.style.justifyContent = Justify.SpaceBetween;
+        topBar.style.flexShrink = 0;
         topBar.style.paddingLeft = 12;
         topBar.style.paddingRight = 12;
         topBar.style.paddingTop = 8;
@@ -78,6 +79,9 @@ public class ZamazorApp : PcApp
 
         VisualElement filterBar = new VisualElement();
         filterBar.style.flexDirection = FlexDirection.Row;
+        filterBar.style.alignItems = Align.Center;
+        filterBar.style.flexShrink = 0;
+        filterBar.style.minHeight = 28;
         filterBar.style.marginBottom = 8;
         string[] filters = { "Tất cả sản phẩm", "Linh kiện PC", "Thiết bị Mạng", "Đồ ăn & Thuốc" };
         for (int i = 0; i < filters.Length; i++)
@@ -92,11 +96,18 @@ public class ZamazorApp : PcApp
             {
                 text = filters[i]
             };
-            fBtn.style.height = 24;
+            fBtn.style.height = 28;
+            fBtn.style.flexShrink = 0;
             fBtn.style.marginRight = 6;
+            fBtn.style.marginTop = 0;
+            fBtn.style.marginBottom = 0;
             fBtn.style.paddingLeft = 10;
             fBtn.style.paddingRight = 10;
+            fBtn.style.paddingTop = 0;
+            fBtn.style.paddingBottom = 0;
             fBtn.style.fontSize = 11;
+            fBtn.style.unityFontStyleAndWeight = active ? FontStyle.Bold : FontStyle.Normal;
+            fBtn.style.unityTextAlign = TextAnchor.MiddleCenter;
             fBtn.style.color = Color.white;
             fBtn.style.backgroundColor = active
                 ? new Color(0.88f, 0.48f, 0.12f, 1f)
@@ -115,6 +126,8 @@ public class ZamazorApp : PcApp
 
         ScrollView scroll = new ScrollView();
         scroll.style.flexGrow = 1;
+        scroll.style.flexBasis = 0;
+        scroll.style.minHeight = 0;
 
         IReadOnlyList<ItemData> items = GetCatalogItems();
         for (int i = 0; i < items.Count; i++)
@@ -165,11 +178,17 @@ public class ZamazorApp : PcApp
             priceLabel.style.marginRight = 10;
 
             Button addBtn = new Button(() => AddToCart(item)) { text = "+ Thêm vào giỏ" };
-            addBtn.style.height = 24;
+            addBtn.style.height = 26;
+            addBtn.style.flexShrink = 0;
+            addBtn.style.marginTop = 0;
+            addBtn.style.marginBottom = 0;
             addBtn.style.paddingLeft = 10;
             addBtn.style.paddingRight = 10;
+            addBtn.style.paddingTop = 0;
+            addBtn.style.paddingBottom = 0;
             addBtn.style.fontSize = 11;
             addBtn.style.unityFontStyleAndWeight = FontStyle.Bold;
+            addBtn.style.unityTextAlign = TextAnchor.MiddleCenter;
             addBtn.style.color = Color.white;
             addBtn.style.backgroundColor = new Color(0.86f, 0.46f, 0.12f, 1f);
             addBtn.style.borderTopLeftRadius = 4;
@@ -192,6 +211,7 @@ public class ZamazorApp : PcApp
         contentRoot.Add(scroll);
 
         statusLabel = new Label(string.Empty);
+        statusLabel.style.flexShrink = 0;
         statusLabel.style.fontSize = 11;
         statusLabel.style.color = new Color(0.56f, 0.88f, 0.68f, 1f);
         statusLabel.style.marginTop = 4;
@@ -201,6 +221,7 @@ public class ZamazorApp : PcApp
         footer.style.flexDirection = FlexDirection.Row;
         footer.style.alignItems = Align.Center;
         footer.style.justifyContent = Justify.SpaceBetween;
+        footer.style.flexShrink = 0;
         footer.style.marginTop = 6;
         footer.style.paddingLeft = 10;
         footer.style.paddingRight = 10;
@@ -219,22 +240,53 @@ public class ZamazorApp : PcApp
 
         VisualElement btnGroup = new VisualElement();
         btnGroup.style.flexDirection = FlexDirection.Row;
+        btnGroup.style.alignItems = Align.Center;
 
         Button clearBtn = new Button(ClearCart) { text = "Xóa giỏ" };
-        clearBtn.style.height = 26;
+        clearBtn.style.height = 28;
+        clearBtn.style.flexShrink = 0;
         clearBtn.style.marginRight = 8;
+        clearBtn.style.marginTop = 0;
+        clearBtn.style.marginBottom = 0;
+        clearBtn.style.paddingLeft = 10;
+        clearBtn.style.paddingRight = 10;
+        clearBtn.style.paddingTop = 0;
+        clearBtn.style.paddingBottom = 0;
         clearBtn.style.fontSize = 11;
+        clearBtn.style.unityTextAlign = TextAnchor.MiddleCenter;
         clearBtn.style.color = Color.white;
         clearBtn.style.backgroundColor = new Color(0.28f, 0.32f, 0.40f, 1f);
+        clearBtn.style.borderTopLeftRadius = 4;
+        clearBtn.style.borderTopRightRadius = 4;
+        clearBtn.style.borderBottomLeftRadius = 4;
+        clearBtn.style.borderBottomRightRadius = 4;
+        clearBtn.style.borderTopWidth = 0;
+        clearBtn.style.borderBottomWidth = 0;
+        clearBtn.style.borderLeftWidth = 0;
+        clearBtn.style.borderRightWidth = 0;
 
         checkoutButton = new Button(Checkout) { name = "checkoutButton", text = "✓ Đặt hàng giao tận nhà" };
-        checkoutButton.style.height = 26;
+        checkoutButton.style.height = 28;
+        checkoutButton.style.flexShrink = 0;
+        checkoutButton.style.marginTop = 0;
+        checkoutButton.style.marginBottom = 0;
         checkoutButton.style.paddingLeft = 12;
         checkoutButton.style.paddingRight = 12;
+        checkoutButton.style.paddingTop = 0;
+        checkoutButton.style.paddingBottom = 0;
         checkoutButton.style.fontSize = 11;
         checkoutButton.style.unityFontStyleAndWeight = FontStyle.Bold;
+        checkoutButton.style.unityTextAlign = TextAnchor.MiddleCenter;
         checkoutButton.style.color = Color.white;
         checkoutButton.style.backgroundColor = new Color(0.18f, 0.64f, 0.36f, 1f);
+        checkoutButton.style.borderTopLeftRadius = 4;
+        checkoutButton.style.borderTopRightRadius = 4;
+        checkoutButton.style.borderBottomLeftRadius = 4;
+        checkoutButton.style.borderBottomRightRadius = 4;
+        checkoutButton.style.borderTopWidth = 0;
+        checkoutButton.style.borderBottomWidth = 0;
+        checkoutButton.style.borderLeftWidth = 0;
+        checkoutButton.style.borderRightWidth = 0;
 
         btnGroup.Add(clearBtn);
         btnGroup.Add(checkoutButton);

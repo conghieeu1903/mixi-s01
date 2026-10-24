@@ -25,19 +25,30 @@ public class PlayerInputReader : MonoBehaviour
     public bool IsFrozen => freezeCount > 0;
 
     // Hướng di chuyển (x trái phải, y tiến lùi), bằng 0 khi bị đóng băng
-    public Vector2 Move => IsFrozen || move == null ? Vector2.zero : move.ReadValue<Vector2>();
+    public Vector2 Move => IsFrozen ? Vector2.zero : ReadMoveVector();
 
     // Có đang giữ chạy nhanh không
-    public bool SprintHeld => !IsFrozen && sprint != null && sprint.IsPressed();
+    public bool SprintHeld => !IsFrozen && ((sprint != null && sprint.IsPressed()) || GameSettings.IsKeyHeld(GameSettings.Current.keySprint));
 
     // Có đang giữ cúi không
-    public bool CrouchHeld => !IsFrozen && crouch != null && crouch.IsPressed();
+    public bool CrouchHeld => !IsFrozen && ((crouch != null && crouch.IsPressed()) || GameSettings.IsKeyHeld(GameSettings.Current.keyCrouch));
 
     // Vừa bấm nhảy trong frame này
-    public bool JumpPressed => !IsFrozen && jump != null && jump.WasPressedThisFrame();
+    public bool JumpPressed => !IsFrozen && ((jump != null && jump.WasPressedThisFrame()) || GameSettings.WasKeyPressedThisFrame(GameSettings.Current.keyJump));
 
-    // Vừa bấm tương tác (phím E) trong frame này
-    public bool InteractPressed => !IsFrozen && ((interact != null && interact.WasPressedThisFrame()) || (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame));
+    // Vừa bấm tương tác trong frame này
+    public bool InteractPressed => !IsFrozen && ((interact != null && interact.WasPressedThisFrame()) || GameSettings.WasKeyPressedThisFrame(GameSettings.Current.keyInteract));
+
+    Vector2 ReadMoveVector()
+    {
+        Vector2 v = move != null ? move.ReadValue<Vector2>() : Vector2.zero;
+        if (v.sqrMagnitude > 0.001f) return v;
+        GameSettings s = GameSettings.Current;
+        float x = (GameSettings.IsKeyHeld(s.keyMoveRight) ? 1f : 0f) - (GameSettings.IsKeyHeld(s.keyMoveLeft) ? 1f : 0f);
+        float y = (GameSettings.IsKeyHeld(s.keyMoveUp) ? 1f : 0f) - (GameSettings.IsKeyHeld(s.keyMoveDown) ? 1f : 0f);
+        Vector2 custom = new Vector2(x, y);
+        return custom.sqrMagnitude > 1f ? custom.normalized : custom;
+    }
 
     // Lấy action từ asset và bật action map
     void Awake()

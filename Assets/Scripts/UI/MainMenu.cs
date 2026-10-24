@@ -13,6 +13,9 @@ public class MainMenu : MonoBehaviour
 
     UIDocument document;
     Button continueButton;
+    Button playButton;
+    Button settingsButton;
+    Button exitButton;
     Label saveInfoLabel;
 
     void Awake()
@@ -34,18 +37,15 @@ public class MainMenu : MonoBehaviour
 
         continueButton = root.Q<Button>("continueButton");
         saveInfoLabel = root.Q<Label>("saveInfoLabel");
-        Button playButton = root.Q<Button>("playButton");
-        Button settingsButton = root.Q<Button>("settingsButton");
-        Button exitButton = root.Q<Button>("exitButton");
+        playButton = root.Q<Button>("playButton");
+        settingsButton = root.Q<Button>("settingsButton");
+        exitButton = root.Q<Button>("exitButton");
 
         if (continueButton != null)
             continueButton.clicked += Continue;
 
         if (playButton != null)
-        {
-            playButton.text = "New Game";
             playButton.clicked += NewGame;
-        }
 
         if (settingsButton != null)
         {
@@ -62,8 +62,25 @@ public class MainMenu : MonoBehaviour
             exitButton.clicked += Quit;
 
         root.RegisterCallback<ClickEvent>(OnMenuClick, TrickleDown.TrickleDown);
+        LocalizationService.LanguageChanged -= RefreshLocalizedText;
+        LocalizationService.LanguageChanged += RefreshLocalizedText;
 
+        RefreshLocalizedText();
         RefreshSaveState();
+    }
+
+    void OnDisable()
+    {
+        LocalizationService.LanguageChanged -= RefreshLocalizedText;
+    }
+
+    // Cập nhật chữ trên các nút Main Menu theo ngôn ngữ đang chọn
+    void RefreshLocalizedText()
+    {
+        if (continueButton != null) continueButton.text = LocalizationService.Get("menu.continue");
+        if (playButton != null) playButton.text = LocalizationService.Get("menu.play");
+        if (settingsButton != null) settingsButton.text = LocalizationService.Get("menu.settings");
+        if (exitButton != null) exitButton.text = LocalizationService.Get("menu.quit");
     }
 
     // Âm click cho mọi nút ở Main Menu

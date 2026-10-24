@@ -142,6 +142,8 @@ public class AudioManager : MonoBehaviour
     // Hệ số âm lượng chỉ dùng khi không có mixer, có mixer thì mixer chỉnh theo nhóm
     float musicVolumeScale = 1f;
     float sfxVolumeScale = 1f;
+    float uiVolumeScale = 1f;
+    float ambienceVolumeScale = 1f;
 
     public AudioCatalog Catalog => catalog;
     public string CurrentMusic => currentMusic;
@@ -177,7 +179,8 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         GameSettings settings = GameSettings.Load();
-        SetVolumes(settings.masterVolume, settings.musicVolume, settings.sfxVolume);
+        float effectiveMaster = settings.muteAll ? 0f : settings.masterVolume;
+        SetVolumes(effectiveMaster, settings.musicVolume, settings.sfxVolume, settings.uiVolume, settings.ambienceVolume);
     }
 
     void OnDestroy()
@@ -293,7 +296,8 @@ public class AudioManager : MonoBehaviour
             source.transform.position = position.Value;
         source.clip = e.clip;
         source.pitch = pitch;
-        source.volume = e.volume * (HasMixer ? 1f : sfxVolumeScale);
+        float channelScale = pool == uiPool ? uiVolumeScale : sfxVolumeScale;
+        source.volume = e.volume * (HasMixer ? 1f : channelScale);
         source.Play();
     }
 
@@ -388,12 +392,14 @@ public class AudioManager : MonoBehaviour
         return null;
     }
 
-    // Cập nhật âm lượng tổng, nhạc nền và hiệu ứng (0..1). Có mixer thì chỉnh qua mixer, không thì nhân trực tiếp vào nguồn phát
-    public void SetVolumes(float master, float musicVol, float sfxVol)
+    // Cập nhật âm lượng tổng, nhạc nền, hiệu ứng, UI và môi trường (0..1)
+    public void SetVolumes(float master, float musicVol, float sfxVol, float uiVol = -1f, float ambienceVol = -1f)
     {
         master = Mathf.Clamp01(master);
         musicVolumeScale = Mathf.Clamp01(musicVol);
         sfxVolumeScale = Mathf.Clamp01(sfxVol);
+        uiVolumeScale = uiVol >= 0f ? Mathf.Clamp01(uiVol) : sfxVolumeScale;
+        ambienceVolumeScale = ambienceVol >= 0f ? Mathf.Clamp01(ambienceVol) : sfxVolumeScale;
 
         AudioMixer mixer = musicGroup != null ? musicGroup.audioMixer : (sfxGroup != null ? sfxGroup.audioMixer : null);
         if (mixer != null && HasMixer)
@@ -402,7 +408,7 @@ public class AudioManager : MonoBehaviour
             mixer.SetFloat("MasterVolume", LinearToDecibel(master));
             mixer.SetFloat("BGMVolume", LinearToDecibel(musicVolumeScale));
             mixer.SetFloat("SFXVolume", LinearToDecibel(sfxVolumeScale));
-            mixer.SetFloat("UIVolume", LinearToDecibel(sfxVolumeScale));
+            mixer.SetFloat("UIVolume", LinearToDecibel(uiVolumeScale));
         }
         else
         {
@@ -416,7 +422,7 @@ public class AudioManager : MonoBehaviour
     }
 
     float MusicTargetVolume() => currentMusicBaseVolume * (HasMixer ? 1f : musicVolumeScale);
-    float AmbienceTargetVolume() => currentAmbienceBaseVolume * (HasMixer ? 1f : sfxVolumeScale);
+    float AmbienceTargetVolume() => currentAmbienceBaseVolume * (HasMixer ? 1f : ambienceVolumeScale);
 
     // Đổi giá trị âm lượng tuyến tính 0..1 sang thang đo Decibel của AudioMixer
     static float LinearToDecibel(float linear)

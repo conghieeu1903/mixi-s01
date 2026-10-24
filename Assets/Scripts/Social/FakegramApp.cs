@@ -58,6 +58,7 @@ public class FakegramApp : PcApp
         content.style.backgroundColor = new Color(0.11f, 0.12f, 0.16f, 1f);
 
         VisualElement header = new VisualElement();
+        header.style.flexShrink = 0;
         header.style.flexDirection = FlexDirection.Row;
         header.style.justifyContent = Justify.SpaceBetween;
         header.style.alignItems = Align.Center;
@@ -78,10 +79,16 @@ public class FakegramApp : PcApp
             text = "＋ Đăng bài mới (+Follower)"
         };
         postBtn.style.height = 28;
+        postBtn.style.flexShrink = 0;
+        postBtn.style.marginTop = 0;
+        postBtn.style.marginBottom = 0;
         postBtn.style.paddingLeft = 12;
         postBtn.style.paddingRight = 12;
+        postBtn.style.paddingTop = 0;
+        postBtn.style.paddingBottom = 0;
         postBtn.style.fontSize = 11;
         postBtn.style.unityFontStyleAndWeight = FontStyle.Bold;
+        postBtn.style.unityTextAlign = TextAnchor.MiddleCenter;
         postBtn.style.color = Color.white;
         postBtn.style.backgroundColor = new Color(0.84f, 0.24f, 0.58f, 1f);
 
@@ -91,6 +98,8 @@ public class FakegramApp : PcApp
 
         ScrollView scroll = new ScrollView();
         scroll.style.flexGrow = 1;
+        scroll.style.flexBasis = 0;
+        scroll.style.minHeight = 0;
         for (int i = 0; i < posts.Count; i++)
         {
             VisualElement card = new VisualElement();

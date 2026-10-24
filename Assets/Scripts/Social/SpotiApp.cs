@@ -129,10 +129,16 @@ public class SpotiApp : PcApp
             {
                 text = playingThis ? "Đang phát ♪" : "▶ Phát"
             };
-            playBtn.style.height = 24;
+            playBtn.style.height = 26;
+            playBtn.style.flexShrink = 0;
+            playBtn.style.marginTop = 0;
+            playBtn.style.marginBottom = 0;
             playBtn.style.paddingLeft = 10;
             playBtn.style.paddingRight = 10;
+            playBtn.style.paddingTop = 0;
+            playBtn.style.paddingBottom = 0;
             playBtn.style.fontSize = 11;
+            playBtn.style.unityTextAlign = TextAnchor.MiddleCenter;
             playBtn.style.color = Color.white;
             playBtn.style.backgroundColor = new Color(0.14f, 0.72f, 0.38f, 1f);
 
@@ -150,7 +156,12 @@ public class SpotiApp : PcApp
             text = "⏹ Dừng phát nhạc"
         };
         stopBtn.style.height = 28;
+        stopBtn.style.flexShrink = 0;
         stopBtn.style.marginTop = 8;
+        stopBtn.style.marginBottom = 0;
+        stopBtn.style.paddingTop = 0;
+        stopBtn.style.paddingBottom = 0;
+        stopBtn.style.unityTextAlign = TextAnchor.MiddleCenter;
         stopBtn.style.color = Color.white;
         stopBtn.style.backgroundColor = new Color(0.24f, 0.28f, 0.32f, 1f);
         content.Add(stopBtn);

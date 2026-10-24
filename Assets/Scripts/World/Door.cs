@@ -52,7 +52,14 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Interact(PlayerInteractor interactor)
     {
-        IsOpen = !IsOpen;
+        SetOpenState(!IsOpen);
+    }
+
+    // Đóng hoặc mở cửa bằng code (dùng cho chuông cửa Intercom và sự kiện SWAT phá cửa)
+    public void SetOpenState(bool open)
+    {
+        if (IsOpen == open) return;
+        IsOpen = open;
         AudioManager.PlayAt(IsOpen ? "door_open" : "door_close", transform.position);
 
         if (swingRoutine != null)

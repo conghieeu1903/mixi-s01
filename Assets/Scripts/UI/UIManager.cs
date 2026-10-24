@@ -58,37 +58,30 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        if (kb.bKey.wasPressedThisFrame && desktopOS != null)
+        // Không bắt các phím tắt chữ cái khi đang gõ tin nhắn trong ô Chat trên màn hình máy tính giống AnyFocusComputerInputField của SLS2
+        if (DesktopOS.IsTypingInInput) return;
+
+        GameSettings s = GameSettings.Current;
+
+        if ((kb.bKey.wasPressedThisFrame || GameSettings.WasKeyPressedThisFrame(s.keyBills)) && desktopOS != null && desktopOS.IsOpen)
         {
-            if (!desktopOS.IsOpen && !HasOpenPanel)
-                desktopOS.Open();
-            if (desktopOS.IsOpen)
-                desktopOS.OpenBillsWindow();
+            desktopOS.OpenBillsWindow();
             return;
         }
 
-        if ((kb.iKey.wasPressedThisFrame || kb.tabKey.wasPressedThisFrame) && inventoryView != null)
+        if ((kb.iKey.wasPressedThisFrame || kb.tabKey.wasPressedThisFrame || GameSettings.WasKeyPressedThisFrame(s.keyInventory)) && inventoryView != null)
         {
             TogglePanel(inventoryView);
             return;
         }
 
-        if (kb.cKey.wasPressedThisFrame && desktopOS != null)
+        if ((kb.kKey.wasPressedThisFrame || GameSettings.WasKeyPressedThisFrame(s.keySkills)) && desktopOS != null && desktopOS.IsOpen)
         {
-            TogglePanel(desktopOS);
+            desktopOS.OpenSkillsWindow();
             return;
         }
 
-        if (kb.kKey.wasPressedThisFrame && desktopOS != null)
-        {
-            if (!desktopOS.IsOpen && !HasOpenPanel)
-                desktopOS.Open();
-            if (desktopOS.IsOpen)
-                desktopOS.OpenSkillsWindow();
-            return;
-        }
-
-        if ((kb.pKey.wasPressedThisFrame || kb.xKey.wasPressedThisFrame || kb.mKey.wasPressedThisFrame) && phoneController != null)
+        if ((kb.pKey.wasPressedThisFrame || kb.xKey.wasPressedThisFrame || kb.mKey.wasPressedThisFrame || GameSettings.WasKeyPressedThisFrame(s.keyPhone) || GameSettings.WasKeyPressedThisFrame(s.keyMap)) && phoneController != null)
         {
             if (phoneController.IsOpen)
                 phoneController.Close();
@@ -151,6 +144,11 @@ public class UIManager : MonoBehaviour
         if (openPanels.Count > 0)
         {
             UIPanel top = openPanels[openPanels.Count - 1];
+            if (top is SettingsMenu sm && sm.IsWaitingForKey)
+            {
+                sm.CancelKeyRebind();
+                return;
+            }
             Close(top);
             return;
         }

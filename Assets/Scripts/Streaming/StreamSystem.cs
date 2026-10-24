@@ -21,7 +21,7 @@ public class StreamRecord
     public int peakViewers;
 }
 
-// Hệ thống stream: viewer, follower, sub, donate theo từng đợt 30 phút
+// Hệ thống stream: viewer, follower, sub, donate, cảnh báo lỗi trực tiếp (problemBG), Bot View (FakeViewer) và quảng cáo FeaturedStream giống SLS2
 public class StreamSystem
 {
     // Thời lượng tối thiểu để ghi lịch sử, và để được tính là một ngày stream đủ dài (phút)
@@ -39,8 +39,14 @@ public class StreamSystem
     public int StreamMinutes { get; private set; }
     public int ViewerLimitationDay { get; private set; }
 
-    // Có sự cố (lag, hỏng máy, virus) thì viewer không tăng
+    // Trạng thái lỗi trực tiếp khi đang Stream giống GameStreamProblemDetect của SLS2 ("gaming", "microphone", "dropframe")
     public bool HasProblem;
+    public string ActiveProblemTag { get; private set; } = string.Empty;
+    public int DroppedFramesCount { get; private set; }
+
+    // Lượng mắt xem ảo (FakeViewer) và vị trí quảng cáo trang chủ (FeaturedStream 1..5)
+    public int FakeViewersActive { get; private set; }
+    public int FeaturedSlot { get; private set; }
 
     // Hàm cộng điểm phần trăm viewer theo kỹ năng, mặc định không có kỹ năng nào
     public Func<StreamCategory, int> SkillViewerBonus = _ => 0;
@@ -48,12 +54,13 @@ public class StreamSystem
     // Điểm phần trăm viewer cộng thêm từ chất lượng dàn máy, router và thiết bị stream
     public int RigViewerBonus;
 
-    // Giới hạn viewer hiện tại, tăng sau mỗi ngày stream đủ dài
-    public int ViewerLimit => 200 + 300 * ViewerLimitationDay;
+    // Giới hạn viewer hiện tại, tăng sau mỗi ngày stream đủ dài và cộng thêm giới hạn khi mua FeaturedStream
+    public int ViewerLimit => 200 + 300 * ViewerLimitationDay + (FeaturedSlot > 0 ? FeaturedSlot * 150 : 0) + FakeViewersActive;
 
     public event Action Opened;
     public event Action<StreamRecord> Closed;
     public event Action<float> Donated;
+    public event Action<int> Subscribed;
     public event Action StatsChanged;
 
     readonly MoodSystem mood;
@@ -78,7 +85,10 @@ public class StreamSystem
         Category = category;
         StreamMinutes = 0;
         HasProblem = false;
-        Viewers = Math.Max(1, (int)(Followers * 0.05f)) + rng.Next(1, 6);
+        ActiveProblemTag = string.Empty;
+        DroppedFramesCount = 0;
+        int featuredBonus = FeaturedSlot > 0 ? FeaturedSlot * 12 : 0;
+        Viewers = Math.Max(1, (int)(Followers * 0.05f)) + rng.Next(1, 6) + FakeViewersActive + featuredBonus;
         Viewers = Math.Min(Viewers, ViewerLimit);
         PeakViewers = Viewers;
         Opened?.Invoke();
@@ -105,16 +115,70 @@ public class StreamSystem
         IsOpen = false;
         Viewers = 0;
         StreamMinutes = 0;
+        HasProblem = false;
+        ActiveProblemTag = string.Empty;
+        FakeViewersActive = 0;
         Closed?.Invoke(record);
         StatsChanged?.Invoke();
         return record;
     }
 
-    // Gọi mỗi phút game: đủ 30 phút thì có đợt viewer mới
+    // Cập nhật trạng thái lỗi trực tiếp của buổi Stream ("gaming", "microphone", "dropframe" hoặc rỗng khi bình thường)
+    public void SetStreamProblem(string problemTag)
+    {
+        string normalized = problemTag ?? string.Empty;
+        bool problemNow = !string.IsNullOrEmpty(normalized);
+        if (HasProblem == problemNow && ActiveProblemTag == normalized) return;
+        HasProblem = problemNow;
+        ActiveProblemTag = normalized;
+        StatsChanged?.Invoke();
+    }
+
+    // Mua mắt xem ảo (FakeViewer) cộng thẳng vào lượng người xem hiện tại
+    public void AddBotViewers(int count)
+    {
+        if (count <= 0) return;
+        FakeViewersActive += count;
+        if (IsOpen)
+        {
+            Viewers = Math.Min(Viewers + count, ViewerLimit);
+            PeakViewers = Math.Max(PeakViewers, Viewers);
+        }
+        StatsChanged?.Invoke();
+    }
+
+    // Mua vị trí quảng cáo trang chủ FeaturedStream (Slot 1..5) giúp tăng mạnh tốc độ lên Viewer và Follower
+    public bool BuyFeaturedSlot(int slotIndex, float price)
+    {
+        if (slotIndex < 1 || slotIndex > 5 || FeaturedSlot == slotIndex) return false;
+        if (!economy.TrySpend(price)) return false;
+        FeaturedSlot = slotIndex;
+        if (IsOpen)
+        {
+            Viewers = Math.Min(Viewers + slotIndex * 18, ViewerLimit);
+            PeakViewers = Math.Max(PeakViewers, Viewers);
+        }
+        StatsChanged?.Invoke();
+        return true;
+    }
+
+    // Gọi mỗi phút game: đủ 30 phút thì có đợt viewer mới; nếu đang có lỗi thì rớt khung hình và giảm dần viewer
     public void OnMinutePassed()
     {
         if (!IsOpen) return;
         StreamMinutes++;
+
+        if (HasProblem)
+        {
+            if (ActiveProblemTag == "dropframe")
+                DroppedFramesCount += rng.Next(8, 28);
+            if (StreamMinutes % 5 == 0 && Viewers > 1)
+            {
+                int loss = Math.Max(1, Viewers * rng.Next(2, 6) / 100);
+                Viewers = Math.Max(1, Viewers - loss);
+            }
+        }
+
         if (StreamMinutes % WaveIntervalMinutes == 0) RunWave();
         else StatsChanged?.Invoke();
     }
@@ -122,7 +186,8 @@ public class StreamSystem
     // Một đợt 30 phút: viewer tăng, dao động, rồi tính follower, sub, donate
     void RunWave()
     {
-        if (!HasProblem && Viewers < ViewerLimit) UpdateViewerPercent(rng.Next(3, 9));
+        int baseGain = rng.Next(3, 9) + (FeaturedSlot > 0 ? FeaturedSlot * 3 : 0);
+        if (!HasProblem && Viewers < ViewerLimit) UpdateViewerPercent(baseGain);
         ApplyViewerWave();
         EarnFollowers();
         EarnSubs();
@@ -158,7 +223,7 @@ public class StreamSystem
         Viewers = Math.Clamp(Viewers + (rng.Next(2) == 0 ? delta : -delta), 0, ViewerLimit);
     }
 
-    // Follower mới = viewer × tỷ lệ theo mood, giảm dần ở kênh lớn
+    // Follower mới = viewer × tỷ lệ theo mood (nhân hệ số FeaturedStream nếu có), giảm dần ở kênh lớn
     void EarnFollowers()
     {
         var (min, max) = mood.FollowerRate();
@@ -167,7 +232,8 @@ public class StreamSystem
         if (Followers >= 100000) scale = 0.25f;
         else if (Followers >= 50000) scale = 0.5f;
         else if (Followers >= 10000) scale = 0.75f;
-        int gain = Math.Max(rng.Next(1, 3), (int)(Viewers * rate * scale));
+        float featuredMult = FeaturedSlot > 0 ? (1f + FeaturedSlot * 0.15f) : 1f;
+        int gain = Math.Max(rng.Next(1, 3), (int)(Viewers * rate * scale * featuredMult));
         Followers = Math.Min(Followers + gain, MaxFollowers);
     }
 
@@ -184,7 +250,11 @@ public class StreamSystem
         int rounds = Math.Clamp(1 + Viewers / 1000, 1, 9);
         rounds = Math.Max(1, rounds + mood.SubRoundBonus(rounds));
         int perRound = Followers < 1000 ? 1 : Followers < 10000 ? rng.Next(1, 4) : rng.Next(3, 10);
+        int before = Subs;
         Subs = Math.Min(Subs + rounds * perRound, Math.Max(cap, 1));
+        int gained = Subs - before;
+        if (gained > 0)
+            Subscribed?.Invoke(gained);
     }
 
     // Có thể có donate sau mỗi đợt, càng nhiều viewer càng dễ có
@@ -213,6 +283,8 @@ public class StreamSystem
         ViewerLimitationDay = data.viewerLimitationDay;
         IsOpen = false;
         Viewers = 0;
+        HasProblem = false;
+        ActiveProblemTag = string.Empty;
         StatsChanged?.Invoke();
     }
 

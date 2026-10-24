@@ -5,14 +5,24 @@ using UnityEngine.UIElements;
 // Cửa sổ ứng dụng kiểu Windows: kéo thả thanh tiêu đề, thu nhỏ xuống Taskbar, phóng to/thu nhỏ, đóng, đưa lên trên cùng
 public class PcWindow : MonoBehaviour
 {
+    // Bảng màu wireframe dùng chung cho khung cửa sổ và thanh tiêu đề
+    static readonly Color WfBg = new Color32(232, 232, 232, 255);
+    static readonly Color WfSurface = new Color32(250, 250, 250, 255);
+    static readonly Color WfFill = new Color32(218, 218, 218, 255);
+    static readonly Color WfFillStrong = new Color32(168, 168, 168, 255);
+    static readonly Color WfLine = new Color32(128, 128, 128, 255);
+    static readonly Color WfInk = new Color32(38, 38, 38, 255);
+    static readonly Color WfDark = new Color32(80, 80, 80, 255);
+
     public PcApp App { get; private set; }
     public string WindowId { get; set; }
     public string WindowTitle { get; private set; }
-    public Color AccentColor { get; set; } = new Color(0.22f, 0.48f, 0.88f, 1f);
+    public Color AccentColor { get; set; } = new Color32(80, 80, 80, 255);
     public string BadgeText { get; set; } = "■";
     public bool IsMinimized { get; private set; }
     public bool IsMaximized { get; private set; }
     public bool IsOpen { get; private set; }
+    public bool IsFocused { get; private set; }
     public bool IsDragging => isDragging;
     public VisualElement WindowElement { get; set; }
     public VisualElement ContentElement { get; set; }
@@ -50,50 +60,62 @@ public class PcWindow : MonoBehaviour
         WindowElement = new VisualElement { name = $"win_{id}" };
         WindowElement.style.position = Position.Absolute;
         ApplyRect(savedNormalRect);
-        WindowElement.style.backgroundColor = new Color(0.14f, 0.16f, 0.20f, 0.98f);
-        WindowElement.style.borderTopWidth = 1;
-        WindowElement.style.borderBottomWidth = 1;
-        WindowElement.style.borderLeftWidth = 1;
-        WindowElement.style.borderRightWidth = 1;
-        WindowElement.style.borderTopColor = new Color(0.32f, 0.38f, 0.48f, 1f);
-        WindowElement.style.borderBottomColor = new Color(0.22f, 0.26f, 0.34f, 1f);
-        WindowElement.style.borderLeftColor = new Color(0.28f, 0.33f, 0.42f, 1f);
-        WindowElement.style.borderRightColor = new Color(0.28f, 0.33f, 0.42f, 1f);
-        WindowElement.style.borderTopLeftRadius = 8;
-        WindowElement.style.borderTopRightRadius = 8;
-        WindowElement.style.borderBottomLeftRadius = 8;
-        WindowElement.style.borderBottomRightRadius = 8;
+        WindowElement.style.backgroundColor = WfSurface;
+        WindowElement.style.borderTopWidth = 2;
+        WindowElement.style.borderBottomWidth = 2;
+        WindowElement.style.borderLeftWidth = 2;
+        WindowElement.style.borderRightWidth = 2;
+        WindowElement.style.borderTopColor = WfInk;
+        WindowElement.style.borderBottomColor = WfInk;
+        WindowElement.style.borderLeftColor = WfInk;
+        WindowElement.style.borderRightColor = WfInk;
+        WindowElement.style.borderTopLeftRadius = 0;
+        WindowElement.style.borderTopRightRadius = 0;
+        WindowElement.style.borderBottomLeftRadius = 0;
+        WindowElement.style.borderBottomRightRadius = 0;
         WindowElement.style.flexDirection = FlexDirection.Column;
         WindowElement.style.overflow = Overflow.Hidden;
 
-        WindowElement.RegisterCallback<PointerDownEvent>(_ => Focus(), TrickleDown.TrickleDown);
+        WindowElement.RegisterCallback<PointerDownEvent>(_ =>
+        {
+            if (!IsFocused || !IsOpen || IsMinimized)
+                Focus();
+        }, TrickleDown.TrickleDown);
 
         VisualElement titlebar = new VisualElement { name = "titlebar" };
-        titlebar.style.height = 36;
+        titlebar.style.height = 34;
         titlebar.style.flexShrink = 0;
         titlebar.style.flexDirection = FlexDirection.Row;
         titlebar.style.alignItems = Align.Center;
         titlebar.style.paddingLeft = 10;
         titlebar.style.paddingRight = 6;
-        titlebar.style.backgroundColor = new Color(0.01f, 0.36f, 0.72f, 1f);
+        titlebar.style.backgroundColor = WfFill;
         titlebar.style.borderBottomWidth = 2;
-        titlebar.style.borderBottomColor = new Color(0.75f, 0.78f, 0.82f, 1f);
+        titlebar.style.borderBottomColor = WfLine;
 
         VisualElement appBadge = new VisualElement();
-        appBadge.style.width = 20;
-        appBadge.style.height = 20;
-        appBadge.style.borderTopLeftRadius = 4;
-        appBadge.style.borderTopRightRadius = 4;
-        appBadge.style.borderBottomLeftRadius = 4;
-        appBadge.style.borderBottomRightRadius = 4;
-        appBadge.style.backgroundColor = accent;
+        appBadge.style.width = 22;
+        appBadge.style.height = 22;
+        appBadge.style.borderTopLeftRadius = 0;
+        appBadge.style.borderTopRightRadius = 0;
+        appBadge.style.borderBottomLeftRadius = 0;
+        appBadge.style.borderBottomRightRadius = 0;
+        appBadge.style.backgroundColor = WfSurface;
+        appBadge.style.borderTopWidth = 1;
+        appBadge.style.borderBottomWidth = 1;
+        appBadge.style.borderLeftWidth = 1;
+        appBadge.style.borderRightWidth = 1;
+        appBadge.style.borderTopColor = WfLine;
+        appBadge.style.borderBottomColor = WfLine;
+        appBadge.style.borderLeftColor = WfLine;
+        appBadge.style.borderRightColor = WfLine;
         appBadge.style.alignItems = Align.Center;
         appBadge.style.justifyContent = Justify.Center;
         appBadge.style.marginRight = 8;
 
         Label badgeLbl = new Label(badge);
         badgeLbl.style.fontSize = 11;
-        badgeLbl.style.color = Color.white;
+        badgeLbl.style.color = WfInk;
         badgeLbl.style.unityFontStyleAndWeight = FontStyle.Bold;
         appBadge.Add(badgeLbl);
         titlebar.Add(appBadge);
@@ -101,13 +123,13 @@ public class PcWindow : MonoBehaviour
         TitleLabel = new Label(title);
         TitleLabel.style.flexGrow = 1;
         TitleLabel.style.fontSize = 13;
-        TitleLabel.style.color = new Color(0.92f, 0.95f, 0.98f, 1f);
+        TitleLabel.style.color = WfInk;
         TitleLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
         titlebar.Add(TitleLabel);
 
-        Button minBtn = CreateTitlebarButton("—", new Color(0.22f, 0.26f, 0.32f, 1f), Minimize);
-        Button maxBtn = CreateTitlebarButton("□", new Color(0.22f, 0.26f, 0.32f, 1f), ToggleMaximize);
-        Button closeBtn = CreateTitlebarButton("✕", new Color(0.78f, 0.20f, 0.22f, 1f), Close);
+        Button minBtn = CreateTitlebarButton("—", WfFillStrong, Minimize);
+        Button maxBtn = CreateTitlebarButton("□", WfFillStrong, ToggleMaximize);
+        Button closeBtn = CreateTitlebarButton("✕", WfDark, Close);
 
         titlebar.Add(minBtn);
         titlebar.Add(maxBtn);
@@ -119,7 +141,7 @@ public class PcWindow : MonoBehaviour
 
         ContentElement = new VisualElement { name = "windowContent" };
         ContentElement.style.flexGrow = 1;
-        ContentElement.style.backgroundColor = new Color(0.13f, 0.15f, 0.19f, 1f);
+        ContentElement.style.backgroundColor = WfBg;
         ContentElement.style.overflow = Overflow.Hidden;
 
         WindowElement.Add(titlebar);
@@ -132,6 +154,8 @@ public class PcWindow : MonoBehaviour
         IsMaximized = false;
 
         buildBody?.Invoke(ContentElement);
+        DesktopOS.ApplySlimScrollers(ContentElement);
+        ContentElement.RegisterCallback<GeometryChangedEvent>(_ => DesktopOS.ApplySlimScrollers(ContentElement));
         ClampToWorkspace();
         Focus();
     }
@@ -164,29 +188,40 @@ public class PcWindow : MonoBehaviour
         btn.style.height = 24;
         btn.style.marginLeft = 4;
         btn.style.marginRight = 0;
+        btn.style.marginTop = 0;
+        btn.style.marginBottom = 0;
         btn.style.paddingLeft = 0;
         btn.style.paddingRight = 0;
         btn.style.paddingTop = 0;
         btn.style.paddingBottom = 0;
         btn.style.fontSize = 12;
         btn.style.unityFontStyleAndWeight = FontStyle.Bold;
-        btn.style.color = Color.white;
-        btn.style.backgroundColor = new Color(0.06f, 0.08f, 0.11f, 1f);
+        btn.style.unityTextAlign = TextAnchor.MiddleCenter;
+        btn.style.color = WfInk;
+        btn.style.backgroundColor = WfSurface;
         btn.style.borderTopWidth = 1;
         btn.style.borderBottomWidth = 1;
         btn.style.borderLeftWidth = 1;
         btn.style.borderRightWidth = 1;
-        btn.style.borderTopColor = new Color(0.85f, 0.88f, 0.92f, 0.85f);
-        btn.style.borderBottomColor = new Color(0.85f, 0.88f, 0.92f, 0.85f);
-        btn.style.borderLeftColor = new Color(0.85f, 0.88f, 0.92f, 0.85f);
-        btn.style.borderRightColor = new Color(0.85f, 0.88f, 0.92f, 0.85f);
-        btn.style.borderTopLeftRadius = 3;
-        btn.style.borderTopRightRadius = 3;
-        btn.style.borderBottomLeftRadius = 3;
-        btn.style.borderBottomRightRadius = 3;
+        btn.style.borderTopColor = WfLine;
+        btn.style.borderBottomColor = WfLine;
+        btn.style.borderLeftColor = WfLine;
+        btn.style.borderRightColor = WfLine;
+        btn.style.borderTopLeftRadius = 0;
+        btn.style.borderTopRightRadius = 0;
+        btn.style.borderBottomLeftRadius = 0;
+        btn.style.borderBottomRightRadius = 0;
 
-        btn.RegisterCallback<PointerEnterEvent>(_ => btn.style.backgroundColor = hoverColor);
-        btn.RegisterCallback<PointerLeaveEvent>(_ => btn.style.backgroundColor = new Color(0.06f, 0.08f, 0.11f, 1f));
+        btn.RegisterCallback<PointerEnterEvent>(_ =>
+        {
+            btn.style.backgroundColor = hoverColor;
+            btn.style.color = hoverColor == WfDark ? WfSurface : WfInk;
+        });
+        btn.RegisterCallback<PointerLeaveEvent>(_ =>
+        {
+            btn.style.backgroundColor = WfSurface;
+            btn.style.color = WfInk;
+        });
         return btn;
     }
 
@@ -219,8 +254,15 @@ public class PcWindow : MonoBehaviour
     void OnTitlebarPointerMove(PointerMoveEvent evt)
     {
         if (!isDragging || WindowElement == null || IsMaximized) return;
+        UpdateExternalDrag(evt.position);
+    }
 
-        Vector2 delta = (Vector2)evt.position - dragStartPointer;
+    // Cập nhật vị trí kéo cửa sổ trực tiếp theo tọa độ con trỏ trên màn hình Monitor
+    public void UpdateExternalDrag(Vector2 pointerPos)
+    {
+        if (!isDragging || WindowElement == null || IsMaximized) return;
+
+        Vector2 delta = pointerPos - dragStartPointer;
         float parentW = WindowElement.parent != null ? WindowElement.parent.resolvedStyle.width : 1200f;
         float parentH = WindowElement.parent != null ? WindowElement.parent.resolvedStyle.height : 700f;
         if (parentW <= 10f) parentW = 1200f;
@@ -234,6 +276,11 @@ public class PcWindow : MonoBehaviour
         WindowElement.style.top = newY;
         savedNormalRect.x = newX;
         savedNormalRect.y = newY;
+    }
+
+    public void EndExternalDrag()
+    {
+        isDragging = false;
     }
 
     void OnTitlebarPointerUp(PointerUpEvent evt)
@@ -280,6 +327,7 @@ public class PcWindow : MonoBehaviour
             ContentElement.Clear();
             if (app != null)
                 app.BuildWindowContent(ContentElement);
+            DesktopOS.ApplySlimScrollers(ContentElement);
         }
 
         if (app != null)
@@ -290,8 +338,14 @@ public class PcWindow : MonoBehaviour
 
     public void SetActiveVisual(bool active)
     {
+        IsFocused = active;
         if (WindowElement == null) return;
-        Color borderCol = active ? AccentColor : new Color(0.26f, 0.30f, 0.38f, 1f);
+        Color borderCol = active ? WfInk : WfLine;
+        float w = active ? 2f : 1f;
+        WindowElement.style.borderTopWidth = w;
+        WindowElement.style.borderBottomWidth = w;
+        WindowElement.style.borderLeftWidth = w;
+        WindowElement.style.borderRightWidth = w;
         WindowElement.style.borderTopColor = borderCol;
         WindowElement.style.borderBottomColor = borderCol;
         WindowElement.style.borderLeftColor = borderCol;
@@ -301,6 +355,7 @@ public class PcWindow : MonoBehaviour
     public void Minimize()
     {
         IsMinimized = true;
+        IsFocused = false;
         AudioManager.PlayUi("ui_popup_close");
         if (WindowElement != null)
             WindowElement.style.display = DisplayStyle.None;
@@ -333,14 +388,14 @@ public class PcWindow : MonoBehaviour
         }
         else
         {
-            WindowElement.style.borderTopLeftRadius = 8;
-            WindowElement.style.borderTopRightRadius = 8;
-            WindowElement.style.borderBottomLeftRadius = 8;
-            WindowElement.style.borderBottomRightRadius = 8;
-            WindowElement.style.borderTopWidth = 1;
-            WindowElement.style.borderBottomWidth = 1;
-            WindowElement.style.borderLeftWidth = 1;
-            WindowElement.style.borderRightWidth = 1;
+            WindowElement.style.borderTopLeftRadius = 0;
+            WindowElement.style.borderTopRightRadius = 0;
+            WindowElement.style.borderBottomLeftRadius = 0;
+            WindowElement.style.borderBottomRightRadius = 0;
+            WindowElement.style.borderTopWidth = 2;
+            WindowElement.style.borderBottomWidth = 2;
+            WindowElement.style.borderLeftWidth = 2;
+            WindowElement.style.borderRightWidth = 2;
             ApplyRect(savedNormalRect);
             ClampToWorkspace();
         }
@@ -356,6 +411,7 @@ public class PcWindow : MonoBehaviour
         }
         IsOpen = false;
         IsMinimized = false;
+        IsFocused = false;
         if (WindowElement != null)
             WindowElement.style.display = DisplayStyle.None;
         Closed?.Invoke(this);
@@ -365,14 +421,20 @@ public class PcWindow : MonoBehaviour
     // Đưa cửa sổ lên trên cùng
     public void Focus()
     {
+        bool wasFocused = IsFocused && IsOpen && !IsMinimized;
         IsOpen = true;
         IsMinimized = false;
+        IsFocused = true;
         if (WindowElement != null)
         {
             WindowElement.style.display = DisplayStyle.Flex;
-            WindowElement.BringToFront();
+            if (!wasFocused)
+                WindowElement.BringToFront();
         }
-        Focused?.Invoke(this);
-        StateChanged?.Invoke(this);
+        if (!wasFocused)
+        {
+            Focused?.Invoke(this);
+            StateChanged?.Invoke(this);
+        }
     }
 }

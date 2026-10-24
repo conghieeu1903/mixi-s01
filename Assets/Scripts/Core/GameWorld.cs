@@ -172,9 +172,8 @@ public class GameWorld : MonoBehaviour
             if (rigs[i] != null && rigs[i].IsRunning)
                 power += rigs[i].MiningPower;
         }
-        if (power <= 0f) return;
         Router router = FindFirstObjectByType<Router>();
-        bool hasRouter = router != null && router.Data != null && router.Data.uploadMbps > 0f;
+        bool hasRouter = router != null && router.EffectiveUploadMbps > 0f;
         Crypto.Tick(dt, power, hasRouter);
     }
 
@@ -201,11 +200,16 @@ public class GameWorld : MonoBehaviour
     {
         Economy.IssueDailyBills(Clock.Day);
         Electricity.OnDayPassed(Economy, Clock.Day);
+        Crypto.DailyBitcoinPriceChanges();
         Mail.OnDayPassed();
         Workers.OnDayPassed();
         Raffle.OnDayPassed();
         Gtu.OnDayPassed();
         FindFirstObjectByType<LuckySpin>()?.ResetDailyFreeSpin();
+        FindFirstObjectByType<DiscatApp>()?.DailyCheck();
+        FindFirstObjectByType<ChestInventory>()?.DailyPriceChanges();
+        FindFirstObjectByType<GiftBox>(FindObjectsInactive.Include)?.CheckDailyMilestone();
+        FindFirstObjectByType<DoorCharactersManager>()?.OnDayPassed();
         Achievements.Evaluate();
         if (autoSaveEachDay) Save();
     }

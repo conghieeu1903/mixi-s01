@@ -70,6 +70,21 @@ public class PlayerLook : MonoBehaviour
         set => invertY = value;
     }
 
+    // Góc nhìn cơ bản của camera (FOV)
+    public float BaseFov
+    {
+        get => defaultFov;
+        set
+        {
+            defaultFov = Mathf.Clamp(value, 60f, 110f);
+            if (viewCamera == null) viewCamera = Camera.main;
+            if (viewCamera != null && !isPoseOverridden)
+                viewCamera.fieldOfView = defaultFov;
+        }
+    }
+
+    public bool HeadBobEnabled { get; set; } = true;
+
     // Lấy component cần dùng
     void Awake()
     {
@@ -111,7 +126,7 @@ public class PlayerLook : MonoBehaviour
         float baseEyeY = motor != null ? motor.CurrentHeight - eyeOffsetFromTop : 1.7f;
         smoothedEyeY = Mathf.Lerp(smoothedEyeY, baseEyeY, 14f * dt);
 
-        if (motor != null && motor.enabled)
+        if (motor != null && motor.enabled && HeadBobEnabled)
         {
             bool grounded = motor.IsGrounded;
             if (!wasGrounded && grounded)
